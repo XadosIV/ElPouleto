@@ -15,4 +15,3 @@ class Platform:
 		#Affichage
 		#self.game.surf.blit(self.sprite, self.rect)
 		pygame.draw.rect(self.game.surf, (0,0,255), self.rect)
-		print("yo")
