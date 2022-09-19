@@ -54,54 +54,14 @@ class Game():
 		bottomleft_side = platform.collidepoint(entity.rect.bottomleft)
 		bottomright_side = platform.collidepoint(entity.rect.bottomright)
 		onground = entity.onground
+		goingup = entity.velocity[1] < 0
+		#Logique physique après simplification booléenne :
 		
-
-		#Si deux côtés du bas touche et qu'aucun des côtés du haut ne touche
-		#C'est une collision sur le haut de la plateforme.
-		if ((bottomleft_side and bottomright_side) and not (topleft_side) and not (topright_side)):
-			return "top"
-
-		#Par raisonnement inverse, on détecte la collision du bas.
-		elif (topleft_side and topright_side) and not (bottomleft_side) and not (bottomright_side):
+		if (topleft_side or topright_side) and (topleft_side or goingup) and (topright_side or goingup) and not (bottomleft_side) and not (bottomright_side):
 			return "bottom"
-
-		#Idem sur les côtés, si on a un côté de l'entité entièrement dans la plateforme et l'autre côté pas du tout, on trouve les collisions
-		elif ((bottomleft_side and topleft_side) and not (bottomright_side) and not (topright_side)):
-			return "right"
-			
-		elif (bottomright_side and topright_side) and not (bottomleft_side) and not (topleft_side):
+		elif not (topleft_side) and not (bottomleft_side) and (topright_side or bottomright_side) and (topright_side or not (onground)) and (bottomright_side or not (goingup)): 
 			return "left"
-
-		#Gestion des coins
-
-		#bas droit de l'entité
-		elif bottomright_side and not bottomleft_side and not topleft_side and not topright_side:
-			if entity.onground:
-				return "top"
-			else:
-				return "left"
-
-		#bas gauche de l'entité
-		elif bottomleft_side and not bottomright_side and not topleft_side and not topright_side:
-			if entity.onground:
-				return "top"
-			else:
-				return "right"
-
-		elif topright_side and not bottomleft_side and not topleft_side and not bottomright_side:
-			if entity.velocity[1] < 0: #Si il monte/saute
-				return "bottom"
-			else:
-				return "left"
-
-		elif topleft_side and not bottomleft_side and not topright_side and not bottomright_side:
-			if entity.velocity[1] < 0: #Si il monte/saute
-				return "bottom"
-			else:
-				return "right"
-
+		elif not (topright_side) and not (bottomright_side) and (topleft_side or bottomleft_side) and (topleft_side or not (onground)) and (bottomleft_side or not (goingup)):
+			return "right"
 		else:
-			#Si il est dans la plateforme, on bidouille en mettant par défaut qu'il arrive sur la plateforme.
 			return "top"
-
-		
