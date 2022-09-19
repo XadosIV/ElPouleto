@@ -53,6 +53,8 @@ class Game():
 		topright_side = platform.collidepoint(entity.rect.topright)
 		bottomleft_side = platform.collidepoint(entity.rect.bottomleft)
 		bottomright_side = platform.collidepoint(entity.rect.bottomright)
+		onground = entity.onground
+		
 
 		#Si deux côtés du bas touche et qu'aucun des côtés du haut ne touche
 		#C'est une collision sur le haut de la plateforme.
@@ -88,13 +90,13 @@ class Game():
 
 		elif topright_side and not bottomleft_side and not topleft_side and not bottomright_side:
 			if entity.velocity[1] < 0: #Si il monte/saute
-				return "down"
+				return "bottom"
 			else:
 				return "left"
 
 		elif topleft_side and not bottomleft_side and not topright_side and not bottomright_side:
 			if entity.velocity[1] < 0: #Si il monte/saute
-				return "down"
+				return "bottom"
 			else:
 				return "right"
 
