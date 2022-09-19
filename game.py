@@ -37,7 +37,6 @@ class Game():
 				index = pygame.Rect.collidelist(entity.rect, platforms)
 			if entity.velocity[1] != 0:
 				entity.onground = False
-			print(entity.onground)
 		self.surf.fill((0,0,0))
 		for platforms in self.platforms:
 			platforms.draw()
@@ -56,7 +55,7 @@ class Game():
 		onground = entity.onground
 		goingup = entity.velocity[1] < 0
 		#Logique physique après simplification booléenne :
-		
+
 		if (topleft_side or topright_side) and (topleft_side or goingup) and (topright_side or goingup) and not (bottomleft_side) and not (bottomright_side):
 			return "bottom"
 		elif not (topleft_side) and not (bottomleft_side) and (topright_side or bottomright_side) and (topright_side or not (onground)) and (bottomright_side or not (goingup)): 
