@@ -12,8 +12,9 @@ class Game():
 	def update(self):
 		if len(self.entities) == 0:
 			self.entities.append(Entity(self))
-			self.platforms.append(Platform(self,200,200,100,100))
-			self.platforms.append(Platform(self,300,300,500,100))
+			self.platforms.append(Platform(self,100,100,100,100))
+			self.platforms.append(Platform(self,50,200,500,100))
+			self.platforms.append(Platform(self,600,350,200,100))
 		for entity in self.entities:
 			entity.update()
 			platforms = self.platforms.copy()

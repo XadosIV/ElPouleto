@@ -2,9 +2,7 @@ import pygame
 import random
 
 class Platform:
-	def __init__(self, game, centerx,centery, width, height):
-		x = centerx - width//2
-		y = centery - height//2
+	def __init__(self, game, x,y, width, height):
 		self.rect = pygame.Rect(x,y,width,height)
 		self.game = game
 
