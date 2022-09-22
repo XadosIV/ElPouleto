@@ -9,6 +9,7 @@ class Entity:
 		self.rect = self.sprite.get_rect()
 		self.rect.x = 100
 		self.rect.y = 100
+		self.jumpforce = 20
 		self.onground = False
 
 
@@ -22,8 +23,8 @@ class Entity:
 		else:
 			self.velocity[0] = 0
 
-		if keys[K_z]:
-			self.velocity[1] = -10
+		if keys[K_z] and self.onground:
+			self.velocity[1] = -self.jumpforce
 
 		#Gestion Physique
 		self.velocity[1] += self.game.gravity

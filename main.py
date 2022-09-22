@@ -4,7 +4,7 @@ from game import Game
 
 def game():
 	clock = pygame.time.Clock()
-	w,h = (1000,500)
+	w,h = (1440,720)
 	running = True
 	window = pygame.display.set_mode((w,h))
 	game = Game(window)
