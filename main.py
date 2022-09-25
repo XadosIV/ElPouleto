@@ -17,7 +17,5 @@ def game():
 		clock.tick(30)
 
 
-
-
 if __name__ == '__main__':
 	game()
