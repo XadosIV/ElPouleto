@@ -10,7 +10,7 @@ class Entity:
 		self.rect = self.sprite.get_rect()
 		self.rect.x = 100
 		self.rect.y = 100
-		self.jumpforce = 500
+		self.jumpforce = 20
 		self.onground = False
 
 		self.debug = False
