@@ -13,6 +13,7 @@ class Player(Entity):
 		self.nb_saut_bonus = 1
 		self.cpt_saut = 0
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
+		self.game.player = self
 
 	def update(self):
 		if self.onground and self.velocity[1] >= 0:

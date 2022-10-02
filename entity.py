@@ -35,5 +35,6 @@ class Entity:
 			self.game.surf.blit(self.sprite, self.rect)
 		else:
 			self.game.surf.blit(pygame.transform.flip(self.sprite, True, False), self.rect)
+			
 class Empty():
 	pass

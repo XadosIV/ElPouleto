@@ -2,6 +2,7 @@ import pygame, copy
 from enemy import Enemy
 from entity import Entity
 from player import Player
+from object import Object
 from tilemap import Tilemap
 import random
 
@@ -10,15 +11,20 @@ class Game():
 		self.gravity = 1
 		self.surf = surf
 		self.entities = []
-		self.platforms = []
+		self.player = []
+		self.platforms = []		
 		self.tilemap = Tilemap(self, "testmap3.csv")
-		self.platforms.append(Player(self, 1))
-		self.platforms.append(Enemy(self, 300,100))
+		self.player = Player(self, 1)
+		self.objectsNotGet = []
+		self.objectsGet = []
+		self.indiceObject = 0
+		self.platforms.append(Enemy(self, 300, 100))	
 		for tile in self.tilemap.tiles:
 			self.platforms.append(tile)
+		self.objectsNotGet.append(Object(self, 800, 100))
 
 	def update(self, events):
-		self.events = events
+		self.events = events		
 		for entity in self.entities:
 			velocity = entity.update()
 			tab = self.split_velocity_cap([velocity[0],velocity[1]], self.tilemap.tile_size-1)
@@ -77,12 +83,23 @@ class Game():
 								t[0] = 0
 			if entity.velocity[1] != 0:
 				entity.onground = False
+		
+		for object in self.objectsNotGet:			
+			if self.player.rect.x == object.rect.x and self.player.rect.y == object.rect.y:
+				object.updateTaken()
+			if object.taken == True:
+				self.objectsGet.append(object)
+				self.objectsNotGet.pop(self.indiceObject)
+			self.indiceObject += 1
+			print(self.objectsGet)
+
 		self.surf.fill((0,0,0))
 		for platforms in self.platforms:
 			platforms.draw(self.surf)
 		for entity in self.entities:
 			entity.draw(self.surf)
 
+		self.indiceObject = 0
 		pygame.display.flip()
 
 	def split_velocity_cap(self, velocity, maxi):
