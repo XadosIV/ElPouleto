@@ -29,9 +29,9 @@ class Tilemap():
 				if tile == "0":
 					self.start_x, self.start_y = x * self.tile_size, y * self.tile_size
 				elif tile == "1":
-					tiles.append(Tile("platform.png", x*self.tile_size, y*self.tile_size, self.game))
+					tiles.append(Tile("platform.png", x*self.tile_size, y*self.tile_size, self.game, self.tile_size))
 				elif tile == "2":
-					tiles.append(Tile("platform2.png", x*self.tile_size, y*self.tile_size, self.game))
+					tiles.append(Tile("platform2.png", x*self.tile_size, y*self.tile_size, self.game, self.tile_size))
 				x+=1
 			y+=1
 		self.map_w, self.map_h = x*self.tile_size, y*self.tile_size

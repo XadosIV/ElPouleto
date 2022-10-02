@@ -1,23 +1,27 @@
 import pygame, copy
+from enemy import Enemy
 from entity import Entity
-from platform import Platform
+from player import Player
 from tilemap import Tilemap
+import random
+
 class Game():
 	def __init__(self, surf):
 		self.gravity = 1
 		self.surf = surf
 		self.entities = []
 		self.platforms = []
-		self.tilemap = Tilemap(self, "testmap2.csv")
+		self.tilemap = Tilemap(self, "testmap3.csv")
+		self.platforms.append(Player(self, 1))
+		self.platforms.append(Enemy(self, 300,100))
+		for tile in self.tilemap.tiles:
+			self.platforms.append(tile)
 
-	def update(self):
-		if len(self.entities) == 0:
-			self.entities.append(Entity(self))
-			for tile in self.tilemap.tiles:
-				self.platforms.append(tile)
+	def update(self, events):
+		self.events = events
 		for entity in self.entities:
 			velocity = entity.update()
-			tab = self.split_velocity_cap([velocity[0],velocity[1]], 15)
+			tab = self.split_velocity_cap([velocity[0],velocity[1]], self.tilemap.tile_size-1)
 			for t in tab:
 				entity.rect.x += t[0]
 				entity.rect.y += t[1]
@@ -26,6 +30,8 @@ class Game():
 				indices = entity.rect.collidelistall(platforms)
 				for i in indices:
 					platform = platforms[i]
+					if platform == entity:
+						continue
 					direction = self.determineSide(entity_origin, platform.rect)
 					if direction == "top":
 						coory = platform.rect.midtop[1] - entity.rect.height
@@ -75,7 +81,8 @@ class Game():
 		for platforms in self.platforms:
 			platforms.draw(self.surf)
 		for entity in self.entities:
-			entity.draw()
+			entity.draw(self.surf)
+
 		pygame.display.flip()
 
 	def split_velocity_cap(self, velocity, maxi):
@@ -96,8 +103,8 @@ class Game():
 
 	def test_platform_coor(self,x,y):
 		#Renvoie True si plateforme libre
-		x=(x//self.tilemap.tile_size)*16
-		y=(y//self.tilemap.tile_size)*16
+		x=(x//self.tilemap.tile_size)*self.tilemap.tile_size
+		y=(y//self.tilemap.tile_size)*self.tilemap.tile_size
 		booleen = True
 		for platform in self.platforms:
 			if platform.rect.x == x and platform.rect.y == y:
@@ -114,14 +121,6 @@ class Game():
 		bottomright_side = platform.collidepoint(entity.rect.bottomright)
 		onground = entity.onground
 		goingup = entity.velocity[1] < 0
-
-		if platform.y == 16:
-			print("---")
-			print(f"X = {platform.x//16-1}")
-			print(topleft_side)
-			print(topright_side)
-			print(bottomleft_side)
-			print(bottomright_side)
 
 		#Si deux côtés du bas touche et qu'aucun des côtés du haut ne touche
 		#C'est une collision sur le haut de la plateforme.

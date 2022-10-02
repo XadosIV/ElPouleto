@@ -9,11 +9,12 @@ def game():
 	window = pygame.display.set_mode((w,h))
 	game = Game(window)
 	while running:
-		for event in pygame.event.get():
+		events = pygame.event.get()
+		for event in events:
 			if event.type == QUIT:
 				running = False
 				break
-		game.update()
+		game.update(events)
 		clock.tick(30)
 
 
