@@ -2,7 +2,7 @@ import pygame, copy
 from enemy import Enemy
 from entity import Entity
 from player import Player
-from object import Object
+from item import Item
 from tilemap import Tilemap
 import random
 
@@ -11,17 +11,18 @@ class Game():
 		self.gravity = 1
 		self.surf = surf
 		self.entities = []
-		self.player = []
 		self.platforms = []		
 		self.tilemap = Tilemap(self, "testmap3.csv")
 		self.player = Player(self, 1)
-		self.objectsNotGet = []
-		self.objectsGet = []
+		self.objects = []
 		self.indiceObject = 0
+		self.platforms.append(self.player)
 		self.platforms.append(Enemy(self, 300, 100))	
 		for tile in self.tilemap.tiles:
 			self.platforms.append(tile)
-		self.objectsNotGet.append(Object(self, 800, 100))
+		#self.objectsNotGet.append(Item(self, 800, 100))
+
+		#self.objectsNotGet.append(Item(self, 880, 0))
 
 	def update(self, events):
 		self.events = events		
@@ -84,11 +85,11 @@ class Game():
 			if entity.velocity[1] != 0:
 				entity.onground = False
 		
-		for object in self.objectsNotGet:			
-			if self.player.rect.x == object.rect.x and self.player.rect.y == object.rect.y:
-				object.updateTaken()
-			if object.taken == True:
-				self.objectsGet.append(object)
+		for item in self.objectsNotGet:			
+			if self.player.rect.x == item.rect.x and self.player.rect.y == item.rect.y:
+				item.updateTaken()
+			if item.taken == True:
+				self.objectsGet.append(item)
 				self.objectsNotGet.pop(self.indiceObject)
 			self.indiceObject += 1
 			print(self.objectsGet)
