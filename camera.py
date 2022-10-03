@@ -30,7 +30,7 @@ class Camera():
 
 		tab = [(255,255,255), (255,0,0)]
 		for i in range(10):
-			pygame.draw.rect(self.surf, tab[i%2], (i*144,0,144,50))
+			pygame.draw.rect(self.surf, tab[i%2], (i*144,0,144,0))
 			#45 - 65 % => On bouge pas
 			#1-10
 		pygame.display.flip()
