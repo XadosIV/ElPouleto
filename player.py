@@ -50,6 +50,7 @@ class Player(Entity):
 		for (k,v) in item["bonus"].items():
 			setattr(self, k, getattr(self, k) + v)
 
+
 	def jump(self, increment):
 		self.velocity[1] = -self.jumpforce
 		if increment:

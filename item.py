@@ -4,14 +4,14 @@ from player import Player
 from pygame.locals import *
 
 class Item(Entity):
-    def __init__(self, game, x, y, bonus):
+    def __init__(self, game, x, y, sprite, bonus):
         Entity.__init__(self, game)
         self.game = game
         self.rect.x = x
         self.rect.y = y
         self.velocity = [0,0]
         self.taken = False
-        self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
+        self.sprite = pygame.transform.scale(pygame.image.load(sprite), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
         self.type = "item"
         self.bonus = bonus
 

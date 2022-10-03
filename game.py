@@ -23,18 +23,18 @@ class Game():
 		self.collisions.append(Enemy(self, 300, 100))	
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
-		self.items.append(Item(self, 800, 100, {
+		self.items.append(Item(self, 800, 100, "./assets/spring.png", {
 				"name":"Extension mécanique pour jambes de poulet (Compatible windows 7)",
 				"bonus": {
-					"nb_saut_bonus":1,
+					"nb_saut_bonus":1
 				}
 			}))
-		"""self.items.append(Item(self, 880, 0, {
-				"name":"Il a perdu les extensions",
+		self.items.append(Item(self, 880, 0, "./assets/wings.png",{
+				"name":"Il plane",
 				"bonus": {
-					"nb_saut_bonus":-1,
+					"jumpforce":2 #"velocity[1]":-10 ? Ca marche pas comme ça mais ça doit plus ou moins être ce que je veux
 				}
-			}))"""
+			}))
 
 	def update(self, events):
 		self.events = events		
