@@ -21,9 +21,9 @@ class Game():
 		self.collisions.append(Enemy(self, 300, 100))	
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
-		#self.objectsNotGet.append(Item(self, 800, 100))
+		self.items.append(Item(self, 800, 100))
 
-		#self.objectsNotGet.append(Item(self, 880, 0))
+		self.items.append(Item(self, 880, 0))
 
 	def update(self, events):
 		self.events = events		

@@ -14,9 +14,10 @@ class Item(Entity):
         self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
         self.type = "item"
 
-    def updateTaken(self):
-        self.taken = True
+    def check(self, player):
+        if player.rect.colliderect(self.rect):
+            self.taken = True
 
-    def draw(self, surf):
+    def draw(self, surf, offset):
         if not self.taken:
             self.game.surf.blit(self.sprite, self.rect)
