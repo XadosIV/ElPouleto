@@ -4,7 +4,7 @@ from player import Player
 from pygame.locals import *
 
 class Item(Entity):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, bonus):
         Entity.__init__(self, game)
         self.game = game
         self.rect.x = x
@@ -13,10 +13,14 @@ class Item(Entity):
         self.taken = False
         self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
         self.type = "item"
+        self.bonus = bonus
 
-    def updateTaken(self):
-        self.taken = True
+    def check(self, player):
+        if player.rect.colliderect(self.rect) and not self.taken:
+            self.taken = True
+            player.inventory.append(self.bonus)
+            player.addBonus(self.bonus)
 
-    def draw(self, surf):
+    def draw(self, surf, offset):
         if not self.taken:
             self.game.surf.blit(self.sprite, self.rect)

@@ -23,9 +23,18 @@ class Game():
 		self.collisions.append(Enemy(self, 300, 100))	
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
-		#self.objectsNotGet.append(Item(self, 800, 100))
-
-		#self.objectsNotGet.append(Item(self, 880, 0))
+		self.items.append(Item(self, 800, 100, {
+				"name":"Extension mécanique pour jambes de poulet (Compatible windows 7)",
+				"bonus": {
+					"nb_saut_bonus":1,
+				}
+			}))
+		self.items.append(Item(self, 880, 0, {
+				"name":"Il a perdu les extensions",
+				"bonus": {
+					"nb_saut_bonus":-1,
+				}
+			}))
 
 	def update(self, events):
 		self.events = events		
@@ -42,8 +51,6 @@ class Game():
 					body = collisions[i]
 					if body == entity:
 						continue
-					if entity.type == "player" and body.type == "item":
-						body.takeItem()
 					elif body.type == "tile":
 						direction = self.determineSide(entity_origin, body.rect)
 						if direction == "top":
@@ -81,7 +88,6 @@ class Game():
 
 		for item in self.items:
 			item.check(self.player)
-
 
 		self.camera.draw(self.surf, self.collisions, self.entities)
 
