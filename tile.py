@@ -11,7 +11,7 @@ class Tile(pygame.sprite.Sprite):
 		self.type = "tile"
 		
 	def draw(self, surface, offset):
-		surface.blit(self.image, (self.rect.x - offset[0], self.rect.y - offset[1]))
+		surface.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))
 		#if self.color != None:
 		#	pygame.draw.rect(self.game.surf, self.color, self.rect)
 		#else:

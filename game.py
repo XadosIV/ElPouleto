@@ -29,12 +29,12 @@ class Game():
 					"nb_saut_bonus":1,
 				}
 			}))
-		self.items.append(Item(self, 880, 0, {
+		"""self.items.append(Item(self, 880, 0, {
 				"name":"Il a perdu les extensions",
 				"bonus": {
 					"nb_saut_bonus":-1,
 				}
-			}))
+			}))"""
 
 	def update(self, events):
 		self.events = events		

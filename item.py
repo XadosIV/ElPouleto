@@ -23,4 +23,5 @@ class Item(Entity):
 
     def draw(self, surf, offset):
         if not self.taken:
-            self.game.surf.blit(self.sprite, self.rect)
+            rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
+            self.game.surf.blit(self.sprite, rect)

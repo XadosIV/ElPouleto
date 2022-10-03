@@ -6,13 +6,14 @@ from entity import Entity
 class Player(Entity):
 	def __init__(self, game, nb):
 		Entity.__init__(self, game)
-		self.jumpforce = 15
-		self.rect.x = 720
+		self.jumpforce = 20
+		self.rect.x = 736
 		self.rect.y = 100
 		self.game = game
 		self.inventory = []
 		self.nb_saut_bonus = 0
 		self.cpt_saut = 0
+		self.speed = 10
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
 		self.type = "player"
 
@@ -25,10 +26,10 @@ class Player(Entity):
 		events = pygame.event.get()
 		#Controles horizontaux
 		if keys[K_q]:
-			self.velocity[0] = -5
+			self.velocity[0] = -self.speed
 			self.direction = -1
 		elif keys[K_d]:
-			self.velocity[0] = 5
+			self.velocity[0] = self.speed
 			self.direction = 1
 		else:
 			self.velocity[0] = 0

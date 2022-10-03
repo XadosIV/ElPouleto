@@ -32,13 +32,13 @@ class Entity:
 
 	def draw(self, surf, offset):
 		#Affichage
-		rect = [self.rect.x - offset[0], self.rect.y - offset[1]]
+		rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
 
 		if self.direction != 1:
 			img = pygame.transform.flip(self.sprite, True, False)
 		else:
 			img = self.sprite
-		self.game.surf.blit(img, self.rect)
+		self.game.surf.blit(img, rect)
 			
 class Empty():
 	pass
