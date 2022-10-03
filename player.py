@@ -7,7 +7,7 @@ class Player(Entity):
 	def __init__(self, game, nb):
 		Entity.__init__(self, game)
 		self.jumpforce = 15
-		self.rect.x = 100
+		self.rect.x = 720
 		self.rect.y = 100
 		self.game = game
 		self.nb_saut_bonus = 1

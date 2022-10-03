@@ -4,7 +4,7 @@ from tile import Tile
 class Tilemap():
 	def __init__(self, game, filename):
 		self.game = game
-		self.tile_size = 16
+		self.tile_size = 32
 		self.start_x, self.start_y = 0,0
 		self.tiles = self.load_tiles("./assets/"+filename)
 		self.map_surf = game.surf

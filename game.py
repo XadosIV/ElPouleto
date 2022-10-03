@@ -11,6 +11,8 @@ class Game():
 	def __init__(self, surf):
 		self.gravity = 1
 		self.surf = surf
+		self.width = surf.get_width()
+		self.height = surf.get_height()
 		self.entities = []
 		self.collisions = []		
 		self.tilemap = Tilemap(self, "testmap3.csv")
