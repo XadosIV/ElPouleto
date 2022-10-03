@@ -10,7 +10,8 @@ class Player(Entity):
 		self.rect.x = 100
 		self.rect.y = 100
 		self.game = game
-		self.nb_saut_bonus = 1
+		self.inventory = []
+		self.nb_saut_bonus = 0
 		self.cpt_saut = 0
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
 		self.type = "player"
@@ -43,6 +44,10 @@ class Player(Entity):
 		Entity.update(self)
 
 		return self.velocity
+
+	def addBonus(self,item):
+		for (k,v) in item["bonus"].items():
+			setattr(self, k, getattr(self, k) + v)
 
 	def jump(self, increment):
 		self.velocity[1] = -self.jumpforce
