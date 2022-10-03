@@ -8,9 +8,11 @@ class Tile(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.x, self.rect.y = x,y
 		self.color = None
+		self.type = "tile"
 		
-	def draw(self, surface):
-		if self.color != None:
-			pygame.draw.rect(self.game.surf, self.color, self.rect)
-		else:
-			surface.blit(self.image, (self.rect.x, self.rect.y))
+	def draw(self, surface, offset):
+		surface.blit(self.image, (self.rect.x - offset[0], self.rect.y - offset[1]))
+		#if self.color != None:
+		#	pygame.draw.rect(self.game.surf, self.color, self.rect)
+		#else:
+		#	surface.blit(self.image, (self.rect.x, self.rect.y))

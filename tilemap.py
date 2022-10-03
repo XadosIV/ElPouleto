@@ -4,12 +4,12 @@ from tile import Tile
 class Tilemap():
 	def __init__(self, game, filename):
 		self.game = game
-		self.tile_size = 32
+		self.tile_size = 16
 		self.start_x, self.start_y = 0,0
 		self.tiles = self.load_tiles("./assets/"+filename)
 		self.map_surf = game.surf
 		self.map_surf.set_colorkey((0,0,0))
-		self.load_map()
+		#self.load_map()
 
 	def read_csv(self, filename):
 		map = []
@@ -37,6 +37,6 @@ class Tilemap():
 		self.map_w, self.map_h = x*self.tile_size, y*self.tile_size
 		return tiles
 
-	def load_map(self):
-		for tile in self.tiles:
-			tile.draw(self.map_surf)
+	#def load_map(self):
+	#	for tile in self.tiles:
+	#		tile.draw(self.map_surf)

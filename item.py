@@ -12,7 +12,7 @@ class Item(Entity):
         self.velocity = [0,0]
         self.taken = False
         self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
-        
+        self.type = "item"
 
     def updateTaken(self):
         self.taken = True

@@ -4,6 +4,7 @@ from entity import Entity
 from player import Player
 from item import Item
 from tilemap import Tilemap
+from camera import Camera
 import random
 
 class Game():
@@ -11,15 +12,15 @@ class Game():
 		self.gravity = 1
 		self.surf = surf
 		self.entities = []
-		self.platforms = []		
+		self.collisions = []		
 		self.tilemap = Tilemap(self, "testmap3.csv")
 		self.player = Player(self, 1)
-		self.objects = []
-		self.indiceObject = 0
-		self.platforms.append(self.player)
-		self.platforms.append(Enemy(self, 300, 100))	
+		self.items = []
+		self.camera = Camera(self)
+		self.collisions.append(self.player)
+		self.collisions.append(Enemy(self, 300, 100))	
 		for tile in self.tilemap.tiles:
-			self.platforms.append(tile)
+			self.collisions.append(tile)
 		#self.objectsNotGet.append(Item(self, 800, 100))
 
 		#self.objectsNotGet.append(Item(self, 880, 0))
@@ -32,76 +33,55 @@ class Game():
 			for t in tab:
 				entity.rect.x += t[0]
 				entity.rect.y += t[1]
-				platforms = self.platforms.copy()
+				collisions = self.collisions.copy()
 				entity_origin = entity.get_copy()
-				indices = entity.rect.collidelistall(platforms)
+				indices = entity.rect.collidelistall(collisions)
 				for i in indices:
-					platform = platforms[i]
-					if platform == entity:
+					body = collisions[i]
+					if body == entity:
 						continue
-					direction = self.determineSide(entity_origin, platform.rect)
-					if direction == "top":
-						coory = platform.rect.midtop[1] - entity.rect.height
-						if not self.test_platform_coor(platform.rect.x, coory):
-							continue
-						else:
-							entity.onground = True
-							platform.color = (255,255,50)
-							entity.rect.y = platform.rect.midtop[1] - entity.rect.height
-							entity.velocity[1] = 0
-							for t in tab:
-								t[1] = 0
-					elif direction == "bottom":
-						coory = platform.rect.midbottom[1]
-						if not self.test_platform_coor(platform.rect.x, coory):
-							continue
-						else:
-							platform.color = (50,255,50)
-							entity.rect.y = platform.rect.midbottom[1]
-							if not entity.onground:
+					if entity.type == "player" and body.type == "item":
+						body.takeItem()
+					elif body.type == "tile":
+						direction = self.determineSide(entity_origin, body.rect)
+						if direction == "top":
+							coory = body.rect.midtop[1] - entity.rect.height
+							if self.tileEmpty(body.rect.x, coory):
+								entity.onground = True
+								entity.rect.y = body.rect.midtop[1] - entity.rect.height
 								entity.velocity[1] = 0
 								for t in tab:
 									t[1] = 0
-					if direction == "left":
-						coorx = platform.rect.midleft[0] - entity.rect.width
-						if not self.test_platform_coor(coorx, platform.rect.y): 
-							continue
-						else:
-							platform.color = (255,50,255)
-							entity.rect.x = platform.rect.midleft[0] - entity.rect.width
-							entity.velocity[0] = 0
-							for t in tab:
-								t[0] = 0
-					elif direction == "right":
-						coorx = platform.rect.midright[0]
-						if not self.test_platform_coor(coorx, platform.rect.y): 
-							continue
-						else:
-							platform.color = (50,255,255)
-							entity.rect.x = platform.rect.midright[0]
-							entity.velocity[0] = 0
-							for t in tab:
-								t[0] = 0
+						elif direction == "bottom":
+							coory = body.rect.midbottom[1]
+							if self.tileEmpty(body.rect.x, coory):
+								entity.rect.y = body.rect.midbottom[1]
+								if not entity.onground:
+									entity.velocity[1] = 0
+									for t in tab:
+										t[1] = 0
+						if direction == "left":
+							coorx = body.rect.midleft[0] - entity.rect.width
+							if self.tileEmpty(coorx, body.rect.y): 
+								entity.rect.x = body.rect.midleft[0] - entity.rect.width
+								entity.velocity[0] = 0
+								for t in tab:
+									t[0] = 0
+						elif direction == "right":
+							coorx = body.rect.midright[0]
+							if self.tileEmpty(coorx, body.rect.y): 
+								entity.rect.x = body.rect.midright[0]
+								entity.velocity[0] = 0
+								for t in tab:
+									t[0] = 0
 			if entity.velocity[1] != 0:
 				entity.onground = False
-		
-		for item in self.objectsNotGet:			
-			if self.player.rect.x == item.rect.x and self.player.rect.y == item.rect.y:
-				item.updateTaken()
-			if item.taken == True:
-				self.objectsGet.append(item)
-				self.objectsNotGet.pop(self.indiceObject)
-			self.indiceObject += 1
-			print(self.objectsGet)
 
-		self.surf.fill((0,0,0))
-		for platforms in self.platforms:
-			platforms.draw(self.surf)
-		for entity in self.entities:
-			entity.draw(self.surf)
+		for item in self.items:
+			item.check(self.player)
 
-		self.indiceObject = 0
-		pygame.display.flip()
+
+		self.camera.draw(self.surf, self.collisions, self.entities)
 
 	def split_velocity_cap(self, velocity, maxi):
 		t = []
@@ -119,24 +99,24 @@ class Game():
 			t.append([x,y])
 		return t
 
-	def test_platform_coor(self,x,y):
+	def tileEmpty(self,x,y):
 		#Renvoie True si plateforme libre
 		x=(x//self.tilemap.tile_size)*self.tilemap.tile_size
 		y=(y//self.tilemap.tile_size)*self.tilemap.tile_size
 		booleen = True
-		for platform in self.platforms:
-			if platform.rect.x == x and platform.rect.y == y:
+		for body in self.collisions:
+			if body.rect.x == x and body.rect.y == y:
 				booleen = False
 		return booleen
 
-	def determineSide(self, entity, platform):
-		#Résultat = côté de la platforme touché par l'entité
+	def determineSide(self, entity, body):
+		#Résultat = côté de la plateforme touché par l'entité
 
-		#On regarde la collision avec la platform pour chaque côté de l'entité
-		topleft_side = platform.collidepoint(entity.rect.topleft)
-		topright_side = platform.collidepoint(entity.rect.topright)
-		bottomleft_side = platform.collidepoint(entity.rect.bottomleft)
-		bottomright_side = platform.collidepoint(entity.rect.bottomright)
+		#On regarde la collision avec la plateforme pour chaque côté de l'entité
+		topleft_side = body.collidepoint(entity.rect.topleft)
+		topright_side = body.collidepoint(entity.rect.topright)
+		bottomleft_side = body.collidepoint(entity.rect.bottomleft)
+		bottomright_side = body.collidepoint(entity.rect.bottomright)
 		onground = entity.onground
 		goingup = entity.velocity[1] < 0
 

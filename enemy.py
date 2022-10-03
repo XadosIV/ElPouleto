@@ -10,8 +10,9 @@ class Enemy(Entity):
 		Entity.__init__(self, game)
 		self.rect.x = x
 		self.rect.y = y
-		self.jumpforce = 20
+		self.jumpforce = 15
 		self.speed = random.randint(3,7)
+		self.type = "enemy"
 
 	def update(self):
 		#Controles

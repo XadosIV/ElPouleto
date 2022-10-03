@@ -12,6 +12,7 @@ class Entity:
 		self.color = None
 		self.direction = 1
 		self.game.entities.append(self)
+		self.type = "entity"
 
 	def get_copy(self):
 		copy = Empty()
@@ -29,7 +30,7 @@ class Entity:
 													#Empêchant de détecter de quel côté a eu lieu la collision
 		return self.velocity
 
-	def draw(self, surf):
+	def draw(self, surf, offset):
 		#Affichage
 		if self.direction == 1:
 			self.game.surf.blit(self.sprite, self.rect)
