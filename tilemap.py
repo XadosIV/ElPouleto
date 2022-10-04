@@ -9,7 +9,6 @@ class Tilemap():
 		self.tiles = self.load_tiles("./assets/"+filename)
 		self.map_surf = game.surf
 		self.map_surf.set_colorkey((0,0,0))
-		#self.load_map()
 
 	def read_csv(self, filename):
 		map = []
@@ -36,7 +35,3 @@ class Tilemap():
 			y+=1
 		self.map_w, self.map_h = x*self.tile_size, y*self.tile_size
 		return tiles
-
-	#def load_map(self):
-	#	for tile in self.tiles:
-	#		tile.draw(self.map_surf)

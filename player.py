@@ -35,6 +35,8 @@ class Player(Entity):
 			self.velocity[0] = 0
 		if keys[K_z] and self.onground:
 			self.jump(False)
+		if keys[K_r] and not self.onground:
+			pass
 
 		#Controles Verticaux
 		for event in self.game.events:

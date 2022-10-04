@@ -17,7 +17,7 @@ class Enemy(Entity):
 	def update(self):
 		#Controles
 		if self.velocity[0] == 0 and random.randint(1,10) == 1:
-			self.direction *= -1
+			self.direction = -1
 			if self.onground:
 				self.velocity[1] = -self.jumpforce
 		

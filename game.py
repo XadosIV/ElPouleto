@@ -19,8 +19,8 @@ class Game():
 		self.player = Player(self, 1)
 		self.items = []
 		self.camera = Camera(self)
-		self.collisions.append(self.player)
-		Enemy(self, 300, 100)
+		#self.collisions.append(self.player)
+		#Enemy(self, 300, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		self.items.append(Item(self, 800, 100, "./assets/spring.png", {
@@ -85,6 +85,8 @@ class Game():
 									t[0] = 0
 			if entity.velocity[1] != 0:
 				entity.onground = False
+		
+		print(self.player.onground)
 
 		for item in self.items:
 			item.check(self.player)
