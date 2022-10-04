@@ -20,7 +20,7 @@ class Game():
 		self.items = []
 		self.camera = Camera(self)
 		self.collisions.append(self.player)
-		self.collisions.append(Enemy(self, 300, 100))	
+		Enemy(self, 300, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		self.items.append(Item(self, 800, 100, "./assets/spring.png", {
@@ -32,7 +32,7 @@ class Game():
 		self.items.append(Item(self, 880, 0, "./assets/wings.png",{
 				"name":"Il plane",
 				"bonus": {
-					"jumpforce":2 #"velocity[1]":-10 ? Ca marche pas comme ça mais ça doit plus ou moins être ce que je veux
+					"jumpforce":8
 				}
 			}))
 
