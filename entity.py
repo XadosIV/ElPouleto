@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from stats import Stats
 
 class Entity:
 	def __init__(self, game):
@@ -9,9 +10,12 @@ class Entity:
 		self.rect = self.sprite.get_rect()
 		self.onground = False
 		self.direction = 1
+		self.fallspeed = 32
+		self.cpt_saut = 0
+		self.stats = Stats()
+		self.cpt_glide = self.stats.glide
 		self.game.entities.append(self)
 		self.type = "entity"
-		self.cap_chute = self.game.tilemap.tile_size
 
 	def get_copy(self):
 		copy = Empty()
@@ -22,11 +26,8 @@ class Entity:
 
 	def update(self):
 		#Gestion Physique
-		self.velocity[1] += self.game.gravity
-		if self.velocity[1] > self.cap_chute:
-			self.velocity[1] = self.cap_chute - 1 #Cap de vitesse de chute = hauteur de l'entité -1
-													#Permet d'éviter que l'entité ne touche aucun bord d'un mur
-													#Empêchant de détecter de quel côté a eu lieu la collision
+		self.velocity[1] += self.game.gravity*self.game.dt
+		#print(self.game.gravity)
 		return self.velocity
 
 	def draw(self, surf, offset):
@@ -38,6 +39,6 @@ class Entity:
 		else:
 			img = self.sprite
 		self.game.surf.blit(img, rect)
-			
+
 class Empty():
 	pass

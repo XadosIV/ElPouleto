@@ -2,14 +2,14 @@ import pygame, copy
 from enemy import Enemy
 from entity import Entity
 from player import Player
-from item import Item
+from item import Item, Collection
 from tilemap import Tilemap
 from camera import Camera
 import random
 
 class Game():
 	def __init__(self, surf):
-		self.gravity = 1
+		self.gravity = 30
 		self.surf = surf
 		self.width = surf.get_width()
 		self.height = surf.get_height()
@@ -21,31 +21,23 @@ class Game():
 		self.camera = Camera(self)
 		#self.collisions.append(self.player)
 		#Enemy(self, 300, 100)
+		self.item_collection = Collection(self)
+		self.item_collection.spawnRandomItem(1056, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
-		self.items.append(Item(self, 800, 100, "./assets/spring.png", {
-				"name":"Extension mécanique pour jambes de poulet (Compatible windows 7)",
-				"bonus": {
-					"nb_saut_bonus":1
-				}
-			}))
-		self.items.append(Item(self, 880, 0, "./assets/wings.png",{
-				"name":"Il plane",
-				"bonus": {
-					"jumpforce":8
-				}
-			}))
+		
 
-	def update(self, events):
-		self.events = events		
+	def update(self, events, dt):
+		self.events = events
+		self.dt = dt/1000
 		for entity in self.entities:
-			velocity = entity.update()
+			velocity = [] + entity.update()
 			tab = self.split_velocity_cap([velocity[0],velocity[1]], self.tilemap.tile_size-1)
 			for t in tab:
-				entity.rect.x += t[0]
+				entity.rect.x += t[0] #??????????????
 				entity.rect.y += t[1]
 				collisions = self.collisions.copy()
-				entity_origin = entity.get_copy()
+				entity_origin = entity.get_copy() #CHANGE LA POS AVANT DE FAIRE UNE COPIE???
 				indices = entity.rect.collidelistall(collisions)
 				for i in indices:
 					body = collisions[i]
@@ -83,10 +75,8 @@ class Game():
 								entity.velocity[0] = 0
 								for t in tab:
 									t[0] = 0
-			if entity.velocity[1] != 0:
+			if entity.velocity[1] != 0: #Alterne True/False au sol ???
 				entity.onground = False
-		
-		print(self.player.onground)
 
 		for item in self.items:
 			item.check(self.player)

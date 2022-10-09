@@ -1,0 +1,18 @@
+[
+	{
+		"name":"Extension Cybernétique",
+		"sprite":"spring",
+		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
+		"bonus":[
+			{"var":"jump_max", "val":1, "add":true, "desc":"[] saut supplémentaire."}
+		]
+	},
+	{
+		"name":"Ailes en plumes de pigeon",
+		"sprite":"wings",
+		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
+		"bonus":[
+			{"var":"glide", "val":3, "add":false, "desc":"Planer pendant [] seconde(s)."}
+		]
+	}
+]
