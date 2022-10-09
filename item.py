@@ -38,7 +38,9 @@ class Item(Entity):
         if player.rect.colliderect(self.rect) and not self.taken:
             self.taken = True
             player.inventory.append(self.data)
-            player.addBonus(self.data)
+            for item in player.inventory:
+                if item['hasButton'] == False:
+                    player.addBonus(self.data)
 
     def draw(self, surf, offset):
         if not self.taken:

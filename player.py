@@ -2,6 +2,7 @@ import pygame
 import copy as cp
 from pygame.locals import *
 from entity import Entity
+from stats import Stats
 
 class Player(Entity):
 	def __init__(self, game, nb):
@@ -34,6 +35,19 @@ class Player(Entity):
 				self.jump(False)
 			else:
 				pass
+		"""if keys[K_SPACE]:
+			for item in self.inventory:
+				if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
+					self.addBonus(item)
+					#Wait 3 frames ?
+					self.removeBonus(item)"""
+		
+		for item in self.inventory:
+			if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
+				if keys[K_SPACE]:
+					self.addBonus(item)
+				else:
+					self.removeBonus(item)
 
 		#Controles Verticaux
 		for event in self.game.events:
@@ -51,6 +65,13 @@ class Player(Entity):
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
 			else:
 				setattr(self.stats, bonus["var"], bonus["val"])
+
+	def removeBonus(self,item):
+		for bonus in item["bonus"]:
+			if bonus["add"]:
+				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) - bonus["val"])
+			else:
+				setattr(self.stats, bonus["var"], self.stats.base_stats()[bonus["var"]])
 
 	def jump(self, increment):
 		self.velocity[1] = -self.stats.jumpforce*self.game.dt

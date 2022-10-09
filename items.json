@@ -3,6 +3,7 @@
 		"name":"Extension Cybernétique",
 		"sprite":"spring",
 		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
+		"hasButton":false,
 		"bonus":[
 			{"var":"jump_max", "val":1, "add":true, "desc":"[] saut supplémentaire."}
 		]
@@ -11,8 +12,19 @@
 		"name":"Ailes en plumes de pigeon",
 		"sprite":"wings",
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
+		"hasButton":false,
 		"bonus":[
 			{"var":"glide", "val":3, "add":false, "desc":"Planer pendant [] seconde(s)."}
+		]
+	},
+	{
+		"name":"Poussée d'énergie",
+		"sprite":"dash",
+		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
+		"hasButton":true,
+		"bonus":[
+			{"var":"speed", "val":3000, "add":false, "desc":"Dash sur [] blocs ."},
+			{"var":"fallspeed", "val":0, "add":false, "desc":"Dash sur [] blocs ."} 
 		]
 	}
 ]

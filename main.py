@@ -3,7 +3,7 @@ from pygame.locals import *
 from game import Game
 
 def game():
-	framerate = 30
+	framerate = 30 
 	clock = pygame.time.Clock()
 	w,h = (1440,720)
 	running = True
@@ -18,8 +18,8 @@ def game():
 				break
 		game.update(events, dt)
 
-
 if __name__ == '__main__':
 	game()
 
 
+     
