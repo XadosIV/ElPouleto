@@ -10,7 +10,6 @@ class Entity:
 		self.rect = self.sprite.get_rect()
 		self.onground = False
 		self.direction = 1
-		self.fallspeed = 32
 		self.cpt_saut = 0
 		self.stats = Stats()
 		self.cpt_glide = self.stats.glide

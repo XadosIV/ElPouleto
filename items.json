@@ -26,5 +26,14 @@
 			{"var":"speed", "val":3000, "add":false, "desc":"Dash sur [] blocs ."},
 			{"var":"fallspeed", "val":0, "add":false, "desc":"Dash sur [] blocs ."} 
 		]
+	},
+	{
+		"name":"Poussée de croissance",
+		"sprite":"wheat",
+		"description":"Du blé afin que notre poulet se nourisse et grandisse",
+		"hasButton":false,
+		"bonus":[
+			{"var":"size", "val":1.2, "add":false, "desc":"Grandir de 20 % ."}
+		]
 	}
 ]

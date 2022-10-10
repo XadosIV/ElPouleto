@@ -11,7 +11,7 @@ class Player(Entity):
 		self.rect.y = 100
 		self.game = game
 		self.inventory = []
-		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
+		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
 		self.type = "player"
 
 	def update(self):
@@ -55,6 +55,7 @@ class Player(Entity):
 				if event.key == K_z and self.cpt_saut < self.stats.jump_max-1:
 					self.jump(True)
 
+		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
 		Entity.update(self)
 
 		return self.velocity
@@ -76,7 +77,7 @@ class Player(Entity):
 	def jump(self, increment):
 		self.velocity[1] = -self.stats.jumpforce*self.game.dt
 		if increment:
-			self.cpt_saut += 1
+			self.cpt_saut += 1		
 
 class Empty():
 	pass
