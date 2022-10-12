@@ -18,8 +18,6 @@ class Player(Entity):
 	def update(self):
 		if self.not_movable > 0:
 			self.not_movable -= self.game.dt
-			
-
 		if self.onground and self.velocity[1] >= 0:
 			self.cpt_saut = 0
 
@@ -40,20 +38,19 @@ class Player(Entity):
 				self.jump(False)
 			else:
 				pass
-		
-		if keys[K_SPACE]:
+		"""if keys[K_SPACE]:
 			for item in self.inventory:
 				if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
 					self.addBonus(item)
 					#Wait 3 frames ?
-					self.removeBonus(item)
+					self.removeBonus(item)"""
 		
-		"""for item in self.inventory:
+		for item in self.inventory:
 			if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
 				if keys[K_SPACE]:
 					self.addBonus(item)
 				else:
-					self.removeBonus(item)"""
+					self.removeBonus(item)
 
 		#Controles Verticaux
 		for event in self.game.events:
@@ -61,8 +58,8 @@ class Player(Entity):
 				if event.key == K_z and self.cpt_saut < self.stats.jump_max-1:
 					self.jump(True)
 
-		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
 		Entity.update(self)
+		self.updateSize(self.stats.size)
 
 		return self.velocity
 
@@ -84,6 +81,9 @@ class Player(Entity):
 		self.velocity[1] = -self.stats.jumpforce*self.game.dt
 		if increment:
 			self.cpt_saut += 1		
+
+	def updateSize(self, size):
+		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*size,self.game.tilemap.tile_size*size))
 
 class Empty():
 	pass
