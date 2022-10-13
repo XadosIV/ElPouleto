@@ -13,11 +13,11 @@ class Player(Entity):
 		self.inventory = []
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
 		self.type = "player"
-		self.not_movable = 0
+		self.dash = {"cooldown":0, "frame_start":self.game.frames}
 
 	def update(self):
-		if self.not_movable > 0:
-			self.not_movable -= self.game.dt
+		if self.dash["cooldown"] != 0:
+			self.dash["cooldown"] -= 1
 		if self.onground and self.velocity[1] >= 0:
 			self.cpt_saut = 0
 
@@ -38,19 +38,17 @@ class Player(Entity):
 				self.jump(False)
 			else:
 				pass
-		"""if keys[K_SPACE]:
-			for item in self.inventory:
-				if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
-					self.addBonus(item)
-					#Wait 3 frames ?
-					self.removeBonus(item)"""
-		
+
+		#Dash
 		for item in self.inventory:
 			if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
-				if keys[K_SPACE]:
+				if keys[K_SPACE] and self.dash["cooldown"] == 0 and self.velocity[0] != 0:
+					self.dash["frame_start"] = self.game.frames
+					self.dash["cooldown"] = item['cooldown']//self.game.dt	
+				if self.dash["cooldown"] != 0 and self.dash["frame_start"] + 2 >= self.game.frames:			
 					self.addBonus(item)
-				else:
-					self.removeBonus(item)
+					if self.dash["frame_start"] + 2 == self.game.frames:
+						self.removeBonus(item)
 
 		#Controles Verticaux
 		for event in self.game.events:

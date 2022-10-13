@@ -9,6 +9,7 @@ import random
 
 class Game():
 	def __init__(self, surf):
+		self.frames = 0
 		self.gravity = 30
 		self.surf = surf
 		self.width = surf.get_width()
@@ -28,6 +29,7 @@ class Game():
 		
 
 	def update(self, events, dt):
+		self.frames += 1
 		self.events = events
 		self.dt = dt/1000
 
