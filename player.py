@@ -13,11 +13,15 @@ class Player(Entity):
 		self.inventory = []
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
 		self.type = "player"
-		self.dash = {"cooldown":0, "frame_start":self.game.frames}
+		self.compteur = 1
+		self.dash = {"cooldown":0, "start_dash":self.compteur, "end_dash":-1}
 
 	def update(self):
-		if self.dash["cooldown"] != 0:
-			self.dash["cooldown"] -= 1
+		self.compteur -= self.game.dt
+		if self.compteur < 0:
+			self.compteur = 1
+			if self.dash["cooldown"] != 0:
+				self.dash["cooldown"] -= 1
 		if self.onground and self.velocity[1] >= 0:
 			self.cpt_saut = 0
 
@@ -40,15 +44,20 @@ class Player(Entity):
 				pass
 
 		#Dash
-		for item in self.inventory:
+		for item in self.inventory:			
 			if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
 				if keys[K_SPACE] and self.dash["cooldown"] == 0 and self.velocity[0] != 0:
-					self.dash["frame_start"] = self.game.frames
-					self.dash["cooldown"] = item['cooldown']//self.game.dt	
-				if self.dash["cooldown"] != 0 and self.dash["frame_start"] + 2 >= self.game.frames:			
-					self.addBonus(item)
-					if self.dash["frame_start"] + 2 == self.game.frames:
+					self.dash["start_dash"] = self.compteur
+					self.dash["cooldown"] = item['cooldown']
+					self.dash["end_dash"] = self.dash["start_dash"] - 2*self.game.dt
+				if self.dash["end_dash"] != -1:
+					if self.dash["end_dash"] < 0:
+						self.dash["end_dash"] = 1 - self.dash["end_dash"]
+					if self.dash["cooldown"] != 0 and self.dash["end_dash"] <= self.compteur:			
+						self.addBonus(item)
+					if self.dash["end_dash"] >= self.compteur:
 						self.removeBonus(item)
+						self.dash["end_dash"] = -1
 
 		#Controles Verticaux
 		for event in self.game.events:
