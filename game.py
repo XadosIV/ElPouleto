@@ -22,7 +22,7 @@ class Game():
 		#self.collisions.append(self.player)
 		#Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
-		self.item_collection.spawnItem(3, 1056, 100)
+		self.item_collection.spawnItem(2, 1056, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		
@@ -102,9 +102,9 @@ class Game():
 		midright = body.collidepoint(entity.rect.midright)
 		midleft = body.collidepoint(entity.rect.midleft)
 		top = int(topleft) + int(topmid) + int(topright) if not self.getTile(body.bottomleft) else 0
-		bot = int(botleft) + int(botright) + int(botmid) if not self.getTile((body.x,body.y-32)) else 0
+		bot = int(botleft) + int(botright) + int(botmid) if not self.getTile((body.x,body.y-self.tilemap.tile_size)) else 0
 		left = int(topleft) + int(midleft) + int(botleft) if not self.getTile(body.topright) else 0
-		right = int(topright) + int(midright) + int(botright) if not self.getTile((body.x-32,body.y)) else 0
+		right = int(topright) + int(midright) + int(botright) if not self.getTile((body.x-self.tilemap.tile_size,body.y)) else 0
 
 		forces = [top, bot, left, right]
 		if max(forces) > 0:
