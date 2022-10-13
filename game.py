@@ -23,7 +23,7 @@ class Game():
 		#self.collisions.append(self.player)
 		#Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
-		self.item_collection.spawnItem(3, 1056, 100)
+		self.item_collection.spawnItem(2, 1056, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		
@@ -35,7 +35,7 @@ class Game():
 
 		for entity in self.entities:
 			velocity = entity.update()
-			tab = self.split_velocity_cap(velocity, 1)
+			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//2)
 			for t in tab:
 				entity.rect.x += t[0] #??????????????
 				entity.rect.y += t[1]
