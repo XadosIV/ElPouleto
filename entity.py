@@ -5,7 +5,7 @@ from stats import Stats
 class Entity:
 	def __init__(self, game):
 		self.game = game
-		self.velocity = [0,0]
+		self.velocity = pygame.math.Vector2([0,0])
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/placeholder.png"), (self.game.tilemap.tile_size, self.game.tilemap.tile_size))
 		self.rect = self.sprite.get_rect()
 		self.onground = False
@@ -26,7 +26,6 @@ class Entity:
 	def update(self):
 		#Gestion Physique
 		self.velocity[1] += self.game.gravity*self.game.dt
-		#print(self.game.gravity)
 		return self.velocity
 
 	def draw(self, surf, offset):

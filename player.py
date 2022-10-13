@@ -58,8 +58,8 @@ class Player(Entity):
 				if event.key == K_z and self.cpt_saut < self.stats.jump_max-1:
 					self.jump(True)
 
-		Entity.update(self)
 		self.updateSize(self.stats.size)
+		Entity.update(self)
 
 		return self.velocity
 
@@ -84,6 +84,9 @@ class Player(Entity):
 
 	def updateSize(self, size):
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*size,self.game.tilemap.tile_size*size))
+		rect = self.sprite.get_rect()
+		rect.bottom, rect.midbottom = self.rect.bottom, self.rect.midbottom
+		self.rect = rect
 
 class Empty():
 	pass

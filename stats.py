@@ -1,5 +1,3 @@
-
-
 class Stats():
 	def __init__(self, opt={}):
 		self.glide = 0

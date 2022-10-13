@@ -28,7 +28,6 @@ class Item(Entity):
         self.game = game
         self.rect.x = x
         self.rect.y = y
-        self.velocity = [0,0]
         self.taken = False
         self.sprite = pygame.transform.scale(pygame.image.load(f"./assets/{data['sprite']}.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
         self.type = "item"

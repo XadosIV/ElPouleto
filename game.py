@@ -22,7 +22,7 @@ class Game():
 		#self.collisions.append(self.player)
 		#Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
-		self.item_collection.spawnItem(2, 1056, 100)
+		self.item_collection.spawnItem(3, 1056, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		
@@ -30,9 +30,10 @@ class Game():
 	def update(self, events, dt):
 		self.events = events
 		self.dt = dt/1000
+
 		for entity in self.entities:
-			velocity = [] + entity.update()
-			tab = self.split_velocity_cap([velocity[0],velocity[1]], self.tilemap.tile_size//2)
+			velocity = entity.update()
+			tab = self.split_velocity_cap(velocity, 1)
 			for t in tab:
 				entity.rect.x += t[0] #??????????????
 				entity.rect.y += t[1]
@@ -47,7 +48,7 @@ class Game():
 						direction = self.determineSide(entity_origin, body.rect)
 						if direction == "top":
 							coory = body.rect.midtop[1] - entity.rect.height
-							if self.tileEmpty(body.rect.x, coory):
+							if not self.getTile((body.rect.x, coory)):
 								entity.onground = True
 								entity.rect.y = body.rect.midtop[1] - entity.rect.height
 								entity.velocity[1] = 0
@@ -55,7 +56,7 @@ class Game():
 									t[1] = 0
 						elif direction == "bottom":
 							coory = body.rect.midbottom[1]
-							if self.tileEmpty(body.rect.x, coory):
+							if not self.getTile((body.rect.x, coory)):
 								entity.rect.y = body.rect.midbottom[1]
 								if not entity.onground:
 									entity.velocity[1] = 0
@@ -63,14 +64,14 @@ class Game():
 										t[1] = 0
 						if direction == "left":
 							coorx = body.rect.midleft[0] - entity.rect.width
-							if self.tileEmpty(coorx, body.rect.y): 
+							if not self.getTile((coorx, body.rect.y)): 
 								entity.rect.x = body.rect.midleft[0] - entity.rect.width
 								entity.velocity[0] = 0
 								for t in tab:
 									t[0] = 0
 						elif direction == "right":
 							coorx = body.rect.midright[0]
-							if self.tileEmpty(coorx, body.rect.y): 
+							if not self.getTile((coorx, body.rect.y)): 
 								entity.rect.x = body.rect.midright[0]
 								entity.velocity[0] = 0
 								for t in tab:
@@ -84,30 +85,28 @@ class Game():
 		self.camera.draw(self.surf, self.collisions, self.entities)
 
 	def split_velocity_cap(self, velocity, maxi):
-		t = []
-		while velocity != [0,0]:
-			if velocity[0] > 0:
-				x = min(velocity[0], maxi)
-			else:
-				x = max(velocity[0], -maxi)
-			if velocity[1] > 0:
-				y = min(velocity[1], maxi)
-			else:
-				y = max(velocity[1], -maxi)
-			velocity[0] -= x
-			velocity[1] -= y
-			t.append([x,y])
+		max_val = max([abs(velocity[0]), abs(velocity[1])])
+		if max_val == 0:
+			return [pygame.math.Vector2(0,0)]
+		i=int(max_val//maxi)
+		i = i if max_val%maxi == 0 else i+1
+		vec = velocity // i
+		total = vec*i
+		t=[vec]*i
+		manque_x = velocity[0] - total[0]
+		manque_y = velocity[1] - total[1]
+		t.append(pygame.math.Vector2(manque_x, manque_y))
 		return t
 
-	def tileEmpty(self,x,y):
-		#Renvoie True si plateforme libre
+	def getTile(self,coor):
+		#Renvoie la tile ou False si il n'y en a pas aux coordonnées
+		x,y = coor[0], coor[1]
 		x=(x//self.tilemap.tile_size)*self.tilemap.tile_size
 		y=(y//self.tilemap.tile_size)*self.tilemap.tile_size
-		booleen = True
-		for body in self.collisions:
+		for body in self.tilemap.tiles:
 			if body.rect.x == x and body.rect.y == y:
-				booleen = False
-		return booleen
+				return body
+		return False
 
 	def determineSide(self, entity, body):
 		#Résultat = côté de la plateforme touché par l'entité
