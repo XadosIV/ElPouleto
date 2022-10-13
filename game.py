@@ -23,7 +23,7 @@ class Game():
 		#self.collisions.append(self.player)
 		#Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
-		self.item_collection.spawnItem(2, 1056, 100)
+		self.item_collection.spawnItem(3, 1056, 100)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		
@@ -32,53 +32,37 @@ class Game():
 		self.frames += 1
 		self.events = events
 		self.dt = dt/1000
-
 		for entity in self.entities:
 			velocity = entity.update()
-			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//2)
+			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
 			for t in tab:
-				entity.rect.x += t[0] #??????????????
-				entity.rect.y += t[1]
-				collisions = self.collisions.copy()
-				entity_origin = entity.get_copy() #CHANGE LA POS AVANT DE FAIRE UNE COPIE???
-				indices = entity.rect.collidelistall(collisions)
+				entity.rect = entity.rect.move(t[0], t[1])
+				indices = entity.rect.collidelistall(self.collisions)
 				for i in indices:
-					body = collisions[i]
-					if body == entity:
-						continue
-					elif body.type == "tile":
-						direction = self.determineSide(entity_origin, body.rect)
-						if direction == "top":
-							coory = body.rect.midtop[1] - entity.rect.height
-							if not self.getTile((body.rect.x, coory)):
-								entity.onground = True
-								entity.rect.y = body.rect.midtop[1] - entity.rect.height
-								entity.velocity[1] = 0
-								for t in tab:
-									t[1] = 0
-						elif direction == "bottom":
-							coory = body.rect.midbottom[1]
-							if not self.getTile((body.rect.x, coory)):
-								entity.rect.y = body.rect.midbottom[1]
-								if not entity.onground:
-									entity.velocity[1] = 0
-									for t in tab:
-										t[1] = 0
-						if direction == "left":
-							coorx = body.rect.midleft[0] - entity.rect.width
-							if not self.getTile((coorx, body.rect.y)): 
-								entity.rect.x = body.rect.midleft[0] - entity.rect.width
-								entity.velocity[0] = 0
-								for t in tab:
-									t[0] = 0
-						elif direction == "right":
-							coorx = body.rect.midright[0]
-							if not self.getTile((coorx, body.rect.y)): 
-								entity.rect.x = body.rect.midright[0]
-								entity.velocity[0] = 0
-								for t in tab:
-									t[0] = 0
-			if entity.velocity[1] != 0: #Alterne True/False au sol ???
+					bloc = self.collisions[i]
+					side = self.side(entity, bloc.rect)
+					if side == "top":
+						entity.onground = True
+						entity.rect.bottom = bloc.rect.top
+						for t in tab:
+							t[1] = 0
+						velocity[1] = 0
+					elif side == "bottom":
+						entity.rect.top = bloc.rect.bottom
+						for t in tab:
+							t[1] = 0
+						velocity[1] = 0
+					elif side == "left":
+						entity.rect.right = bloc.rect.left
+						for t in tab:
+							t[0] = 0
+						velocity[0] = 0
+					elif side =="right":
+						entity.rect.left = bloc.rect.right
+						for t in tab:
+							t[0] = 0
+						velocity[0] = 0
+			if velocity[1] != 0:
 				entity.onground = False
 
 		for item in self.items:
@@ -95,8 +79,8 @@ class Game():
 		vec = velocity // i
 		total = vec*i
 		t=[vec]*i
-		manque_x = velocity[0] - total[0]
-		manque_y = velocity[1] - total[1]
+		manque_x = round(velocity[0] - total[0])
+		manque_y = round(velocity[1] - total[1])
 		t.append(pygame.math.Vector2(manque_x, manque_y))
 		return t
 
@@ -110,63 +94,27 @@ class Game():
 				return body
 		return False
 
-	def determineSide(self, entity, body):
-		#Résultat = côté de la plateforme touché par l'entité
+	def side(self, entity, body):
+		topleft = body.collidepoint(entity.rect.topleft)
+		topmid = body.collidepoint(entity.rect.midtop)
+		topright = body.collidepoint(entity.rect.topright)
+		botleft = body.collidepoint(entity.rect.bottomleft)
+		botmid = body.collidepoint(entity.rect.midbottom)
+		botright = body.collidepoint(entity.rect.bottomright)
+		midright = body.collidepoint(entity.rect.midright)
+		midleft = body.collidepoint(entity.rect.midleft)
+		top = int(topleft) + int(topmid) + int(topright) if not self.getTile(body.bottomleft) else 0
+		bot = int(botleft) + int(botright) + int(botmid) if not self.getTile((body.x,body.y-32)) else 0
+		left = int(topleft) + int(midleft) + int(botleft) if not self.getTile(body.topright) else 0
+		right = int(topright) + int(midright) + int(botright) if not self.getTile((body.x-32,body.y)) else 0
 
-		#On regarde la collision avec la plateforme pour chaque côté de l'entité
-		topleft_side = body.collidepoint(entity.rect.topleft)
-		topright_side = body.collidepoint(entity.rect.topright)
-		bottomleft_side = body.collidepoint(entity.rect.bottomleft)
-		bottomright_side = body.collidepoint(entity.rect.bottomright)
-		onground = entity.onground
-		goingup = entity.velocity[1] < 0
-
-		#Si deux côtés du bas touche et qu'aucun des côtés du haut ne touche
-		#C'est une collision sur le haut de la plateforme.
-		if ((bottomleft_side and bottomright_side) and not (topleft_side) and not (topright_side)):
-			return "top"
-
-		#Par raisonnement inverse, on détecte la collision du bas.
-		elif (topleft_side and topright_side) and not (bottomleft_side) and not (bottomright_side):
-			return "bottom"
-
-		#Idem sur les côtés, si on a un côté de l'entité entièrement dans la plateforme et l'autre côté pas du tout, on trouve les collisions
-		elif ((bottomleft_side and topleft_side) and not (bottomright_side) and not (topright_side)):
-			return "right"
-			
-		elif (bottomright_side and topright_side) and not (bottomleft_side) and not (topleft_side):
-			return "left"
-
-		#Gestion des coins
-
-		#bas droit de l'entité touche
-		elif bottomright_side and not bottomleft_side and not topleft_side and not topright_side:
-			if entity.onground or not goingup:
-				return "top"
-			else:
-				return "left"
-
-		#bas gauche de l'entité touche
-		elif bottomleft_side and not bottomright_side and not topleft_side and not topright_side:
-			if entity.onground or not goingup:
-				return "top"
-			else:
-				return "right"
-
-		#haut droit de l'entité touche
-		elif topright_side and not bottomleft_side and not topleft_side and not bottomright_side:
-			if goingup: #Si il monte/saute
+		forces = [top, bot, left, right]
+		if max(forces) > 0:
+			if top == max(forces):
 				return "bottom"
-			else:
-				return "left"
-
-		#haut gauche de l'entité touche
-		elif topleft_side and not bottomleft_side and not topright_side and not bottomright_side:
-			if goingup: #Si il monte/saute
-				return "bottom"
-			else:
+			elif bot == max(forces):
+				return "top"
+			elif left == max(forces):
 				return "right"
-
-		else:
-			#Si il est dans la plateforme, on bidouille en mettant par défaut qu'il arrive sur la plateforme.
-			return "top"
+			elif right == max(forces):
+				return "left"

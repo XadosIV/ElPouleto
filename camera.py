@@ -9,7 +9,6 @@ class Camera():
 		self.speed_max = self.game.tilemap.tile_size #32
 
 	def draw(self, surf, platforms, entities):
-		retient = self.offset[0]
 		player_abs_pos = (self.player.rect.x + self.offset[0], self.player.rect.y + self.offset[1])
 		if self.player.rect.x + self.offset[0] < self.game.width*0.45:
 			#déplacer cam à gauche et player sur la droite absolue
