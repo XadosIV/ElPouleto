@@ -7,13 +7,14 @@ from stats import Stats
 class Player(Entity):
 	def __init__(self, game, nb):
 		Entity.__init__(self, game)
-		self.rect.x = 736
-		self.rect.y = 100
+		self.rect.x = 800
+		self.rect.y = 200
 		self.game = game
 		self.inventory = []
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
 		self.type = "player"
 		self.compteur = 1
+		self.interact = False
 		self.dash = {"cooldown":0, "start_dash":self.compteur, "end_dash":-1}
 
 	def update(self):
@@ -40,12 +41,10 @@ class Player(Entity):
 		if keys[K_z]:
 			if self.onground:
 				self.jump(False)
-			else:
-				pass
-
+		
 		#Dash
 		for item in self.inventory:			
-			if item['name'] == "PoussÃ©e d'Ã©nergie": #Problème avec les accents ptdr
+			if self.game.item_collection.items.index(item) == 2:
 				if keys[K_SPACE] and self.dash["cooldown"] == 0 and self.velocity[0] != 0:
 					self.dash["start_dash"] = self.compteur
 					self.dash["cooldown"] = item['cooldown']
@@ -61,16 +60,21 @@ class Player(Entity):
 
 		#Controles Verticaux
 		for event in self.game.events:
-			if event.type == pygame.KEYDOWN and not self.onground:
-				if event.key == K_z and self.cpt_saut < self.stats.jump_max-1:
+			if event.type == pygame.KEYDOWN:
+				if event.key == K_z and self.cpt_saut < self.stats.jump_max-1 and not self.onground:
 					self.jump(True)
+				if event.key == K_e:
+					self.interact = True
+			if event.type == pygame.KEYUP:
+				if event.key == K_e:
+					self.interact = False
 
-		self.updateSize(self.stats.size)
 		Entity.update(self)
 
 		return self.velocity
 
 	def addBonus(self,item):
+		#self.updateSize(self.stats.size)
 		for bonus in item["bonus"]:
 			if bonus["add"]:
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
@@ -83,11 +87,6 @@ class Player(Entity):
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) - bonus["val"])
 			else:
 				setattr(self.stats, bonus["var"], self.stats.base_stats()[bonus["var"]])
-
-	def jump(self, increment):
-		self.velocity[1] = -self.stats.jumpforce*self.game.dt
-		if increment:
-			self.cpt_saut += 1		
 
 	def updateSize(self, size):
 		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*size,self.game.tilemap.tile_size*size))

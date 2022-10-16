@@ -5,7 +5,7 @@ class Camera():
 		self.game = game
 		self.surf = self.game.surf
 		self.player = self.game.player
-		self.offset = [0,0]
+		self.offset = [self.player.rect.x-720,self.player.rect.y]
 		self.speed_max = self.game.tilemap.tile_size #32
 
 	def draw(self, surf, platforms, entities):

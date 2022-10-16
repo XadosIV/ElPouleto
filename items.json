@@ -22,8 +22,9 @@
 		"sprite":"dash",
 		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
 		"hasButton":true,
-		"cooldown":5,
+		"cooldown":2,
 		"bonus":[
+			{"var":"can_dash", "val":1, "add":false, "desc":"Peut faire une ruée en avant."},
 			{"var":"speed", "val":2000, "add":false, "desc":"Dash sur [] blocs ."},
 			{"var":"fallspeed", "val":0, "add":false, "desc":"Dash sur [] blocs ."} 
 		]

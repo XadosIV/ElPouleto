@@ -28,20 +28,34 @@ class Item(Entity):
         self.game = game
         self.rect.x = x
         self.rect.y = y
-        self.taken = False
+        self.pickable = False
         self.sprite = pygame.transform.scale(pygame.image.load(f"./assets/{data['sprite']}.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
         self.type = "item"
         self.data = data
 
-    def check(self, player):
-        if player.rect.colliderect(self.rect) and not self.taken:
-            self.taken = True
-            player.inventory.append(self.data)
-            for item in player.inventory:
-                if item['hasButton'] == False:
-                    player.addBonus(self.data)
+    def delete(self):
+        self.game.items.remove(self)
+        self.game.entities.remove(self)
+        del self
+
+    def take(self):
+        self.taken = True
+        self.game.player.inventory.append(self.data)
+        if self.data["hasButton"] == False:
+            self.game.player.addBonus(self.data)
+        self.delete()
+
+    def check(self):
+        if self.game.player.rect.colliderect(self.rect):
+            if self.game.player.interact:
+                self.take()
+            else:
+                self.infobulle()
+
+    def infobulle(self):
+        #créer et afficher une infobulle de l'item en question
+        pass
 
     def draw(self, surf, offset):
-        if not self.taken:
-            rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
-            self.game.surf.blit(self.sprite, rect)
+        rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
+        self.game.surf.blit(self.sprite, rect)

@@ -38,5 +38,10 @@ class Entity:
 			img = self.sprite
 		self.game.surf.blit(img, rect)
 
+	def jump(self, increment=False):
+		self.velocity[1] = -self.stats.jumpforce*self.game.dt
+		if increment:
+			self.cpt_saut += 1
+
 class Empty():
 	pass

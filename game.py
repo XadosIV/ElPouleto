@@ -19,10 +19,11 @@ class Game():
 		self.player = Player(self, 1)
 		self.items = []
 		self.camera = Camera(self)
-		#self.collisions.append(self.player)
-		#Enemy(self, 300, 100)
+		Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
-		self.item_collection.spawnItem(2, 1056, 100)
+		self.item_collection.spawnItem(2, 1056, 200)
+		self.item_collection.spawnItem(1, 544, 200)
+		self.item_collection.spawnItem(0, 320, 200)
 		for tile in self.tilemap.tiles:
 			self.collisions.append(tile)
 		
@@ -60,15 +61,19 @@ class Game():
 						for t in tab:
 							t[0] = 0
 						velocity[0] = 0
-			if velocity[1] != 0:
+			if not self.getTile(entity.rect.bottomleft) and not self.getTile(entity.rect.bottomright):
 				entity.onground = False
 
 		for item in self.items:
-			item.check(self.player)
+			item.check()
 
 		self.camera.draw(self.surf, self.collisions, self.entities)
 
 	def split_velocity_cap(self, velocity, maxi):
+		#Entrée : velocity Vector2, maxi Int
+		#Sortie : Array "t" de Vector2 tel que t[0] = t[1] = t[...] = t[len(t) - 1]
+
+		#Permet de découper un vecteur en plusieurs vecteurs plus petits de façon optimale
 		max_val = max([abs(velocity[0]), abs(velocity[1])])
 		if max_val == 0:
 			return [pygame.math.Vector2(0,0)]
