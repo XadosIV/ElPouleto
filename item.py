@@ -63,7 +63,7 @@ class Infobulle():
     def __init__(self, item):
         self.item = item
         self.game = self.item.game
-        self.sprite = pygame.transform.scale(self.item.sprite, (50,50))
+        self.sprite = pygame.transform.scale(self.item.sprite, (40,40))
         self.sprite_rect = self.sprite.get_rect()
         pygame.font.init()
         self.create_infobulle()
@@ -73,6 +73,9 @@ class Infobulle():
         font = pygame.font.SysFont("comic sans ms", 18)
         font_desc = pygame.font.SysFont("comic sans ms", 15)
 
+        img_sprite = pygame.Surface((60,60))
+        img_sprite.blit(self.sprite, (10,10))
+
         img_title = drawText(self.item.data["name"], (255,255,255), 165, font)
         rect_title = img_title.get_rect()
         img_desc = drawText(self.item.data["description"], (255,255,255), 230, font_desc)
@@ -81,7 +84,7 @@ class Infobulle():
         img_infobulle = pygame.Surface((250,35+max(50, rect_title.height)+rect_desc.height))
         img_infobulle.fill((255,0,0))
 
-        img_infobulle.blit(self.sprite,(10, max(10+rect_title.centery-25,10)))
+        img_infobulle.blit(img_sprite,(10, max(10+rect_title.centery-25,10)))
         img_infobulle.blit(img_title, (75,15))
         img_infobulle.blit(img_desc, (10, 25+max(50, rect_title.height)))
 
