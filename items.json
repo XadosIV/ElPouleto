@@ -1,6 +1,6 @@
 [
 	{
-		"name":"Extension Cybernétique",
+		"name":"Extension Cybernétique de fou furieux",
 		"sprite":"spring",
 		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
 		"hasButton":false,
@@ -9,7 +9,7 @@
 		]
 	},
 	{
-		"name":"Ailes en plumes de pigeon",
+		"name":"Ailes de pigeon",
 		"sprite":"wings",
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
 		"hasButton":false,

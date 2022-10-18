@@ -20,13 +20,14 @@ class Camera():
 			self.offset[1] += (1 - (player_abs_pos[1]/(self.game.height*0.45))) * self.speed_max
 		elif self.player.rect.y + self.offset[1] > (self.game.height*0.55):
 			self.offset[1] -= ((player_abs_pos[1] - (self.game.height*0.55))/(self.game.height*0.45)) * self.speed_max
-		self.surf.fill((0,0,0))
+		self.surf.fill((135,206,235))
 
 		for platform in platforms:
 			platform.draw(self.surf, self.offset)
 		for entity in entities:
-			entity.draw(self.surf, self.offset)
-
+			if entity.type != "player":
+				entity.draw(self.surf, self.offset)
+		self.player.draw(self.surf, self.offset)
 		"""tab = [(255,255,255), (255,0,0)]
 		for i in range(10):
 			pygame.draw.rect(self.surf, tab[i%2], (i*144,0,144,0))

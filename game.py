@@ -19,7 +19,7 @@ class Game():
 		self.player = Player(self, 1)
 		self.items = []
 		self.camera = Camera(self)
-		Enemy(self, 300, 100)
+		#Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
 		self.item_collection.spawnItem(2, 1056, 200)
 		self.item_collection.spawnItem(1, 544, 200)
@@ -34,6 +34,7 @@ class Game():
 		for entity in self.entities:
 			velocity = entity.update()
 			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
+			top_collision = False
 			for t in tab:
 				entity.rect = entity.rect.move(t[0], t[1])
 				indices = entity.rect.collidelistall(self.collisions)
@@ -41,7 +42,7 @@ class Game():
 					bloc = self.collisions[i]
 					side = self.side(entity, bloc.rect)
 					if side == "top":
-						entity.onground = True
+						top_collision = True
 						entity.rect.bottom = bloc.rect.top
 						for t in tab:
 							t[1] = 0
@@ -61,8 +62,7 @@ class Game():
 						for t in tab:
 							t[0] = 0
 						velocity[0] = 0
-			if not self.getTile(entity.rect.bottomleft) and not self.getTile(entity.rect.bottomright):
-				entity.onground = False
+			entity.onground = top_collision
 
 		for item in self.items:
 			item.check()
