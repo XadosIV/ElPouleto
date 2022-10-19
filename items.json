@@ -35,7 +35,7 @@
 		"description":"Du blé afin que notre poulet se nourisse et grandisse",
 		"hasButton":false,
 		"bonus":[
-			{"var":"size", "val":1.2, "add":false, "desc":"Grandir de 20 % ."}
+			{"var":"size", "val":1.1, "add":false, "desc":"Grandir de 20 % ."}
 		]
 	}
 ]

@@ -75,7 +75,8 @@ class Player(Entity):
 					if event.key == K_e:
 						self.interact = False
 
-			self.losingLife(self.game.enemies)
+			#self.losingLife(self.game.enemies)
+			self.updateSize(self.stats.size)
 			Entity.update(self)
 
 			return self.velocity
