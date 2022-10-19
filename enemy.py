@@ -12,6 +12,7 @@ class Enemy(Entity):
 		self.rect.y = y
 		self.stats.speed = random.randint(250,350)
 		self.type = "enemy"
+		self.game.enemies.append(self)
 
 	def update(self):
 		#Controles
