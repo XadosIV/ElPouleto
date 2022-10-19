@@ -97,6 +97,11 @@ class Game():
 		return False
 
 	def side(self, entity, body):
+		if body.height < entity.rect.height:
+			dif = entity.rect.height - body.height
+			resizer = dif//32+1 * self.tilemap.tile_size
+			goingup = entity.velocity[1] < 0
+			body = body.union(body.move((0,-resizer if goingup else resizer)))
 		topleft = body.collidepoint(entity.rect.topleft)
 		topmid = body.collidepoint(entity.rect.midtop)
 		topright = body.collidepoint(entity.rect.topright)
