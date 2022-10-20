@@ -27,14 +27,17 @@ class Game():
 		self.item_collection.spawnItem(1, 544, 200)
 		self.item_collection.spawnItem(0, 320, 200)
 
-	def defer(self, function, timing, opts=[]):
+	def defer(self, function, timing, opts=None):
 		self.defer_list.append([function, timing, opts])
 
 	def defer_update(self):
 		for i in self.defer_list:
 			i[1] -= self.dt*1000
 			if i[1] <= 0:
-				i[0](i[2])
+				if i[2] == None:
+					i[0]()
+				else:
+					i[0](i[2])
 				self.defer_list.pop(self.defer_list.index(i))
 
 	def update(self, events, dt):
