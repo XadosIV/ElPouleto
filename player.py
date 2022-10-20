@@ -15,20 +15,12 @@ class Player(Entity):
 		self.type = "player"
 		self.compteur = 1
 		self.interact = False
-		self.dash = {"cooldown":0, "start_dash":self.compteur, "end_dash":-1}
 		self.lifebar = 5
 		self.lifeCooldown = 0
 		self.lifeLost = False
 
 	def update(self):
 		if self.lifebar > 0:
-			self.compteur -= self.game.dt
-			if self.compteur < 0:
-				self.compteur = 1
-				if self.dash["cooldown"] != 0:
-					self.dash["cooldown"] -= 1
-				if self.lifeLost == True:
-					self.lifeCooldown -= 1
 			if self.onground and self.velocity[1] >= 0:
 				self.cpt_saut = 0
 
@@ -51,18 +43,11 @@ class Player(Entity):
 			#Dash
 			for item in self.inventory:			
 				if self.game.item_collection.items.index(item) == 2:
-					if keys[K_SPACE] and self.dash["cooldown"] == 0 and self.velocity[0] != 0:
-						self.dash["start_dash"] = self.compteur
-						self.dash["cooldown"] = item['cooldown']
-						self.dash["end_dash"] = self.dash["start_dash"] - 2*self.game.dt
-					if self.dash["end_dash"] != -1:
-						if self.dash["end_dash"] < 0:
-							self.dash["end_dash"] = 1 - self.dash["end_dash"]
-						if self.dash["cooldown"] != 0 and self.dash["end_dash"] <= self.compteur:			
-							self.addBonus(item)
-						if self.dash["end_dash"] >= self.compteur:
-							self.removeBonus(item)
-							self.dash["end_dash"] = -1
+					if keys[K_SPACE] and self.stats.can_dash and self.velocity[0] != 0:
+						self.stats.can_dash = False
+						self.addBonus(item)
+						self.game.defer(self.removeItem, 90, item)
+						self.game.defer(self.endCooldownDash, 3000, item)
 
 			#Controles Verticaux
 			for event in self.game.events:
@@ -81,7 +66,12 @@ class Player(Entity):
 
 			return self.velocity
 
+	def endCooldownDash(self, item):
+		self.stats.can_dash = True
 
+	def removeItem(self, item):
+		self.removeBonus(item)
+		
 	def addBonus(self,item):
 		#self.updateSize(self.stats.size)
 		for bonus in item["bonus"]:

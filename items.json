@@ -24,7 +24,6 @@
 		"hasButton":true,
 		"cooldown":2,
 		"bonus":[
-			{"var":"can_dash", "val":1, "add":false, "desc":"Peut faire une ruée en avant."},
 			{"var":"speed", "val":2000, "add":false, "desc":"Dash sur [] blocs ."},
 			{"var":"fallspeed", "val":0, "add":false, "desc":"Dash sur [] blocs ."} 
 		]

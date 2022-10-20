@@ -6,11 +6,11 @@ class Stats():
 		self.jump_max = 1
 		self.fallspeed = 32
 		self.size = 1
-		self.can_dash = 0
+		self.can_dash = True
 		for (k,v) in opt:
 			if getattr(self, k) != None:
 				setattr(self, k, v)
 
 
 	def base_stats(self):
-		return {"glide":0, "speed":300, "jumpforce":600, "jump_max":1, "fallspeed":32, "size":1, "can_dash":1}
+		return {"glide":0, "speed":300, "jumpforce":600, "jump_max":1, "fallspeed":32, "size":1, "can_dash":True}
