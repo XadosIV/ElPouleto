@@ -9,6 +9,7 @@ import random
 
 class Game():
 	def __init__(self, surf):
+		self.defer_list = []
 		self.gravity = 30
 		self.surf = surf
 		self.width = surf.get_width()
@@ -25,11 +26,21 @@ class Game():
 		self.item_collection.spawnItem(3, 1056, 200)
 		self.item_collection.spawnItem(1, 544, 200)
 		self.item_collection.spawnItem(0, 320, 200)
-		
+
+	def defer(self, function, timing, opts=[]):
+		self.defer_list.append([function, timing, opts])
+
+	def defer_update(self):
+		for i in self.defer_list:
+			i[1] -= self.dt*1000
+			if i[1] <= 0:
+				i[0](i[2])
+				self.defer_list.pop(self.defer_list.index(i))
 
 	def update(self, events, dt):
 		self.events = events
 		self.dt = dt/1000
+		self.defer_update()
 		for entity in self.entities:
 			velocity = entity.update()
 			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
