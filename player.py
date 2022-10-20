@@ -15,12 +15,11 @@ class Player(Entity):
 		self.type = "player"
 		self.compteur = 1
 		self.interact = False
-		self.lifebar = 5
-		self.lifeCooldown = 0
 		self.lifeLost = False
+		self.blinking = False
 
 	def update(self):
-		if self.lifebar > 0:
+		if self.stats.lifebar > 0:
 			if self.onground and self.velocity[1] >= 0:
 				self.cpt_saut = 0
 
@@ -47,7 +46,7 @@ class Player(Entity):
 						self.stats.can_dash = False
 						self.addBonus(item)
 						self.game.defer(self.removeItem, 90, item)
-						self.game.defer(self.endCooldownDash, 3000, item)
+						self.game.defer(self.endCooldownDash, 3000)
 
 			#Controles Verticaux
 			for event in self.game.events:
@@ -59,14 +58,20 @@ class Player(Entity):
 				if event.type == pygame.KEYUP:
 					if event.key == K_e:
 						self.interact = False
+			
+			for enemy in self.game.enemies:
+				if not self.lifeLost:
+					self.losingLife(enemy)								
 
-			#self.losingLife(self.game.enemies)
 			self.updateSize(self.stats.size)
 			Entity.update(self)
 
-			return self.velocity
+			if self.lifeLost and not self.blinking:
+				self.blink(True)
+				self.game.defer(self.blink, 500, False)				
 
-	def endCooldownDash(self, item):
+			return self.velocity
+	def endCooldownDash(self):
 		self.stats.can_dash = True
 
 	def removeItem(self, item):
@@ -93,14 +98,22 @@ class Player(Entity):
 		rect.bottom, rect.midbottom = self.rect.bottom, self.rect.midbottom
 		self.rect = rect
 
-	def losingLife(self, enemies):
-		for enemy in enemies:
-			if self.game.player.rect.colliderect(enemy) and not self.lifeCooldown > 2:
-				self.lifebar -= 1
-				self.lifeLost = True
-				print(self.lifebar)
-			elif self.lifeCooldown > 2:
-				self.lifeLost = False
+	def losingLife(self, enemy):
+		if self.game.player.rect.colliderect(enemy):
+			self.lifeLost = True
+			self.stats.lifebar -= 1
+			self.game.defer(self.endCooldownLife, 2000)	
+				
+	def endCooldownLife(self):
+		self.lifeLost = False
+	
+	def blink(self, val):
+		if val:
+			self.sprite = pygame.transform.scale(pygame.image.load("./assets/blink.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
+			self.blinking = True			
+		else:
+			self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
+			self.blinking = False
 
 class Empty():
 	pass

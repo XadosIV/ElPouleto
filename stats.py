@@ -7,6 +7,7 @@ class Stats():
 		self.fallspeed = 32
 		self.size = 1
 		self.can_dash = True
+		self.lifebar = 5
 		for (k,v) in opt:
 			if getattr(self, k) != None:
 				setattr(self, k, v)
