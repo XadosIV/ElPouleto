@@ -24,7 +24,7 @@ class Game():
 		Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
 		self.item_collection.spawnItem(2, 1056, 200)
-		self.item_collection.spawnItem(1, 544, 200)
+		self.item_collection.spawnItem(4, 544, 200)
 		self.item_collection.spawnItem(0, 320, 200)
 
 	def defer(self, function, timing, opts=None):

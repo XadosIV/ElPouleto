@@ -20,6 +20,8 @@ class Player(Entity):
 
 	def update(self):
 		if self.stats.lifebar > 0:
+			if self.stats.lifebar > self.stats.lifemax:
+				self.stats.lifebar = self.stats.lifemax
 			if self.onground and self.velocity[1] >= 0:
 				self.cpt_saut = 0
 
@@ -45,7 +47,7 @@ class Player(Entity):
 					if keys[K_SPACE] and self.stats.can_dash and self.velocity[0] != 0:
 						self.stats.can_dash = False
 						self.addBonus(item)
-						self.game.defer(self.removeItem, 90, item)
+						self.game.defer(self.removeBonus, 90, item)
 						self.game.defer(self.endCooldownDash, 3000)
 
 			#Controles Verticaux
@@ -71,14 +73,8 @@ class Player(Entity):
 				self.game.defer(self.blink, 500, False)				
 
 			return self.velocity
-	def endCooldownDash(self):
-		self.stats.can_dash = True
-
-	def removeItem(self, item):
-		self.removeBonus(item)
 		
 	def addBonus(self,item):
-		#self.updateSize(self.stats.size)
 		for bonus in item["bonus"]:
 			if bonus["add"]:
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
@@ -97,6 +93,9 @@ class Player(Entity):
 		rect = self.sprite.get_rect()
 		rect.bottom, rect.midbottom = self.rect.bottom, self.rect.midbottom
 		self.rect = rect
+
+	def endCooldownDash(self):
+		self.stats.can_dash = True
 
 	def losingLife(self, enemy):
 		if self.game.player.rect.colliderect(enemy):

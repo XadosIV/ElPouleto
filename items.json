@@ -36,5 +36,14 @@
 		"bonus":[
 			{"var":"size", "val":2, "add":false, "desc":"Grandir de 20 % ."}
 		]
+	},
+	{
+		"name":"Vie supplémentaire",
+		"sprite":"life",
+		"description":"Une vie supplémentaire ain de soigner votre petit cœur de poulet",
+		"hasButton":false,
+		"bonus":[
+			{"var":"lifebar", "val":1, "add":true, "desc":"1 vie en plus"}
+		]
 	}
 ]
