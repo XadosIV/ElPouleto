@@ -1,10 +1,12 @@
 import pygame, copy
-from enemy import Enemy
+from goomba import Goomba
+from randomenemy import RandomEnemy
 from entity import Entity
 from player import Player
 from item import Item, Collection
 from tilemap import Tilemap
 from camera import Camera
+
 import random
 
 class Game():
@@ -21,12 +23,13 @@ class Game():
 		self.player = Player(self)
 		self.items = []
 		self.camera = Camera(self)
-		Enemy(self, 300, 100)
+		Goomba(self, 300, 500)
 		self.item_collection = Collection(self)
+		self.item_collection.spawnItem(0, 320, 200)
+		self.item_collection.spawnItem(1, 100, 200)
 		self.item_collection.spawnItem(2, 1056, 200)
 		self.item_collection.spawnItem(3, 1200, 200)
 		self.item_collection.spawnItem(4, 544, 200)
-		self.item_collection.spawnItem(0, 320, 200)
 
 	def defer(self, function, timing, opts=None):
 		self.defer_list.append([function, timing, opts])

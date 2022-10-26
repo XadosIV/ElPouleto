@@ -12,7 +12,6 @@ class Entity:
 		self.direction = 1
 		self.cpt_saut = 0
 		self.stats = Stats()
-		self.cpt_glide = self.stats.glide
 		self.game.entities.append(self)
 		self.type = "entity"
 

@@ -41,9 +41,11 @@ class Player(Entity):
 
 	def update(self):
 		if self.stats.life > 0:
-			if self.onground and self.velocity[1] >= 0:
-				self.cpt_saut = 0
-
+			if self.onground:
+				if self.velocity[1] >= 0:
+					self.cpt_saut = 0
+				self.stats.can_glide = True
+				
 			#Controles
 			keys = pygame.key.get_pressed()
 			events = pygame.event.get()
@@ -61,14 +63,20 @@ class Player(Entity):
 					self.jump(False)
 			
 			#Dash
-			for item in self.inventory:			
+			for item in self.inventory:
+				if self.game.item_collection.items.index(item) == 1:
+					if keys[K_SPACE] and self.velocity[1] > 0 and self.stats.can_glide:
+						self.addBonus(item)
+						self.game.defer(self.removeBonus, 1500, item)
+						self.game.defer(self.stopGlide, 1500)
+						self.velocity[1] -= self.stats.fallspeed*self.game.dt						
 				if self.game.item_collection.items.index(item) == 2:
-					if keys[K_SPACE] and self.stats.can_dash and self.velocity[0] != 0:
+					if keys[K_v] and self.stats.can_dash and self.velocity[0] != 0:
 						self.stats.can_dash = False
 						self.addBonus(item)
 						self.game.defer(self.removeBonus, 90, item)
 						self.game.defer(self.endCooldownDash, 3000)
-
+				
 			#Controles Verticaux
 			for event in self.game.events:
 				if event.type == pygame.KEYDOWN:
@@ -116,6 +124,9 @@ class Player(Entity):
 				
 	def endCooldownLife(self):
 		self.lifeLost = False
+
+	def stopGlide(self):
+		self.stats.can_glide = False
 	
 	def blink(self, val):
 		if self.lifeLost:
