@@ -104,7 +104,7 @@ class Player(Entity):
 	def losingLife(self, enemy):
 		if self.game.player.rect.colliderect(enemy):
 			self.lifeLost = True
-			self.stats.lifebar -= 100
+			self.stats.life -= 100
 			self.game.defer(self.endCooldownLife, 2000)
 			self.game.defer(self.blink, 100, False)
 				
@@ -120,6 +120,6 @@ class Player(Entity):
 			self.game.defer(self.blink, 100, not val)
 		else:
 			self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
-			
+
 class Empty():
 	pass
