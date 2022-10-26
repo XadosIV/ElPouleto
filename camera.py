@@ -28,4 +28,6 @@ class Camera():
 			if entity.type != "player":
 				entity.draw(self.surf, self.offset)
 		self.player.draw(self.surf, self.offset)
+		pygame.draw.rect(self.surf, (70, 70, 70), [50, 50, 150, 50])
+		pygame.draw.rect(self.surf, (255, 0, 0), [55, 55, 140*(self.game.player.stats.life/self.game.player.stats.lifemax), 40])
 		pygame.display.flip()

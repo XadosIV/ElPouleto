@@ -24,6 +24,7 @@ class Game():
 		Enemy(self, 300, 100)
 		self.item_collection = Collection(self)
 		self.item_collection.spawnItem(2, 1056, 200)
+		self.item_collection.spawnItem(3, 1200, 200)
 		self.item_collection.spawnItem(4, 544, 200)
 		self.item_collection.spawnItem(0, 320, 200)
 
@@ -79,6 +80,8 @@ class Game():
 
 		for item in self.items:
 			item.check()
+
+		
 
 		self.camera.draw(self.surf, self.collisions, self.entities)
 

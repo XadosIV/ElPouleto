@@ -27,9 +27,7 @@ class Player(Entity):
 		return (self.width, self.height)
 
 	def update(self):
-		if self.stats.lifebar > 0:
-			if self.stats.lifebar > self.stats.lifemax:
-				self.stats.lifebar = self.stats.lifemax
+		if self.stats.life > 0:
 			if self.onground and self.velocity[1] >= 0:
 				self.cpt_saut = 0
 
@@ -73,7 +71,6 @@ class Player(Entity):
 				if not self.lifeLost:
 					self.losingLife(enemy)
 
-			#self.updateSize(self.stats.size)
 			Entity.update(self)
 
 		return self.velocity
@@ -81,7 +78,10 @@ class Player(Entity):
 	def addBonus(self,item):
 		for bonus in item["bonus"]:
 			if bonus["add"]:
-				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
+				if bonus["var"] == "size":
+					self.updateSize()
+				else:
+					setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
 			else:
 				setattr(self.stats, bonus["var"], bonus["val"])
 
@@ -104,7 +104,7 @@ class Player(Entity):
 	def losingLife(self, enemy):
 		if self.game.player.rect.colliderect(enemy):
 			self.lifeLost = True
-			self.stats.lifebar -= 1
+			self.stats.lifebar -= 100
 			self.game.defer(self.endCooldownLife, 2000)
 			self.game.defer(self.blink, 100, False)
 				
@@ -120,6 +120,6 @@ class Player(Entity):
 			self.game.defer(self.blink, 100, not val)
 		else:
 			self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
-
+			
 class Empty():
 	pass

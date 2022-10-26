@@ -43,7 +43,8 @@
 		"description":"Une vie supplémentaire ain de soigner votre petit cœur de poulet",
 		"hasButton":false,
 		"bonus":[
-			{"var":"lifebar", "val":1, "add":true, "desc":"1 vie en plus"}
+			{"var":"life", "val":100, "add":true, "desc":"1 vie en plus"},
+			{"var":"lifemax", "val":100, "add":true, "desc":"1 vie en plus"}
 		]
 	}
 ]
