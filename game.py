@@ -18,7 +18,7 @@ class Game():
 		self.collisions = []
 		self.enemies = []		
 		self.tilemap = Tilemap(self, "testmap3.csv")
-		self.player = Player(self, 1)
+		self.player = Player(self)
 		self.items = []
 		self.camera = Camera(self)
 		Enemy(self, 300, 100)

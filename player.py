@@ -1,22 +1,30 @@
 import pygame
-import copy as cp
 from pygame.locals import *
 from entity import Entity
 from stats import Stats
 
 class Player(Entity):
-	def __init__(self, game, nb):
+	def __init__(self, game, img_path="assets/"):
 		Entity.__init__(self, game)
 		self.rect.x = 800
 		self.rect.y = 200
 		self.game = game
 		self.inventory = []
-		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
+		self.loadImg()
+		self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
 		self.type = "player"
 		self.compteur = 1
 		self.interact = False
 		self.lifeLost = False
-		self.blinking = False
+
+	def loadImg(self):
+		self.imgs = []
+		#self.imgs.append(pygame.image.load("./assets/poulet.png"))
+
+	def updateDim(self):
+		self.width = self.game.tilemap.tile_size*self.stats.size
+		self.height = self.game.tilemap.tile_size*self.stats.size
+		return (self.width, self.height)
 
 	def update(self):
 		if self.stats.lifebar > 0:
@@ -60,19 +68,15 @@ class Player(Entity):
 				if event.type == pygame.KEYUP:
 					if event.key == K_e:
 						self.interact = False
-			
+
 			for enemy in self.game.enemies:
 				if not self.lifeLost:
-					self.losingLife(enemy)								
+					self.losingLife(enemy)
 
-			self.updateSize(self.stats.size)
+			#self.updateSize(self.stats.size)
 			Entity.update(self)
 
-			if self.lifeLost and not self.blinking:
-				self.blink(True)
-				self.game.defer(self.blink, 500, False)				
-
-			return self.velocity
+		return self.velocity
 		
 	def addBonus(self,item):
 		for bonus in item["bonus"]:
@@ -88,8 +92,8 @@ class Player(Entity):
 			else:
 				setattr(self.stats, bonus["var"], self.stats.base_stats()[bonus["var"]])
 
-	def updateSize(self, size):
-		self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*size,self.game.tilemap.tile_size*size))
+	def updateSize(self):
+		self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
 		rect = self.sprite.get_rect()
 		rect.bottom, rect.midbottom = self.rect.bottom, self.rect.midbottom
 		self.rect = rect
@@ -101,18 +105,21 @@ class Player(Entity):
 		if self.game.player.rect.colliderect(enemy):
 			self.lifeLost = True
 			self.stats.lifebar -= 1
-			self.game.defer(self.endCooldownLife, 2000)	
+			self.game.defer(self.endCooldownLife, 2000)
+			self.game.defer(self.blink, 100, False)
 				
 	def endCooldownLife(self):
 		self.lifeLost = False
 	
 	def blink(self, val):
-		if val:
-			self.sprite = pygame.transform.scale(pygame.image.load("./assets/blink.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
-			self.blinking = True			
+		if self.lifeLost:
+			if val:
+				self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/blink.png"), self.updateDim())
+			else:
+				self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
+			self.game.defer(self.blink, 100, not val)
 		else:
-			self.sprite = pygame.transform.scale(pygame.image.load("./assets/poulet.png"), (self.game.tilemap.tile_size*self.stats.size,self.game.tilemap.tile_size*self.stats.size))
-			self.blinking = False
+			self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
 
 class Empty():
 	pass
