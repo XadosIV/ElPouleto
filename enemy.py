@@ -16,7 +16,7 @@ class Enemy(Entity):
 
 	def update(self):
 		#Controles
-		if self.velocity[0] == 0 and random.randint(1,10) == 1:
+		"""if self.velocity[0] == 0 and random.randint(1,10) == 1:
 			self.direction = -1
 			if self.onground:
 				self.jump()
@@ -31,7 +31,7 @@ class Enemy(Entity):
 		if random.randint(1,50) == 27:
 			self.stats.speed = random.randint(250,350)
 
-		self.velocity[0] = self.stats.speed * self.direction * self.game.dt
+		self.velocity[0] = self.stats.speed * self.direction * self.game.dt"""
 		Entity.update(self)
 
 		return self.velocity
