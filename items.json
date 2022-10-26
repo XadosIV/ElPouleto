@@ -12,9 +12,9 @@
 		"name":"Ailes de pigeon",
 		"sprite":"wings",
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
-		"hasButton":true,
+		"hasButton":false,
 		"bonus":[
-			{"var":"fallspeed", "val":27, "add":false, "desc":"Planer pendant [] seconde(s)."}
+			{"var":"glide", "val":1, "add":false, "desc":"Planer pendant [] seconde(s)."}
 		]
 	},
 	{
@@ -24,8 +24,7 @@
 		"hasButton":true,
 		"cooldown":2,
 		"bonus":[
-			{"var":"speed", "val":2000, "add":false, "desc":"Dash sur [] blocs ."},
-			{"var":"fallspeed", "val":0, "add":false, "desc":"Dash sur [] blocs ."} 
+			{"var":"speed", "val":2000, "add":false, "desc":"Dash sur [] blocs ."}
 		]
 	},
 	{

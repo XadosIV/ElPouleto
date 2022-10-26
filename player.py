@@ -18,9 +18,9 @@ class Player(Entity):
 		self.sprite = self.imgs["poulet"]
 
 		self.type = "player"
-		self.compteur = 1
 		self.interact = False
 		self.lifeLost = False
+		self.gliding = False
 
 	def loadImg(self, path):
 		self.imgs = {}
@@ -40,12 +40,11 @@ class Player(Entity):
 		return (self.width, self.height)
 
 	def update(self):
+		print(self.gliding)
 		if self.stats.life > 0:
-			if self.onground:
-				if self.velocity[1] >= 0:
-					self.cpt_saut = 0
-				self.stats.can_glide = True
-				
+			if self.onground and self.velocity[1] >= 0:
+				self.cpt_saut = 0
+
 			#Controles
 			keys = pygame.key.get_pressed()
 			events = pygame.event.get()
@@ -58,18 +57,19 @@ class Player(Entity):
 				self.direction = 1
 			else:
 				self.velocity[0] = 0
+
 			if keys[K_z]:
 				if self.onground:
 					self.jump(False)
 			
+			if self.onground or not keys[K_SPACE]:
+				self.gliding = self.stats.glide
+
+			if keys[K_SPACE] and self.stats.glide != 0 and self.velocity[1] >= 0:
+				self.gliding -= self.game.dt
+
 			#Dash
 			for item in self.inventory:
-				if self.game.item_collection.items.index(item) == 1:
-					if keys[K_SPACE] and self.velocity[1] > 0 and self.stats.can_glide:
-						self.addBonus(item)
-						self.game.defer(self.removeBonus, 1500, item)
-						self.game.defer(self.stopGlide, 1500)
-						self.velocity[1] -= self.stats.fallspeed*self.game.dt						
 				if self.game.item_collection.items.index(item) == 2:
 					if keys[K_v] and self.stats.can_dash and self.velocity[0] != 0:
 						self.stats.can_dash = False
@@ -92,6 +92,9 @@ class Player(Entity):
 				if not self.lifeLost:
 					self.losingLife(enemy)
 
+			if self.gliding > 0 and self.gliding < self.stats.glide:
+				self.velocity[1] -= (self.game.gravity*0.8)*self.game.dt
+			
 			Entity.update(self)
 
 		return self.velocity
@@ -124,9 +127,6 @@ class Player(Entity):
 				
 	def endCooldownLife(self):
 		self.lifeLost = False
-
-	def stopGlide(self):
-		self.stats.can_glide = False
 	
 	def blink(self, val):
 		if self.lifeLost:
