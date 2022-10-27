@@ -9,15 +9,13 @@ class Camera():
 		self.speed_max = self.game.tilemap.tile_size #32
 
 	def draw(self, surf, platforms, entities):
-		print(self.offset)
-		print(self.game.tilemap.map_w)
 		player_abs_pos = (self.player.rect.x + self.offset[0], self.player.rect.y + self.offset[1])
 		if self.player.rect.x + self.offset[0] < self.game.width*0.45:
-			#déplacer cam à gauche et player sur la droite absolue
+			#déplacer cam à gauche
 			self.offset[0] += (1 - (player_abs_pos[0]/(self.game.width*0.45))) * self.speed_max
 		elif self.player.rect.x + self.offset[0] > (self.game.width*0.55):
 			self.offset[0] -= ((player_abs_pos[0] - (self.game.width*0.55))/(self.game.width*0.45)) * self.speed_max
-			#déplacer cam à droite et player à gauche absolue
+			#déplacer cam à droite
 		if self.player.rect.y + self.offset[1] < self.game.height*0.45:
 			self.offset[1] += (1 - (player_abs_pos[1]/(self.game.height*0.45))) * self.speed_max
 		elif self.player.rect.y + self.offset[1] > (self.game.height*0.55):
