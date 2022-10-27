@@ -6,7 +6,6 @@ class Stats():
 		self.glide = 0
 		self.size = 1
 		self.can_dash = True
-		self.can_glide = True
 		self.life = 500
 		self.lifemax = 500
 

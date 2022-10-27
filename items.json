@@ -5,7 +5,7 @@
 		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
 		"hasButton":false,
 		"bonus":[
-			{"var":"jump_max", "val":1, "add":true, "desc":"[] saut supplémentaire."}
+			{"var":"jump_max", "val":1, "add":true}
 		]
 	},
 	{
@@ -14,7 +14,7 @@
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
 		"hasButton":false,
 		"bonus":[
-			{"var":"glide", "val":1, "add":false, "desc":"Planer pendant [] seconde(s)."}
+			{"var":"glide", "val":1, "add":false}
 		]
 	},
 	{
@@ -24,7 +24,7 @@
 		"hasButton":true,
 		"cooldown":2,
 		"bonus":[
-			{"var":"speed", "val":2000, "add":false, "desc":"Dash sur [] blocs ."}
+			{"var":"speed", "val":2000, "add":false}
 		]
 	},
 	{
@@ -33,7 +33,7 @@
 		"description":"Du blé afin que notre poulet se nourisse et grandisse",
 		"hasButton":false,
 		"bonus":[
-			{"var":"size", "val":2, "add":false, "desc":"Grandir de 20 % ."}
+			{"var":"size", "val":2, "add":false}
 		]
 	},
 	{
@@ -42,8 +42,7 @@
 		"description":"Une vie supplémentaire ain de soigner votre petit cœur de poulet",
 		"hasButton":false,
 		"bonus":[
-			{"var":"life", "val":100, "add":true, "desc":"1 vie en plus"},
-			{"var":"lifemax", "val":100, "add":true, "desc":"1 vie en plus"}
+			{"var":"lifemax", "val":100, "add":true}
 		]
 	}
 ]

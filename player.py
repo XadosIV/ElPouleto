@@ -12,11 +12,10 @@ class Player(Entity):
 		self.game = game
 		self.inventory = []
 		#Chargement des images
-		self.width = -1
+		self.width = None
 		self.loadImg(img_path)
 		self.updateDim()
 		self.sprite = self.imgs["poulet"]
-
 		self.type = "player"
 		self.interact = False
 		self.lifeLost = False
@@ -56,15 +55,27 @@ class Player(Entity):
 				self.direction = 1
 			else:
 				self.velocity[0] = 0
-
+			#Verticaux
 			if keys[K_z]:
 				if self.onground:
 					self.jump(False)
-			
+
+			for event in self.game.events:
+				if event.type == pygame.KEYDOWN:
+					if event.key == K_z and self.cpt_saut < self.stats.jump_max-1 and not self.onground:
+						self.jump(True)
+				#Interaction
+					if event.key == K_e:
+						self.interact = True
+				if event.type == pygame.KEYUP:
+					if event.key == K_e:
+						self.interact = False
+
+			#Planer
 			if self.onground or not keys[K_SPACE]:
 				self.gliding = self.stats.glide
 
-			if keys[K_SPACE] and self.stats.glide != 0 and self.velocity[1] >= 0:
+			if keys[K_SPACE] and self.stats.glide != 0 and self.velocity[1] > 0:
 				self.gliding -= self.game.dt
 
 			#Dash
@@ -75,23 +86,12 @@ class Player(Entity):
 						self.addBonus(item)
 						self.game.defer(self.removeBonus, 90, item)
 						self.game.defer(self.endCooldownDash, 3000)
-				
-			#Controles Verticaux
-			for event in self.game.events:
-				if event.type == pygame.KEYDOWN:
-					if event.key == K_z and self.cpt_saut < self.stats.jump_max-1 and not self.onground:
-						self.jump(True)
-					if event.key == K_e:
-						self.interact = True
-				if event.type == pygame.KEYUP:
-					if event.key == K_e:
-						self.interact = False
 
-			for enemy in self.game.enemies:
+			for enemy in self.game.enemies: #Ne marche pas pour plusieurs ennemies très cher Mathys
 				if not self.lifeLost:
 					self.losingLife(enemy)
 
-			if self.gliding > 0 and self.gliding < self.stats.glide:
+			if self.gliding > 0 and self.gliding < self.stats.glide and self.velocity[1] >= 0:
 				self.velocity[1] -= (self.game.gravity*0.8)*self.game.dt
 			
 			Entity.update(self)
@@ -105,7 +105,7 @@ class Player(Entity):
 			else:
 				setattr(self.stats, bonus["var"], bonus["val"])
 			if bonus["var"] == "size":
-					self.updateDim()
+				self.updateDim()
 
 	def removeBonus(self,item):
 		for bonus in item["bonus"]:
@@ -123,16 +123,19 @@ class Player(Entity):
 			self.stats.life -= 100
 			self.game.defer(self.endCooldownLife, 2000)
 			self.game.defer(self.blink, 100, False)
-				
+
 	def endCooldownLife(self):
 		self.lifeLost = False
 	
 	def blink(self, val):
 		if self.lifeLost:
 			if val:
-				self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/blink.png"), self.updateDim())
+				self.sprite = self.imgs["blink"]
 			else:
-				self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
+				self.sprite = self.imgs["poulet"]
 			self.game.defer(self.blink, 100, not val)
 		else:
-			self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
+			if self.stats.life <= 0:
+				self.sprite = self.imgs["dead"]
+			else:
+				self.sprite = self.imgs["poulet"]

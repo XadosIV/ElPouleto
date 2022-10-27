@@ -90,21 +90,25 @@ class Game():
 
 	def split_velocity_cap(self, velocity, maxi):
 		#Entrée : velocity Vector2, maxi Int
-		#Sortie : Array "t" de Vector2 tel que t[0] = t[1] = t[...] = t[len(t) - 1]
+		#Sortie : Array "t" de Vector2 tel que t[0] = t[1] = t[...] = t[len(t) - 2] et t[len(t) -1] vecteur correcteur (= reste de division)
 
 		#Permet de découper un vecteur en plusieurs vecteurs plus petits de façon optimale
 		max_val = max([abs(velocity[0]), abs(velocity[1])])
 		if max_val == 0:
-			return [pygame.math.Vector2(0,0)]
+			return []
 		i=int(max_val//maxi)
 		i = i if max_val%maxi == 0 else i+1
-		vec = velocity // i
+		vec = velocity / i
 		total = vec*i
 		t=[vec]*i
 		manque_x = round(velocity[0] - total[0])
 		manque_y = round(velocity[1] - total[1])
 		t.append(pygame.math.Vector2(manque_x, manque_y))
-		return t
+		t_non_null = []
+		for i in range(len(t)):
+			if not(t[i].x == 0 and t[i].y == 0):
+				t_non_null.append(t[i])
+		return t_non_null
 
 	def getTile(self,coor):
 		#Renvoie la tile ou False si il n'y en a pas aux coordonnées
