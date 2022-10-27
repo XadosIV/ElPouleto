@@ -40,7 +40,6 @@ class Player(Entity):
 		return (self.width, self.height)
 
 	def update(self):
-		print(self.gliding)
 		if self.stats.life > 0:
 			if self.onground and self.velocity[1] >= 0:
 				self.cpt_saut = 0
@@ -137,6 +136,3 @@ class Player(Entity):
 			self.game.defer(self.blink, 100, not val)
 		else:
 			self.sprite = pygame.transform.scale(pygame.image.load("./assets/player/poulet.png"), self.updateDim())
-
-class Empty():
-	pass

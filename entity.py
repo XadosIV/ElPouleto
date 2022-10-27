@@ -15,13 +15,6 @@ class Entity:
 		self.game.entities.append(self)
 		self.type = "entity"
 
-	def get_copy(self):
-		copy = Empty()
-		copy.onground = self.onground
-		copy.rect = self.rect.copy()
-		copy.velocity = self.velocity
-		return copy
-
 	def update(self):
 		#Gestion Physique
 		self.velocity[1] += self.game.gravity*self.game.dt
@@ -41,6 +34,3 @@ class Entity:
 		self.velocity[1] = -self.stats.jumpforce*self.game.dt
 		if increment:
 			self.cpt_saut += 1
-
-class Empty():
-	pass

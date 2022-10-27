@@ -36,6 +36,3 @@ class RandomEnemy(Entity):
 		Entity.update(self)
 
 		return self.velocity
-		
-class Empty():
-	pass
