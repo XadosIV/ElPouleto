@@ -11,5 +11,5 @@ class Tile(pygame.sprite.Sprite):
 		self.type = "tile"
 		self.game.collisions.append(self)
 		
-	def draw(self, surface, offset):
-		surface.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))
+	def draw(self, offset):
+		self.game.surf.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))

@@ -17,10 +17,12 @@ class Entity:
 
 	def update(self):
 		#Gestion Physique
+		if self.velocity[1] > 1:
+			self.onground = False
 		self.velocity[1] += self.game.gravity*self.game.dt
 		return self.velocity
 
-	def draw(self, surf, offset):
+	def draw(self, offset):
 		#Affichage
 		rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
 
@@ -31,6 +33,7 @@ class Entity:
 		self.game.surf.blit(img, rect)
 
 	def jump(self, increment=False):
+		self.onground = False
 		self.velocity[1] = -self.stats.jumpforce*self.game.dt
 		if increment:
 			self.cpt_saut += 1

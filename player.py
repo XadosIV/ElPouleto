@@ -3,10 +3,11 @@ from pygame.locals import *
 from entity import Entity
 from stats import Stats
 import os
+from projectile import Projectile
 
 class Player(Entity):
 	def __init__(self, game, img_path="./assets/player/"):
-		Entity.__init__(self, game)
+		super().__init__(game)
 		self.rect.x = 800
 		self.rect.y = 200
 		self.game = game
@@ -15,11 +16,13 @@ class Player(Entity):
 		self.width = None
 		self.loadImg(img_path)
 		self.updateDim()
-		self.sprite = self.imgs["poulet"]
+		self.base_sprite = self.imgs["poulet"]
+		self.sprite = self.base_sprite
 		self.type = "player"
 		self.interact = False
-		self.lifeLost = False
+		self.invincible = 0
 		self.gliding = False
+		self.show_items = True
 
 	def loadImg(self, path):
 		self.imgs = {}
@@ -40,6 +43,9 @@ class Player(Entity):
 
 	def update(self):
 		if self.stats.life > 0:
+			if self.invincible > 0:
+				self.invincible -= 1
+
 			if self.onground and self.velocity[1] >= 0:
 				self.cpt_saut = 0
 
@@ -60,11 +66,17 @@ class Player(Entity):
 				if self.onground:
 					self.jump(False)
 
+			has_jumped = False
 			for event in self.game.events:
 				if event.type == pygame.KEYDOWN:
-					if event.key == K_z and self.cpt_saut < self.stats.jump_max-1 and not self.onground:
+					#Double saut
+					if event.key == K_z and self.cpt_saut < self.stats.jump_max-1 and not self.onground and self.velocity[1] > 0:
+						has_jumped = True
 						self.jump(True)
 				#Interaction
+					if event.key == K_SPACE:
+						Projectile(self.game, self)
+
 					if event.key == K_e:
 						self.interact = True
 				if event.type == pygame.KEYUP:
@@ -72,10 +84,10 @@ class Player(Entity):
 						self.interact = False
 
 			#Planer
-			if self.onground or not keys[K_SPACE]:
+			if self.onground or not keys[K_z]:
 				self.gliding = self.stats.glide
 
-			if keys[K_SPACE] and self.stats.glide != 0 and self.velocity[1] > 0:
+			if keys[K_z] and self.stats.glide != 0 and self.velocity[1] > 0 and not has_jumped:
 				self.gliding -= self.game.dt
 
 			#Dash
@@ -87,17 +99,34 @@ class Player(Entity):
 						self.game.defer(self.removeBonus, 90, item)
 						self.game.defer(self.endCooldownDash, 3000)
 
-			for enemy in self.game.enemies: #Ne marche pas pour plusieurs ennemies très cher Mathys
-				if not self.lifeLost:
-					self.losingLife(enemy)
+			if self.invincible == 0:
+				for enemy in self.game.enemies:
+					if self.game.player.rect.colliderect(enemy):
+						self.stats.life -= 100
+						self.invincible = 60
 
 			if self.gliding > 0 and self.gliding < self.stats.glide and self.velocity[1] >= 0:
 				self.velocity[1] -= (self.game.gravity*0.8)*self.game.dt
 			
 			Entity.update(self)
-
 		return self.velocity
 		
+	def updateSprite(self):
+		self.show_items = True
+		if self.stats.life <= 0:
+			self.sprite = self.imgs["dead"]
+			self.show_items = False
+		else:
+			if not self.onground:
+				self.sprite = self.imgs["glide"]
+			else:
+				self.sprite = self.imgs["poulet"]
+
+			if self.invincible != 0:
+				if self.invincible % 6 in [0,5,4]: #3 premières frames + toutes les 3 frames
+					self.sprite = self.imgs["blink"]
+					self.show_items = False
+
 	def addBonus(self,item):
 		for bonus in item["bonus"]:
 			if bonus["add"]:
@@ -117,25 +146,18 @@ class Player(Entity):
 	def endCooldownDash(self):
 		self.stats.can_dash = True
 
-	def losingLife(self, enemy):
-		if self.game.player.rect.colliderect(enemy):
-			self.lifeLost = True
-			self.stats.life -= 100
-			self.game.defer(self.endCooldownLife, 2000)
-			self.game.defer(self.blink, 100, False)
-
-	def endCooldownLife(self):
-		self.lifeLost = False
-	
-	def blink(self, val):
-		if self.lifeLost:
-			if val:
-				self.sprite = self.imgs["blink"]
-			else:
-				self.sprite = self.imgs["poulet"]
-			self.game.defer(self.blink, 100, not val)
+	def get_item_sprite(self, name):
+		if name in self.imgs.keys():
+			return self.imgs[name]
 		else:
-			if self.stats.life <= 0:
-				self.sprite = self.imgs["dead"]
-			else:
-				self.sprite = self.imgs["poulet"]
+			return self.imgs["item_ph"] #Renvoie un placeholder (image transparente) si pas d'image.
+
+	def draw(self, offset):
+		super().draw(offset)
+		if self.show_items:
+			rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
+			for item in self.inventory:
+				img = self.get_item_sprite(item["sprite"])
+				if self.direction != 1:
+					img = pygame.transform.flip(img, True, False)
+				self.game.surf.blit(img, rect)

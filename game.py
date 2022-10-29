@@ -51,7 +51,7 @@ class Game():
 		for entity in self.entities:
 			velocity = entity.update()
 			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
-			top_collision = False
+			top_collision = entity.onground
 			for t in tab:
 				entity.rect = entity.rect.move(t[0], t[1])
 				indices = entity.rect.collidelistall(self.collisions)

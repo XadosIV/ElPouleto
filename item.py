@@ -124,8 +124,8 @@ class Infobulle():
         return img_padding
 
 
-    def draw(self, coor):
-        self.rect.midbottom = coor
+    def draw(self, offset):
+        self.rect.midbottom = [self.item.rect.x + offset[0], self.item.rect.y + offset[1]]
         self.rect.y -= self.padding
         self.game.surf.blit(self.img, self.rect)
 
@@ -161,8 +161,6 @@ class Item(Entity):
         else:
             self.show_info = False
 
-    def draw(self, surf, offset):
+    def draw(self, offset):
         coor = [self.rect.x + offset[0], self.rect.y + offset[1]]
-        if self.show_info:
-            self.infobulle.draw(coor)
         self.game.surf.blit(self.sprite, coor)

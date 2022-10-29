@@ -33,12 +33,20 @@ class Camera():
 
 		self.surf.fill((135,206,235))
 
+		item_infobulles = []
 		for platform in platforms:
-			platform.draw(self.surf, self.offset)
+			platform.draw(self.offset)
 		for entity in entities:
 			if entity.type != "player":
-				entity.draw(self.surf, self.offset)
-		self.player.draw(self.surf, self.offset)
+				entity.draw(self.offset)
+			if entity.type == "item":
+				if entity.show_info:
+					item_infobulles.append(entity.infobulle)
+		for infobulle in item_infobulles:
+			infobulle.draw(self.offset)
+
+		self.player.updateSprite()
+		self.player.draw(self.offset)
 		pygame.draw.rect(self.surf, (70, 70, 70), [30, 30, 200, 30])
 		pygame.draw.rect(self.surf, (255, 0, 0), [35, 35, 190*(self.game.player.stats.life/self.game.player.stats.lifemax), 20])
 		pygame.display.flip()
