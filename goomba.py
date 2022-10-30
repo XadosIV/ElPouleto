@@ -12,22 +12,27 @@ class Goomba(Entity):
 		self.rect.y = y
 		self.stats.speed = random.randint(250,350)
 		self.sprite = pygame.image.load("./assets/goomba.png")
+		self.life = 200
 		self.type = "goomba"
 		self.game.enemies.append(self)
 
 	def update(self):
 		#Controles
-		if self.direction == 1:
-			if not self.game.getTile(self.rect.bottomright):
+		if self.life > 0:
+			if self.direction == 1:
+				if not self.game.getTile(self.rect.bottomright):
+					self.direction *= -1
+			else:
+				if not self.game.getTile(self.rect.bottomleft):
+					self.direction *= -1
+			if self.velocity[0] == 0:
 				self.direction *= -1
+			
+			self.velocity[0] = self.stats.speed * self.direction * self.game.dt
+
+			Entity.update(self)
 		else:
-			if not self.game.getTile(self.rect.bottomleft):
-				self.direction *= -1
-		if self.velocity[0] == 0:
-			self.direction *= -1
-		
-		self.velocity[0] = self.stats.speed * self.direction * self.game.dt
-
-		Entity.update(self)
-
+			self.delete()
 		return self.velocity
+		
+	

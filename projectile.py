@@ -19,6 +19,6 @@ class Projectile(Entity):
 		indices = self.rect.collidelistall(self.game.enemies)
 		for i in indices:
 			entity = self.game.enemies[i]
-			entity.delete()
+			entity.life -= 100
 			self.delete()
 		return self.velocity
