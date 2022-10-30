@@ -11,7 +11,7 @@ class Goomba(Entity):
 		self.rect.x = x
 		self.rect.y = y
 		self.stats.speed = random.randint(250,350)
-		self.sprite = pygame.transform.scale(pygame.image.load("./assets/goomba.png"), (32,32))
+		self.sprite = pygame.image.load("./assets/goomba.png")
 		self.type = "goomba"
 		self.game.enemies.append(self)
 

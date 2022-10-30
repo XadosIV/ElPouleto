@@ -16,13 +16,12 @@ class Player(Entity):
 		self.width = None
 		self.loadImg(img_path)
 		self.updateDim()
-		self.base_sprite = self.imgs["poulet"]
-		self.sprite = self.base_sprite
 		self.type = "player"
 		self.interact = False
 		self.invincible = 0
 		self.gliding = False
 		self.show_items = True
+		self.cpt_frame = 0
 
 	def loadImg(self, path):
 		self.imgs = {}
@@ -35,7 +34,7 @@ class Player(Entity):
 			self.height = self.game.tilemap.tile_size*self.stats.size
 			for img in self.imgs:
 				self.imgs[img] = pygame.transform.scale(self.imgs[img], (self.width, self.height))
-			self.sprite = self.imgs["poulet"]
+			self.sprite = self.imgs["poulet0"]
 			rect = self.sprite.get_rect()
 			rect.bottom, rect.midbottom = self.rect.bottom, self.rect.midbottom
 			self.rect = rect
@@ -112,6 +111,9 @@ class Player(Entity):
 		return self.velocity
 		
 	def updateSprite(self):
+		self.cpt_frame += 1
+		if self.cpt_frame == 16:
+			self.cpt_frame = 0
 		self.show_items = True
 		if self.stats.life <= 0:
 			self.sprite = self.imgs["dead"]
@@ -120,7 +122,10 @@ class Player(Entity):
 			if not self.onground:
 				self.sprite = self.imgs["glide"]
 			else:
-				self.sprite = self.imgs["poulet"]
+				if self.velocity[0] == 0:
+					self.sprite = self.imgs["poulet0"]
+				else:
+					self.sprite = self.imgs["poulet"+str(self.cpt_frame//4)]
 
 			if self.invincible != 0:
 				if self.invincible % 6 in [0,5,4]: #3 premières frames + toutes les 3 frames

@@ -6,7 +6,7 @@ class Entity:
 	def __init__(self, game):
 		self.game = game
 		self.velocity = pygame.math.Vector2([0,0])
-		self.sprite = pygame.transform.scale(pygame.image.load("./assets/placeholder.png"), (self.game.tilemap.tile_size, self.game.tilemap.tile_size))
+		self.sprite = pygame.image.load("./assets/placeholder.png")
 		self.rect = self.sprite.get_rect()
 		self.onground = False
 		self.direction = 1
@@ -37,3 +37,9 @@ class Entity:
 		self.velocity[1] = -self.stats.jumpforce*self.game.dt
 		if increment:
 			self.cpt_saut += 1
+
+	def delete(self):
+		self.game.entities.remove(self)
+		if self in self.game.enemies:
+			self.game.enemies.remove(self)
+		del self

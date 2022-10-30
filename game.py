@@ -46,7 +46,7 @@ class Game():
 
 	def update(self, events, dt):
 		self.events = events
-		self.dt = dt/1000
+		self.dt = min(dt/1000, 0.1)
 		self.defer_update()
 		for entity in self.entities:
 			velocity = entity.update()
