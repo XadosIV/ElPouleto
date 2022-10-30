@@ -47,6 +47,12 @@ class Camera():
 
 		self.player.updateSprite()
 		self.player.draw(self.offset)
-		pygame.draw.rect(self.surf, (70, 70, 70), [30, 30, 200, 30])
+		pygame.draw.rect(self.surf, (70, 70, 70), [30, 30, 300, 30])
+		pygame.draw.rect(self.surf, (0, 0, 0), [35, 35, 190, 20])
 		pygame.draw.rect(self.surf, (255, 0, 0), [35, 35, 190*(self.game.player.stats.life/self.game.player.stats.lifemax), 20])
+		font = pygame.font.SysFont("comic sans ms", 15)
+		img = self.game.drawText(f"{self.game.player.stats.life} / {self.game.player.stats.lifemax}", (255,255,255), 90, font, (70,70,70))
+		img_rect = img.get_rect()
+		img_rect.midleft = (235,45)
+		self.surf.blit(img, img_rect)
 		pygame.display.flip()
