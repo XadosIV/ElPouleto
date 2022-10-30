@@ -30,6 +30,7 @@ class Game():
 		self.item_collection.spawnItem(2, 1056, 200)
 		self.item_collection.spawnItem(3, 1200, 200)
 		self.item_collection.spawnItem(4, 544, 200)
+		self.item_collection.spawnItem(5, 600, 200)
 
 	def defer(self, function, timing, opts=None):
 		self.defer_list.append([function, timing, opts])

@@ -44,5 +44,14 @@
 		"bonus":[
 			{"var":"lifemax", "val":100, "add":true}
 		]
+	},
+	{
+		"name":"Tome de résurrection",
+		"sprite":"book",
+		"description":"Vous permet de rester en vie après la mort (1 coeur)",
+		"hasButton":true,
+		"bonus":[
+			{"var":"life", "val":100, "add":false}
+		]
 	}
 ]

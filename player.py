@@ -22,6 +22,7 @@ class Player(Entity):
 		self.gliding = False
 		self.show_items = True
 		self.cpt_frame = 0
+		self.not_dead = False
 
 	def loadImg(self, path):
 		self.imgs = {}
@@ -97,6 +98,8 @@ class Player(Entity):
 						self.addBonus(item)
 						self.game.defer(self.removeBonus, 90, item)
 						self.game.defer(self.endCooldownDash, 3000)
+				if self.game.item_collection.items.index(item) == 5:
+					self.not_dead = True
 
 			if self.invincible == 0:
 				for enemy in self.game.enemies:
@@ -108,6 +111,12 @@ class Player(Entity):
 				self.velocity[1] -= (self.game.gravity*0.8)*self.game.dt
 			
 			Entity.update(self)
+		else:
+			for item in self.inventory:
+				if self.game.item_collection.items.index(item) == 5:
+					self.addBonus(item)
+					self.inventory.remove(item)
+					self.not_dead = False
 		return self.velocity
 		
 	def updateSprite(self):
@@ -115,7 +124,7 @@ class Player(Entity):
 		if self.cpt_frame == 16:
 			self.cpt_frame = 0
 		self.show_items = True
-		if self.stats.life <= 0:
+		if self.stats.life <= 0 and not self.not_dead:
 			self.sprite = self.imgs["dead"]
 			self.show_items = False
 		else:
