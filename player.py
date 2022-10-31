@@ -127,6 +127,7 @@ class Player(Entity):
 		if self.stats.life <= 0 and not self.not_dead:
 			self.sprite = self.imgs["dead"]
 			self.show_items = False
+			self.velocity[0] = 0
 		else:
 			if not self.onground:
 				self.sprite = self.imgs["glide"]

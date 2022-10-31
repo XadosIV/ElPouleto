@@ -152,41 +152,41 @@ class Game():
 				return "left"
 
 	def drawText(self, text, color, width, font, bg=(0,0,0)):
-	    #Trouvé ici: https://www.pygame.org/wiki/TextWrap
-	    #Réarrangé à nos besoins
-	    y = 0
-	    lineSpacing = -2
+		#Trouvé ici: https://www.pygame.org/wiki/TextWrap
+		#Réarrangé à nos besoins
+		y = 0
+		lineSpacing = -2
 
-	    # get the height of the font
-	    fontHeight = font.size("Tg")[1]
+		# get the height of the font
+		fontHeight = font.size("Tg")[1]
 
-	    imgs_y = []
-	    while text:
-	        i = 1
+		imgs_y = []
+		while text:
+			i = 1
 
-	        if y + fontHeight > 180:
-	            break
+			if y + fontHeight > 180:
+				break
 
-	        # determine maximum width of line
-	        while font.size(text[:i])[0] < width and i < len(text):
-	            i += 1
+			# determine maximum width of line
+			while font.size(text[:i])[0] < width and i < len(text):
+				i += 1
 
-	        # if we've wrapped the text, then adjust the wrap to the last word      
-	        if i < len(text): 
-	            i = text.rfind(" ", 0, i) + 1
+			# if we've wrapped the text, then adjust the wrap to the last word      
+			if i < len(text): 
+				i = text.rfind(" ", 0, i) + 1
 
-	        # render the line and blit it to the surface
-	        image = font.render(text[:i], True, color)
-	        imgs_y.append((image, y))
-	        y += fontHeight + lineSpacing
+			# render the line and blit it to the surface
+			image = font.render(text[:i], True, color)
+			imgs_y.append((image, y))
+			y += fontHeight + lineSpacing
 
-	        # remove the text we just blitted
-	        text = text[i:]
+			# remove the text we just blitted
+			text = text[i:]
 
-	    render_img = pygame.Surface((width, y))
-	    render_img.fill(bg)
+		render_img = pygame.Surface((width, y))
+		render_img.fill(bg)
 
-	    for im in imgs_y:
-	        render_img.blit(im[0], (0, im[1]))
+		for im in imgs_y:
+			render_img.blit(im[0], (0, im[1]))
 
-	    return render_img
+		return render_img
