@@ -1,7 +1,7 @@
 import pygame, csv, os
 
 class Tile(pygame.sprite.Sprite):
-	def __init__(self, image, x, y, game, tilesize):
+	def __init__(self, image, x, y, game, tilesize, noBottom=False):
 		pygame.sprite.Sprite.__init__(self)
 		self.game = game
 		self.image = pygame.transform.scale(pygame.image.load("./assets/"+image).convert(), (tilesize, tilesize))
@@ -9,6 +9,7 @@ class Tile(pygame.sprite.Sprite):
 		self.rect.x, self.rect.y = x,y
 		self.color = None
 		self.type = "tile"
+		self.noBottom = noBottom
 		self.game.collisions.append(self)
 		
 	def draw(self, offset):

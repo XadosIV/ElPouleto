@@ -53,5 +53,12 @@
 		"bonus":[
 			{"var":"life", "val":100, "add":false}
 		]
+	},
+	{
+		"name":"Arc",
+		"sprite":"placeholder",
+		"description":"Tire des flèches",
+		"notUsing":true,
+		"bonus":[]
 	}
 ]

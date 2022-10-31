@@ -6,6 +6,7 @@ from player import Player
 from item import Item, Collection
 from tilemap import Tilemap
 from camera import Camera
+from pygame.locals import *
 
 import random
 
@@ -31,7 +32,7 @@ class Game():
 		self.item_collection.spawnItem(3, 1200, 200)
 		self.item_collection.spawnItem(4, 544, 200)
 		self.item_collection.spawnItem(5, 600, 200)
-
+		self.item_collection.spawnItem(6, 700,200)
 	def defer(self, function, timing, opts=None):
 		self.defer_list.append([function, timing, opts])
 
@@ -61,16 +62,19 @@ class Game():
 					bloc = self.collisions[i]
 					side = self.side(entity, bloc.rect)
 					if side == "top":
+						if entity.type == "player" and keys[K_s] and bloc.noBottom:
+							continue
 						top_collision = True
 						entity.rect.bottom = bloc.rect.top
 						for t in tab:
 							t[1] = 0
 						velocity[1] = 0
 					elif side == "bottom":
-						entity.rect.top = bloc.rect.bottom
-						for t in tab:
-							t[1] = 0
-						velocity[1] = 0
+						if not bloc.noBottom:
+							entity.rect.top = bloc.rect.bottom
+							for t in tab:
+								t[1] = 0
+							velocity[1] = 0
 					elif side == "left":
 						entity.rect.right = bloc.rect.left
 						for t in tab:

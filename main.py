@@ -16,7 +16,6 @@ def game():
 		for event in events:
 			if event.type == QUIT:
 				running = False
-		#Vérifier s'il est en vie
 		game.update(events, keys, dt)
 
 

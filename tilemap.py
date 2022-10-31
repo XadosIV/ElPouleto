@@ -30,7 +30,7 @@ class Tilemap():
 				elif tile == "1":
 					tiles.append(Tile("underground.png", x*self.tile_size, y*self.tile_size, self.game, self.tile_size))
 				elif tile == "2":
-					tiles.append(Tile("ground.png", x*self.tile_size, y*self.tile_size, self.game, self.tile_size))
+					tiles.append(Tile("ground.png", x*self.tile_size, y*self.tile_size, self.game, self.tile_size, noBottom=True))
 				x+=1
 			y+=1
 		self.map_w, self.map_h = x*self.tile_size, y*self.tile_size

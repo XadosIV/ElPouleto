@@ -4,6 +4,7 @@ from entity import Entity
 from stats import Stats
 import os
 from projectile import Projectile
+from weapons import Weapon
 
 class Player(Entity): #Initialisé comme une entité
 	def __init__(self, game, img_path="./assets/player/"):
@@ -14,7 +15,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.rect.y = 200
 		#Inventaire, stockant les données des objets obtenus par le joueur
 		self.inventory = []
-		self.weapon = None
+		self.weapon = Weapon(self)
 		self.secondary_weapon = None
 		self.world_power = None
 		#Chargement des images
@@ -110,20 +111,18 @@ class Player(Entity): #Initialisé comme une entité
 						if event.key == K_v and self.velocity[0] != 0 and self.cd_dash <= 0:
 							self.dashing = self.stats.dash
 
-					#Attaque
+						#Attaque
 						if event.key == K_SPACE:
-							Projectile(self.game, self)
-							#self.weapon.use()
-					#Interaction
+							#Projectile(self.game, self)
+							self.weapon.use()
+						#Interaction
 						if event.key == K_e:
 							self.interact = True
+		
 					if event.type == pygame.KEYUP:
 						if event.key == K_e:
 							self.interact = False
 
-				#Planer
-				if keys[K_z] and self.stats.glide != 0 and self.velocity[1] > 0:
-					self.gliding -= self.game.dt
 
 				#check damages
 				if self.invincible == 0:
@@ -132,11 +131,12 @@ class Player(Entity): #Initialisé comme une entité
 							self.stats.life -= 100
 							self.invincible = 60
 
-				#gliding again
-				if self.gliding > 0 and self.gliding < self.stats.glide and self.velocity[1] >= 0:
-					self.velocity[1] -= (self.game.gravity*0.8)*self.game.dt
-
-				super().update()
+				#Planer
+				if keys[K_z] and self.gliding > 0 and self.velocity[1] >= 0:
+					self.gliding -= self.game.dt
+					self.velocity[1] = 3 #Gravité baisse de 3 pixels le poulet par frame
+				else:
+					super().update() #Application de la gravité normalement
 			else:
 				#Dash
 				self.velocity[0] = self.direction * 1000*self.game.dt #Vitesse du dash
