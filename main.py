@@ -12,11 +12,12 @@ def game():
 	while running:
 		dt = clock.tick(framerate)
 		events = pygame.event.get()
+		keys = pygame.key.get_pressed()
 		for event in events:
 			if event.type == QUIT:
 				running = False
-				break
-		game.update(events, dt)
+		#Vérifier s'il est en vie
+		game.update(events, keys, dt)
 
 
 if __name__ == '__main__':
