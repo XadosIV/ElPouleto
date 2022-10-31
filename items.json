@@ -14,17 +14,17 @@
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
 		"hasButton":false,
 		"bonus":[
-			{"var":"glide", "val":1, "add":false}
+			{"var":"glide", "val":2, "add":true}
 		]
 	},
 	{
 		"name":"Poussée d'énergie",
 		"sprite":"dash",
 		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
-		"hasButton":true,
+		"hasButton":false,
 		"cooldown":2,
 		"bonus":[
-			{"var":"speed", "val":2000, "add":false}
+			{"var":"dash", "val":5, "add":false}
 		]
 	},
 	{

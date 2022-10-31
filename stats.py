@@ -3,9 +3,10 @@ class Stats():
 		self.speed = 300
 		self.jumpforce = 600
 		self.jump_max = 1
-		self.glide = 0
+		self.glide = 0 #en secondes
+		self.dash = 0 #en frame
+		self.cd_dash = 60 #en frame
 		self.size = 1
-		self.can_dash = True
 		self.life = 500
 		self.lifemax = 500
 

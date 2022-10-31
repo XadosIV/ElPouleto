@@ -45,8 +45,9 @@ class Game():
 					i[0](i[2])
 				self.defer_list.pop(self.defer_list.index(i))
 
-	def update(self, events, dt):
+	def update(self, events, keys, dt):
 		self.events = events
+		self.keys = keys
 		self.dt = min(dt/1000, 0.1)
 		self.defer_update()
 		for entity in self.entities:
