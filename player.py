@@ -145,6 +145,8 @@ class Player(Entity): #Initialisé comme une entité
 				if self.dashing == 0:
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 		else:
+			self.velocity = pygame.math.Vector2([0,0])
+			super().update()
 			for item in self.inventory:
 				if self.game.item_collection.items.index(item) == 5 and self.death_cd == 0:					
 					self.not_dead -= 1 #Décrémente le compteur de la mort
@@ -163,7 +165,6 @@ class Player(Entity): #Initialisé comme une entité
 		if self.stats.life <= 0:
 			self.sprite = self.imgs["dead"]
 			self.show_items = False
-			self.velocity[0] = 0
 		else:
 			if not self.onground:
 				self.sprite = self.imgs["glide"]

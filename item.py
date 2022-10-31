@@ -118,7 +118,7 @@ class Item(Entity):
         self.delete()
 
     def check(self):
-        if self.game.player.rect.colliderect(self.rect):
+        if self.game.player.rect.colliderect(self.rect) and self.game.player.stats.life > 0:
             self.show_info = True
             if self.game.player.interact:
                 self.take()
