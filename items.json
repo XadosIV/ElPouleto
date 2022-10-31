@@ -3,7 +3,7 @@
 		"name":"Extension Cybernétique de fou furieux",
 		"sprite":"spring",
 		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
-		"hasButton":false,
+		"notUsing":false,
 		"bonus":[
 			{"var":"jump_max", "val":1, "add":true}
 		]
@@ -12,7 +12,7 @@
 		"name":"Ailes de pigeon",
 		"sprite":"wings",
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
-		"hasButton":false,
+		"notUsing":false,
 		"bonus":[
 			{"var":"glide", "val":2, "add":true}
 		]
@@ -21,7 +21,7 @@
 		"name":"Poussée d'énergie",
 		"sprite":"dash",
 		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
-		"hasButton":false,
+		"notUsing":false,
 		"cooldown":2,
 		"bonus":[
 			{"var":"dash", "val":5, "add":false}
@@ -31,7 +31,7 @@
 		"name":"Poussée de croissance",
 		"sprite":"wheat",
 		"description":"Du blé afin que notre poulet se nourisse et grandisse",
-		"hasButton":false,
+		"notUsing":false,
 		"bonus":[
 			{"var":"size", "val":2, "add":false}
 		]
@@ -40,7 +40,7 @@
 		"name":"Vie supplémentaire",
 		"sprite":"life",
 		"description":"Une vie supplémentaire ain de soigner votre petit cœur de poulet",
-		"hasButton":false,
+		"notUsing":false,
 		"bonus":[
 			{"var":"lifemax", "val":100, "add":true}
 		]
@@ -49,7 +49,7 @@
 		"name":"Tome de résurrection",
 		"sprite":"book",
 		"description":"Vous permet de rester en vie après la mort (1 coeur)",
-		"hasButton":true,
+		"notUsing":true,
 		"bonus":[
 			{"var":"life", "val":100, "add":false}
 		]

@@ -113,7 +113,7 @@ class Item(Entity):
 
     def take(self):
         self.game.player.inventory.append(self.data)
-        if self.data["hasButton"] == False:
+        if self.data["notUsing"] == False:
             self.game.player.addBonus(self.data)
         self.delete()
 

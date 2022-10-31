@@ -8,13 +8,16 @@ import random
 class Goomba(Entity): #Initialisé comme une entité
 	def __init__(self, game, x, y):
 		Entity.__init__(self, game)
-		self.rect.x = x #Ennemi posé aux coordonnées données dans le main
+		#Point de spawn de l'ennemi
+		self.rect.x = x 
 		self.rect.y = y
-		self.stats.speed = random.randint(250,350)
-		self.sprite = pygame.image.load("./assets/goomba.png")
-		self.life = 200
-		self.type = "goomba"
-		self.game.enemies.append(self)
+		#Vitesse aléatoire de l'ennemi
+		self.stats.speed = random.randint(250,350) 
+		#Chargement de l'image
+		self.sprite = pygame.image.load("./assets/goomba.png")		
+		self.life = 200 #Vie de l'ennemi
+		self.type = "goomba" #Le type de l'entité / son nom.
+		self.game.enemies.append(self) #Ajout dans la liste d'ennemis
 
 	def update(self):
 		#Controles

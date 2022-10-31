@@ -4,16 +4,18 @@ from stats import Stats
 
 class Entity:
 	def __init__(self, game):
-		self.game = game
+		self.game = game 
 		self.velocity = pygame.math.Vector2([0,0]) #Vitesse de l'entité horizontalement/verticalement
-		self.sprite = pygame.image.load("./assets/placeholder.png") #De base c'est un carré rouge
-		self.rect = self.sprite.get_rect()
+		#Importation de l'image (De base c'est un carré rouge)
+		self.sprite = pygame.image.load("./assets/placeholder.png") 
+		self.rect = self.sprite.get_rect() 
 		self.onground = False
-		self.direction = 1
-		self.cpt_saut = 0
+		self.direction = 1 #Direction : 1 = Droite, -1 = Gauche
+		self.cpt_saut = 0 #Compteur de saut de l'entité
+		#Importation des stats
 		self.stats = Stats() 
-		self.game.entities.append(self)
-		self.type = "entity"
+		self.game.entities.append(self) #Ajout dans la liste d'entités
+		self.type = "entity" #Le type de l'entité / son nom.
 
 	def update(self):
 		#Gestion Physique
