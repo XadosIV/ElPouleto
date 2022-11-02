@@ -8,6 +8,7 @@ def game():
 	w,h = (1440,720)
 	running = True
 	window = pygame.display.set_mode((w,h))
+	pygame.font.init()
 	game = Game(window)
 	while running:
 		dt = clock.tick(framerate)

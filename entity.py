@@ -37,7 +37,7 @@ class Entity:
 	def jump(self, increment=False): 
 		#Saut
 		self.onground = False
-		self.velocity[1] = -self.stats.jumpforce*self.game.dt #Contrebalance la gravité pour faire sauter
+		self.velocity[1] = -self.stats.jumpforce*0.033 #Contrebalance la gravité pour faire sauter
 		if increment: #Pour plusieurs sauts
 			self.cpt_saut += 1
 

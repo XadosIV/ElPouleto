@@ -7,6 +7,7 @@ from item import Item, Collection
 from tilemap import Tilemap
 from camera import Camera
 from pygame.locals import *
+from generator import Generator
 
 import random
 
@@ -19,20 +20,16 @@ class Game():
 		self.height = surf.get_height()
 		self.entities = []
 		self.collisions = []
-		self.enemies = []		
-		self.tilemap = Tilemap(self, "testmap3.csv")
-		self.player = Player(self)
+		self.enemies = []
+		#self.tilemap = Tilemap(self, "testmap3.csv")
 		self.items = []
-		self.camera = Camera(self)
-		Goomba(self, 300, 500)
 		self.item_collection = Collection(self)
-		self.item_collection.spawnItem(0, 320, 200)
-		self.item_collection.spawnItem(1, 100, 200)
-		self.item_collection.spawnItem(2, 1056, 200)
-		self.item_collection.spawnItem(3, 1200, 200)
-		self.item_collection.spawnItem(4, 544, 200)
-		self.item_collection.spawnItem(5, 600, 200)
-		self.item_collection.spawnItem(6, 700,200)
+		self.generator = Generator(self, "1")
+		self.tilemap = self.generator.tilemap
+		self.player = Player(self.generator.start_x, self.generator.start_y, self)
+		self.camera = Camera(self)
+		print(self.surf.get_clip())
+
 	def defer(self, function, timing, opts=None):
 		self.defer_list.append([function, timing, opts])
 

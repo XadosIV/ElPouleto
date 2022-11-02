@@ -7,12 +7,12 @@ from projectile import Projectile
 from weapons import Weapon
 
 class Player(Entity): #Initialisé comme une entité
-	def __init__(self, game, img_path="./assets/player/"):
+	def __init__(self, x,y, game, img_path="./assets/player/"):
 		super().__init__(game)
 		self.type = "player" #Le type de l'entité / son nom.
 		#Point de spawn du joueur
-		self.rect.x = 800
-		self.rect.y = 200
+		self.rect.x = x
+		self.rect.y = y
 		#Inventaire, stockant les données des objets obtenus par le joueur
 		self.inventory = []
 		self.weapon = Weapon(self)
@@ -146,7 +146,6 @@ class Player(Entity): #Initialisé comme une entité
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 		else:
 			self.velocity = pygame.math.Vector2([0,0])
-			super().update()
 			for item in self.inventory:
 				if self.game.item_collection.items.index(item) == 5 and self.death_cd == 0:					
 					self.not_dead -= 1 #Décrémente le compteur de la mort
@@ -155,6 +154,7 @@ class Player(Entity): #Initialisé comme une entité
 						self.death_cd = 300
 						self.addBonus(item)
 						self.inventory.remove(item) #Lorsque la mort est finie, on met à jour son cooldown pour le réutiliser dans minimum 60 frames, et on supprime l'item
+			super().update()
 		return self.velocity
 		
 	def updateSprite(self):

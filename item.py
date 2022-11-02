@@ -28,7 +28,6 @@ class Infobulle():
         self.background_color = (50,50,50)
         self.item = item
         self.game = self.item.game
-        pygame.font.init()
         self.create_infobulle(item)
         
 
@@ -100,7 +99,7 @@ class Item(Entity):
         self.rect.x = x
         self.rect.y = y
         self.pickable = False
-        self.sprite = pygame.transform.scale(pygame.image.load(f"./assets/{data['sprite']}.png"), (self.game.tilemap.tile_size,self.game.tilemap.tile_size))
+        self.sprite = pygame.image.load(f"./assets/{data['sprite']}.png")
         self.type = "item"
         self.data = data
         self.infobulle = Infobulle(self)

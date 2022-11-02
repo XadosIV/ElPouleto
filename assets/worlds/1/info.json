@@ -1,0 +1,6 @@
+{
+	"ground":5,
+	"floating":true,
+	"space-between":[10,35],
+	"relief":[-5,0]
+}
