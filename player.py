@@ -23,6 +23,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.updateDim(force=True) #Redimensionne toutes les images de self.imgs
 		#Variables locales
 		self.interact = False #True si E appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
+		self.last_onground_pos = [x,y] #Position où  faire respawn le joueur en cas de chute dans le vide
 		#Compteurs
 		self.invincible = 0 #Compteur de frames d'invincibilité, décrémente de deltaTime à chaque frame si != 0
 		self.dashing = 0 #Compteur de frames de dash
@@ -32,7 +33,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.not_dead = 60 #Compteur de frames, pour la résurrection du joueur.
 		self.death_cd = 0 #Compteur de frames, pour pas qu'il y aie 2 résurrections en trop peu de temps
 		#Affichage
-		self.show_items = True #True = objets affichés sur le joueur
+		self.show_items = True #True = objets affichés sur le joueur		
 		
 
 	def loadImg(self, path):
@@ -146,6 +147,16 @@ class Player(Entity): #Initialisé comme une entité
 				self.dashing -= 1 #Décrémente le compteur du dash
 				if self.dashing == 0:
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
+
+			if self.onground:
+				self.last_onground_pos = [self.rect.x, self.rect.y]
+			
+			if self.rect.y >= self.game.tilemap.map_h: #Pour l'instant c'est 32000 parce que Joris il est con
+				self.rect.x = self.last_onground_pos[0]
+				self.rect.y = self.last_onground_pos[1]
+				self.velocity[1] = 0
+				self.stats.life -= 200
+
 		else:
 			for item in self.inventory:
 				if self.game.item_collection.items.index(item) == 5 and self.death_cd == 0:					
