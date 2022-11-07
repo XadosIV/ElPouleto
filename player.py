@@ -31,7 +31,6 @@ class Player(Entity): #Initialisé comme une entité
 		self.cd_dash = 0 #Compteur de frames avant réutilisation du dash
 		self.cpt_frame = 0 #Compteur de frames, pour les animations du poulet.
 		self.not_dead = 60 #Compteur de frames, pour la résurrection du joueur.
-		self.death_cd = 0 #Compteur de frames, pour pas qu'il y aie 2 résurrections en trop peu de temps
 		#Affichage
 		self.show_items = True #True = objets affichés sur le joueur		
 		
@@ -77,9 +76,6 @@ class Player(Entity): #Initialisé comme une entité
 			#Compteur frame avant re_dash
 			if self.cd_dash > 0:
 				self.cd_dash -= 1
-			#Compteur frame avant re_résurrection
-			if self.death_cd > 0:
-				self.death_cd -= 1
 			#Au sol, reset des compteurs
 			if self.onground:
 				#Compteur de saut
@@ -129,10 +125,11 @@ class Player(Entity): #Initialisé comme une entité
 				if self.invincible == 0:
 					for enemy in self.game.enemies:
 						if self.game.player.rect.colliderect(enemy):
-							self.stats.life -= 100
+							self.stats.life -= enemy.damage
 							self.invincible = 60
 							if self.stats.life <= 0:
 								self.velocity = pygame.math.Vector2([0,0])
+							break
 
 				#Planer
 				if keys[K_z] and self.gliding > 0 and self.velocity[1] >= 0:
@@ -159,11 +156,10 @@ class Player(Entity): #Initialisé comme une entité
 
 		else:
 			for item in self.inventory:
-				if self.game.item_collection.items.index(item) == 5 and self.death_cd == 0:					
+				if self.game.item_collection.items.index(item) == 5:					
 					self.not_dead -= 1 #Décrémente le compteur de la mort
 					if self.not_dead == 0:
 						self.not_dead = 60
-						self.death_cd = 300
 						self.addBonus(item)
 						self.inventory.remove(item) #Lorsque la mort est finie, on met à jour son cooldown pour le réutiliser dans minimum 60 frames, et on supprime l'item
 			super().update()

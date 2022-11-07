@@ -15,16 +15,19 @@ class Goomba(Entity): #Initialisé comme une entité
 		#Chargement de l'image
 		self.sprite = pygame.image.load("./assets/goomba.png")		
 		self.life = 200 #Vie de l'ennemi
+		self.damage = 50
 		self.type = "goomba" #Le type de l'entité / son nom.
-		self.game.enemies.append(self) #Ajout dans la liste d'ennemis
-		self.cd_hurt = 0
+		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1
+		#Compteurs
+		self.cd_hurt = 0 #Temps pendant lequel l'ennemi est intouchable + knockback
+		self.disappear = 150 #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
 		if self.life > 0:
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
-				self.velocity[0] = 32 * self.direction_hurt * self.game.dt
+				self.velocity[0] = 50 * self.direction_hurt * self.game.dt
 			else:
 				if self.velocity[0] == 0: #S'il ne bouge plus (Coincé contre un bloc)
 					self.direction *= -1
@@ -38,14 +41,22 @@ class Goomba(Entity): #Initialisé comme une entité
 				self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
 
 				Entity.update(self)
-		else: #Supprime si plus de vie
-			self.delete()
+		else: #Supprime si plus de vie			
+			if self.disappear == 300:
+				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
+				self.game.enemies.remove(self)
+			self.disappear -= 1		
+			self.velocity[0] = 0
+			if self.disappear == 0:
+				self.game.entities.remove(self)
 		return self.velocity
 
 	def hurt(self, damage, hitter):
-		self.life -= damage
-		self.cd_hurt = 10
-		if hitter.rect.x > self.rect.x:
-			self.direction_hurt = -1
-		else:
-			self.direction_hurt = 1
+		if self.cd_hurt == 0:
+			if hitter.rect.x > self.rect.x:
+				self.direction_hurt = -1
+			else:
+				self.direction_hurt = 1
+			self.life -= damage
+			self.cd_hurt = 30
+	

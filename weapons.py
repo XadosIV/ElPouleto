@@ -4,7 +4,7 @@ class Weapon():
 	def __init__(self, owner):
 		self.owner = owner
 		self.game = self.owner.game
-		self.damage = 20
+		self.damage = 100
 
 	def use(self):
 		rect = pygame.Rect([1,1,1,1])
