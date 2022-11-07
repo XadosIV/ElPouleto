@@ -4,7 +4,6 @@ from randomenemy import RandomEnemy
 from entity import Entity
 from player import Player
 from item import Item, Collection
-from tilemap import Tilemap
 from camera import Camera
 from pygame.locals import *
 from generator import Generator
@@ -21,68 +20,59 @@ class Game():
 		self.entities = []
 		self.collisions = []
 		self.enemies = []
-		#self.tilemap = Tilemap(self, "testmap3.csv")
 		self.items = []
 		self.item_collection = Collection(self)
 		self.generator = Generator(self, "1")
 		self.tilemap = self.generator.tilemap
 		self.player = Player(self.generator.start_x, self.generator.start_y, self)
 		self.camera = Camera(self)
-		print(self.surf.get_clip())
-
-	def defer(self, function, timing, opts=None):
-		self.defer_list.append([function, timing, opts])
-
-	def defer_update(self):
-		for i in self.defer_list:
-			i[1] -= self.dt*1000
-			if i[1] <= 0:
-				if i[2] == None:
-					i[0]()
-				else:
-					i[0](i[2])
-				self.defer_list.pop(self.defer_list.index(i))
 
 	def update(self, events, keys, dt):
 		self.events = events
 		self.keys = keys
 		self.dt = min(dt/1000, 0.1)
-		self.defer_update()
+
+		updatable_rect = self.surf.get_clip()
+		updatable_rect.inflate_ip(640,640)
+
 		for entity in self.entities:
-			velocity = entity.update()
-			tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
-			top_collision = entity.onground
-			for t in tab:
-				entity.rect = entity.rect.move(t[0], t[1])
-				indices = entity.rect.collidelistall(self.collisions)
-				for i in indices:
-					bloc = self.collisions[i]
-					side = self.side(entity, bloc.rect)
-					if side == "top":
-						if entity.type == "player" and keys[K_s] and bloc.noBottom:
-							continue
-						top_collision = True
-						entity.rect.bottom = bloc.rect.top
-						for t in tab:
-							t[1] = 0
-						velocity[1] = 0
-					elif side == "bottom":
-						if not bloc.noBottom:
-							entity.rect.top = bloc.rect.bottom
+			if updatable_rect.colliderect(entity.rect.move(self.camera.offset)):
+				velocity = entity.update()
+				tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
+				top_collision = entity.onground
+				for t in tab:
+					entity.rect = entity.rect.move(t[0], t[1])
+					indices = entity.rect.collidelistall(self.collisions)
+					for i in indices:
+						bloc = self.collisions[i]
+						side = self.side(entity, bloc.rect)
+						if side == "top":
+							if entity.type == "player" and keys[K_s] and bloc.noBottom:
+								continue
+							top_collision = True
+							entity.rect.bottom = bloc.rect.top
 							for t in tab:
 								t[1] = 0
 							velocity[1] = 0
-					elif side == "left":
-						entity.rect.right = bloc.rect.left
-						for t in tab:
-							t[0] = 0
-						velocity[0] = 0
-					elif side =="right":
-						entity.rect.left = bloc.rect.right
-						for t in tab:
-							t[0] = 0
-						velocity[0] = 0
-			entity.onground = top_collision
+						elif side == "bottom":
+							if not bloc.noBottom:
+								entity.rect.top = bloc.rect.bottom
+								for t in tab:
+									t[1] = 0
+								velocity[1] = 0
+						elif side == "left":
+							if not bloc.noBottom:
+								entity.rect.right = bloc.rect.left
+								for t in tab:
+									t[0] = 0
+								velocity[0] = 0
+						elif side =="right":
+							if not bloc.noBottom:
+								entity.rect.left = bloc.rect.right
+								for t in tab:
+									t[0] = 0
+								velocity[0] = 0
+				entity.onground = top_collision
 
 		for item in self.items:
 			item.check()

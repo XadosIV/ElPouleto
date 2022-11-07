@@ -33,7 +33,7 @@ class Generator():
 		for i in range(nb_struct):
 			end_tiles = self.spawnStructure(tileId, coor=deb_tile)
 			deb_tile = self.join(end_tiles[0])
-			tileId = self.read_csv("struct_farm_1")
+			tileId = self.read_csv("structures/"+str(random.randint(1,2)))
 		
 	
 	def join(self, deb):
@@ -43,22 +43,26 @@ class Generator():
 		direction = [1 if segment[0] > 0 else -1, 1 if segment[1] > 0 else -1]		
 		tileSurf = self.tileset.getSurf(5)
 		if x > y:
-			self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=False))
+			self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
 			while [x,y] != fin:
 				x+=direction[0]
 				distx = abs(fin[0]-x)
 				disty = abs(fin[1]-y)
-				self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=False))
+				self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
 				if y != fin[1]:
 					if distx > disty:
 						for i in range(min(2, disty)):
 							if random.randint(1,4) == 1:
 								y+=direction[1]
-								self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=False))
+								self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
 					else:
 						y+=direction[1]
-						self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=False))
+						self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
 		return fin
+
+	def join2(self, deb, fin):
+		x,y = deb
+
 
 	def spawnStructure(self, tileId, coor):
 		if self.find_deb_tile(tileId):
@@ -80,7 +84,8 @@ class Generator():
 					end_tiles.append([x,y])
 				elif tile != "-1" and tile != "3":
 					tileSurf = self.tileset.getSurf(int(tile))
-					self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=False))
+					noBottom = self.tileset.getNoBottom(int(tile))
+					self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=noBottom))
 				x+=1
 			y+=1
 		self.tilemap.map_w, self.tilemap.map_h = 1000*self.size, 1000*self.size
@@ -108,21 +113,26 @@ class Tileset():
 		self.rows = self.img_size[1]//size
 		self.columns = self.img_size[0]//size
 		self.tile_id = [] #Tableau ID => Surface pour chaque tuile
+		self.noBottom_id = [] #Tableau ID => True/False noBottom
 		self.load()
 
 	def load(self):
 		for row in range(self.rows):
 			for column in range(self.columns):
-				surf = pygame.Surface((self.size, self.size))
+				surf = pygame.Surface((self.size, self.size), pygame.SRCALPHA, 32)
+				surf.convert_alpha()
 				surf.blit(self.tileset, (0,0), (column*32,row*32,32,32))
 				self.tile_id.append(surf)
+				self.noBottom_id.append(row == self.rows-1)
 
 	def getSurf(self, id):
 		return self.tile_id[id]
 
+	def getNoBottom(self, id):
+		return self.noBottom_id[id]
+
 class Tile():
 	def __init__(self, surf, x, y, game, noBottom=False):
-		pygame.sprite.Sprite.__init__(self)
 		self.game = game
 		self.image = surf
 		self.rect = self.image.get_rect()

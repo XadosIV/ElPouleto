@@ -11,9 +11,9 @@ def game():
 	pygame.font.init()
 	game = Game(window)
 	while running:
-		dt = clock.tick(framerate)
 		events = pygame.event.get()
 		keys = pygame.key.get_pressed()
+		dt = clock.tick(framerate)
 		for event in events:
 			if event.type == QUIT:
 				running = False

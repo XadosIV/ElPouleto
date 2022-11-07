@@ -130,6 +130,8 @@ class Player(Entity): #Initialisé comme une entité
 						if self.game.player.rect.colliderect(enemy):
 							self.stats.life -= 100
 							self.invincible = 60
+							if self.stats.life <= 0:
+								self.velocity = pygame.math.Vector2([0,0])
 
 				#Planer
 				if keys[K_z] and self.gliding > 0 and self.velocity[1] >= 0:
@@ -145,7 +147,6 @@ class Player(Entity): #Initialisé comme une entité
 				if self.dashing == 0:
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 		else:
-			self.velocity = pygame.math.Vector2([0,0])
 			for item in self.inventory:
 				if self.game.item_collection.items.index(item) == 5 and self.death_cd == 0:					
 					self.not_dead -= 1 #Décrémente le compteur de la mort
@@ -205,6 +206,7 @@ class Player(Entity): #Initialisé comme une entité
 			return self.imgs["item_ph"] #Renvoie un placeholder (image transparente) si pas d'image.
 
 	def draw(self, offset):
+		self.updateSprite()
 		super().draw(offset)
 		if self.show_items:
 			rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
@@ -213,3 +215,13 @@ class Player(Entity): #Initialisé comme une entité
 				if self.direction != 1:
 					img = pygame.transform.flip(img, True, False)
 				self.game.surf.blit(img, rect)
+
+		#HUD
+		pygame.draw.rect(self.game.surf, (70, 70, 70), [30, 30, 300, 30])
+		pygame.draw.rect(self.game.surf, (0, 0, 0), [35, 35, 190, 20])
+		pygame.draw.rect(self.game.surf, (255, 0, 0), [35, 35, 190*(self.stats.life/self.stats.lifemax), 20])
+		font = pygame.font.SysFont("comic sans ms", 15)
+		img = self.game.drawText(f"{max(0,self.stats.life)} / {self.stats.lifemax}", (255,255,255), 90, font, (70,70,70))
+		img_rect = img.get_rect()
+		img_rect.midleft = (235,45)
+		self.game.surf.blit(img, img_rect)
