@@ -64,6 +64,10 @@ class Player(Entity): #Initialisé comme une entité
 
 	def update(self): #Executé à chaque frame par Game (renvoie la vélocité de l'entité pour les calculs de physique.)
 		if self.stats.life > 0: #Vérifier s'il est en vie
+
+			if self.game.getTile(self.rect.bottomleft) and self.game.getTile(self.rect.bottomright):
+				self.last_onground_pos = [self.rect.x, self.rect.y]
+
 			#Récupérer les inputs sur la frame
 			events = self.game.events
 			keys = self.game.keys
@@ -85,14 +89,15 @@ class Player(Entity): #Initialisé comme une entité
 			
 			if self.dashing == 0: #Blocage des contrôles durant le dash.
 				#Controles horizontaux
+				self.velocity[0] = 0
 				if keys[K_q]:
-					self.velocity[0] = -self.stats.speed*self.game.dt
-					self.direction = -1
-				elif keys[K_d]:
-					self.velocity[0] = self.stats.speed*self.game.dt
+					self.velocity[0] -= self.stats.speed*self.game.dt
+				if keys[K_d]:
+					self.velocity[0] += self.stats.speed*self.game.dt
+				if self.velocity[0] > 0:
 					self.direction = 1
-				else:
-					self.velocity[0] = 0
+				elif self.velocity[0] < 0:
+					self.direction = -1
 
 				#Verticaux
 				if keys[K_z]:
@@ -129,7 +134,7 @@ class Player(Entity): #Initialisé comme une entité
 							self.invincible = 60
 							if self.stats.life <= 0:
 								self.velocity = pygame.math.Vector2([0,0])
-							break
+							break #On peut pas se faire toucher deux fois dans la même frame
 
 				#Planer
 				if keys[K_z] and self.gliding > 0 and self.velocity[1] >= 0:
@@ -145,8 +150,6 @@ class Player(Entity): #Initialisé comme une entité
 				if self.dashing == 0:
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 
-			if self.onground:
-				self.last_onground_pos = [self.rect.x, self.rect.y]
 			
 			if self.rect.y >= self.game.tilemap.map_h: #Pour l'instant c'est 32000 parce que Joris il est con
 				self.rect.x = self.last_onground_pos[0]

@@ -42,7 +42,7 @@ class Goomba(Entity): #Initialisé comme une entité
 
 				Entity.update(self)
 		else: #Supprime si plus de vie			
-			if self.disappear == 300:
+			if self.disappear == 150:
 				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
 				self.game.enemies.remove(self)
 			self.disappear -= 1		
