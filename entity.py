@@ -26,13 +26,11 @@ class Entity:
 
 	def draw(self, offset):
 		#Affichage
-		rect = [self.rect.x + offset[0], self.rect.y + offset[1]] #Coordonnées du player en fonction de la caméra
-
 		if self.direction != 1: #Mettre dans le bon sens l'entité
 			img = pygame.transform.flip(self.sprite, True, False)
 		else:
 			img = self.sprite
-		self.game.surf.blit(img, rect)
+		self.game.surf.blit(img, self.rect.move(offset))
 
 	def jump(self, increment=False): 
 		#Saut

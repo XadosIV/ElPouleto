@@ -9,7 +9,7 @@ class Generator():
 
 		self.path = f"./assets/worlds/{world}/"
 		self.tileset = Tileset(self.path+"tileset.png")
-		self.tilemap = Tilemap(size) #Contient tiles[] et tile_size
+		self.tilemap = Tilemap(self) #Contient tiles[] et tile_size
 		
 		self.start_x, self.start_y = 0,0 #Coordonnée de spawn du joueur
 		self.enemies_coor = [] #Coordonnée où doivent spawn des ennemis
@@ -32,10 +32,12 @@ class Generator():
 		tileId = self.read_csv("spawn")
 		nb_struct = 4
 		deb_tile = [0,16]
+		end_tiles = self.spawnStructure(tileId, coor=deb_tile)
+		deb_tile = self.join(end_tiles[0])
 		for i in range(nb_struct):
+			tileId = self.read_csv("structures/"+str(self.nextStruct()))
 			end_tiles = self.spawnStructure(tileId, coor=deb_tile)
 			deb_tile = self.join(end_tiles[0])
-			tileId = self.read_csv("structures/"+str(self.nextStruct()))
 		
 	def nextStruct(self):
 		nb = random.randint(1,4)
@@ -49,23 +51,23 @@ class Generator():
 		fin = [deb[0]+random.randint(15,25),deb[1]+random.randint(-3, 0)]
 		segment = [fin[0]-deb[0], fin[1]-deb[1]]
 		direction = [1 if segment[0] > 0 else -1, 1 if segment[1] > 0 else -1]		
-		tileSurf = self.tileset.getSurf(5)
+		ground_id = 5
 		if x > y:
-			self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
+			self.tilemap.add(ground_id, x, y)
 			while [x,y] != fin:
 				x+=direction[0]
 				distx = abs(fin[0]-x)
 				disty = abs(fin[1]-y)
-				self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
+				self.tilemap.add(ground_id, x, y)
 				if y != fin[1]:
 					if distx > disty:
 						for i in range(min(2, disty)):
 							if random.randint(1,4) == 1:
 								y+=direction[1]
-								self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
+								self.tilemap.add(ground_id, x, y)
 					else:
 						y+=direction[1]
-						self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game))
+						self.tilemap.add(ground_id, x, y)
 		return fin
 
 	def join2(self, deb, fin):
@@ -78,26 +80,66 @@ class Generator():
 			coor[1]-=i
 		x,y = coor
 		end_tiles = [] #Coordonnée des tuiles de sortie de la structure
+		decoid = 15
 		for row in tileId:
 			x = coor[0]
 			for tile in row:
 				if tile == "0":
 					#Coordonnée de spawn du joueur
 					self.start_x, self.start_y = x * self.size, y * self.size
+					id = self.complete(tileId, x, y, coor)
+					self.tilemap.add(id, x, y)
 				elif tile == "1":
 					self.items_coor.append( (x*self.size, y*self.size) )
+					id = self.complete(tileId, x, y, coor)
+					self.tilemap.add(id, x, y)
 				elif tile == "2":
 					self.enemies_coor.append( (x*self.size, y*self.size) )
+					id = self.complete(tileId, x, y, coor)
+					self.tilemap.add(id, x, y)
 				elif tile == "4":
 					end_tiles.append([x,y])
 				elif tile != "-1" and tile != "3":
-					tileSurf = self.tileset.getSurf(int(tile))
-					noBottom = self.tileset.getNoBottom(int(tile))
-					self.tilemap.tiles.append(Tile(tileSurf, x*self.size, y*self.size, self.game, noBottom=noBottom))
+					self.tilemap.add(int(tile), x, y)
+					if self.tileset.getNoBottom(int(tile)):
+						id = self.complete(tileId, x, y, coor)
+						self.tilemap.add(id, x, y)
 				x+=1
 			y+=1
 		self.tilemap.map_w, self.tilemap.map_h = 1000*self.size, 1000*self.size
 		return end_tiles
+
+	def complete(self, tileid, x,y, offset):
+		x=x-offset[0]
+		y=y-offset[1]
+		adj = []
+		for i in range(x-1,x+2):
+			for j in range(y-1,y+2):
+				if i != x or j != y:
+					if len(tileid) <= j or j < 0:
+						adj.append(-1)
+					elif len(tileid[j]) <= i or i < 0:
+						adj.append(-1)
+					else:
+						adj.append(tileid[j][i])
+
+
+		#Compter et trouver le plus grand
+		dic = {}
+		for elem in adj:
+			#Ne pas compter les tuiles non-décoratives
+			if self.tileset.getDeco(int(elem)):
+				if elem in dic:
+					dic[elem]+=1
+				else:
+					dic[elem]=1
+		keymax = 0
+		for (k,v) in dic.items():
+			if (v == max(dic.values())):
+				return int(k)
+		return -1
+		#Christine se retournerait dans sa tombe mais ça marchait aussi
+		#return list(dic.keys())[list(dic.values()).index(max(dic.values()))]
 
 	def find_deb_tile(self, tileId):
 		for i in range(len(tileId)):
@@ -118,6 +160,7 @@ class Tileset():
 		self.tileset = pygame.image.load(path) #Chargement de l'image tileset
 		self.img_size = self.tileset.get_size()
 		self.size = size
+		self.deco = []
 		self.rows = self.img_size[1]//size
 		self.columns = self.img_size[0]//size
 		self.tile_id = [] #Tableau ID => Surface pour chaque tuile
@@ -131,29 +174,56 @@ class Tileset():
 				surf.convert_alpha()
 				surf.blit(self.tileset, (0,0), (column*32,row*32,32,32))
 				self.tile_id.append(surf)
-				self.noBottom_id.append(row == self.rows-1)
+				self.noBottom_id.append(row == self.rows-2)
+				self.deco.append(row == self.rows-1)
 
 	def getSurf(self, id):
+		if id == -1:
+			return False
 		return self.tile_id[id]
 
 	def getNoBottom(self, id):
+		if id == -1:
+			return False
 		return self.noBottom_id[id]
 
+	def getDeco(self, id):
+		if id == -1:
+			return False
+		return self.deco[id]
+
 class Tile():
-	def __init__(self, surf, x, y, game, noBottom=False):
+	def __init__(self, surf, x, y, game, noBottom=False, deco=False):
 		self.game = game
 		self.image = surf
 		self.rect = self.image.get_rect()
 		self.rect.x, self.rect.y = x,y
 		self.type = "tile"
 		self.noBottom = noBottom
-		self.game.collisions.append(self)
+		if not deco:
+			self.game.collisions.append(self)
 
 	def draw(self, offset):
-		self.game.surf.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))
+		self.game.surf.blit(self.image, self.rect.move(offset))
 
 class Tilemap():
-	def __init__(self, size):
+	def __init__(self, generator):
+		self.generator = generator
+		self.game = generator.game
 		self.tiles = []
-		self.tile_size = size
+		self.deco = []
+		self.tileset = generator.tileset
+		self.tile_size = self.tileset.size
 		self.map_w, self.map_h = 0,0
+
+	def add(self, id, x, y):
+		if id == -1:
+			return
+		surf = self.tileset.getSurf(id)
+		noBottom = self.tileset.getNoBottom(id)
+		deco = self.tileset.getDeco(id)
+		tile = Tile(surf, x*self.tile_size, y*self.tile_size, self.game, noBottom=noBottom, deco=deco)
+		if not deco:
+			self.tiles.append(tile)
+		else:
+			self.deco.append(tile)

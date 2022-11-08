@@ -84,7 +84,7 @@ class Infobulle():
 
 
     def draw(self, offset):
-        self.rect.midbottom = [self.item.rect.x + offset[0], self.item.rect.y + offset[1]]
+        self.rect.midbottom = self.item.rect.move(offset).midtop
         self.rect.y -= self.padding
         if self.rect.left < 0:
             self.rect.left = 0
@@ -125,5 +125,4 @@ class Item(Entity):
             self.show_info = False
 
     def draw(self, offset):
-        coor = [self.rect.x + offset[0], self.rect.y + offset[1]]
-        self.game.surf.blit(self.sprite, coor)
+        self.game.surf.blit(self.sprite, self.rect.move(offset))

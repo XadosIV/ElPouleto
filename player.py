@@ -215,12 +215,11 @@ class Player(Entity): #Initialisé comme une entité
 		self.updateSprite()
 		super().draw(offset)
 		if self.show_items:
-			rect = [self.rect.x + offset[0], self.rect.y + offset[1]]
 			for item in self.inventory:
 				img = self.get_item_sprite(item["sprite"])
 				if self.direction != 1:
 					img = pygame.transform.flip(img, True, False)
-				self.game.surf.blit(img, rect)
+				self.game.surf.blit(img, rect.move(offset))
 
 		#HUD
 		pygame.draw.rect(self.game.surf, (70, 70, 70), [30, 30, 300, 30])

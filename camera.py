@@ -58,6 +58,8 @@ class Camera():
 		self.surf.fill((135,206,235)) #Fond bleu
 
 		item_infobulles = []
+		for deco in self.game.tilemap.deco:
+			deco.draw(self.offset)
 		for platform in self.game.collisions: #La carte est dessinée
 			platform.draw(self.offset)
 		for entity in self.game.entities: #Toutes les entitées sont dessinées sauf le joueur
