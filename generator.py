@@ -15,6 +15,8 @@ class Generator():
 		self.enemies_coor = [] #Coordonnée où doivent spawn des ennemis
 		self.items_coor = [] #Coordonnée où doivent spawn des items
 
+		self.struct_spawned = []
+
 		self.generate()
 		self.spawns()
 
@@ -28,14 +30,20 @@ class Generator():
 
 	def generate(self):
 		tileId = self.read_csv("spawn")
-		nb_struct = 5
+		nb_struct = 4
 		deb_tile = [0,16]
 		for i in range(nb_struct):
 			end_tiles = self.spawnStructure(tileId, coor=deb_tile)
 			deb_tile = self.join(end_tiles[0])
-			tileId = self.read_csv("structures/"+str(random.randint(1,2)))
+			tileId = self.read_csv("structures/"+str(self.nextStruct()))
 		
-	
+	def nextStruct(self):
+		nb = random.randint(1,4)
+		while nb in self.struct_spawned:
+			nb = random.randint(1,4)
+		self.struct_spawned.append(nb)
+		return nb
+
 	def join(self, deb):
 		x,y = deb
 		fin = [deb[0]+random.randint(15,25),deb[1]+random.randint(-3, 0)]
