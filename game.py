@@ -36,7 +36,7 @@ class Game():
 		updatable_rect.inflate_ip(640,640)
 
 		for entity in self.entities:
-			if updatable_rect.colliderect(entity.rect.move(self.camera.offset)):
+			if updatable_rect.colliderect(entity.rect.move(self.camera.offset)) or entity.type == "player":
 				velocity = entity.update()
 				tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
 				top_collision = entity.onground
@@ -79,7 +79,7 @@ class Game():
 
 		
 
-		self.camera.draw(self.surf, self.collisions, self.entities)
+		self.camera.draw()
 
 	def split_velocity_cap(self, velocity, maxi):
 		#Entrée : velocity Vector2, maxi Int

@@ -22,7 +22,6 @@
 		"sprite":"dash",
 		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
 		"notUsing":false,
-		"cooldown":2,
 		"bonus":[
 			{"var":"dash", "val":5, "add":false}
 		]
@@ -39,7 +38,7 @@
 	{
 		"name":"Vie supplémentaire",
 		"sprite":"life",
-		"description":"Une vie supplémentaire ain de soigner votre petit cœur de poulet",
+		"description":"Une vie supplémentaire afin de soigner votre petit cœur de poulet",
 		"notUsing":false,
 		"bonus":[
 			{"var":"lifemax", "val":100, "add":true},

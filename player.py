@@ -130,10 +130,7 @@ class Player(Entity): #Initialisé comme une entité
 				if self.invincible == 0:
 					for enemy in self.game.enemies:
 						if self.game.player.rect.colliderect(enemy):
-							self.stats.life -= enemy.damage
-							self.invincible = 60
-							if self.stats.life <= 0:
-								self.velocity = pygame.math.Vector2([0,0])
+							self.hurt(enemy.damage)
 							break #On peut pas se faire toucher deux fois dans la même frame
 
 				#Planer
@@ -154,8 +151,7 @@ class Player(Entity): #Initialisé comme une entité
 			if self.rect.y >= self.game.tilemap.map_h: #Pour l'instant c'est 32000 parce que Joris il est con
 				self.rect.x = self.last_onground_pos[0]
 				self.rect.y = self.last_onground_pos[1]
-				self.velocity[1] = 0
-				self.stats.life -= 200
+				self.hurt(200)
 
 		else:
 			for item in self.inventory:
@@ -235,3 +231,9 @@ class Player(Entity): #Initialisé comme une entité
 		img_rect = img.get_rect()
 		img_rect.midleft = (235,45)
 		self.game.surf.blit(img, img_rect)
+
+	def hurt(self, dmg):
+		self.stats.life -= dmg
+		self.invincible = 60
+		if self.stats.life <= 0:
+			self.velocity = pygame.math.Vector2([0,0])
