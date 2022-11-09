@@ -31,13 +31,15 @@ class Generator():
 	def generate(self):
 		tileId = self.read_csv("spawn")
 		nb_struct = 4
-		deb_tile = [0,16]
+		deb_tile = [0,30]
 		end_tiles = self.spawnStructure(tileId, coor=deb_tile)
-		deb_tile = self.join(end_tiles[0])
+		deb_tile = [end_tiles[0][0]-1,end_tiles[0][1]]
 		for i in range(nb_struct):
 			tileId = self.read_csv("structures/"+str(self.nextStruct()))
 			end_tiles = self.spawnStructure(tileId, coor=deb_tile)
-			deb_tile = self.join(end_tiles[0])
+			deb_tile = [end_tiles[0][0]-1,end_tiles[0][1]]
+		tileId = self.read_csv("end")
+		self.spawnStructure(tileId, coor=deb_tile)
 		self.fill()
 
 	def fill(self):
@@ -52,12 +54,13 @@ class Generator():
 			return -1
 		tile = self.tilemap.map[y][x]
 		if tile == -1:
-			next = self.fillUp(x, y-1)
-			if self.tileset.getNoBottom(next):
+			nextTile = self.fillUp(x, y-1)
+			if self.tileset.getNoBottom(nextTile):
 				return -1
 			else:
-				self.tilemap.add(next, x, y)
-				return next
+				self.tilemap.add(nextTile, x, y)
+
+				return nextTile
 		else:
 			return tile
 
@@ -70,11 +73,11 @@ class Generator():
 
 	def join(self, deb):
 		x,y = deb
-		fin = [deb[0]+random.randint(15,25),deb[1]+random.randint(-3, 0)]
+		fin = [deb[0]+random.randint(5,15),deb[1]+random.randint(-3, 0)]
 		segment = [fin[0]-deb[0], fin[1]-deb[1]]
 		direction = [1 if segment[0] > 0 else -1, 1 if segment[1] > 0 else -1]		
 		ground_id = 5
-		if x > y:
+		if x >= y:
 			self.tilemap.add(ground_id, x, y)
 			while [x,y] != fin:
 				x+=direction[0]
@@ -214,7 +217,7 @@ class Tileset():
 		return self.deco[id]
 
 class Tile():
-	def __init__(self, surf, x, y, game, noBottom=False, deco=False):
+	def __init__(self, surf, x, y, game, noBottom=True, deco=False):
 		self.game = game
 		self.image = surf
 		self.rect = self.image.get_rect()
@@ -249,7 +252,7 @@ class Tilemap():
 		self.map_h = len(self.map)*self.tile_size
 
 	def add(self, id, x, y):
-		if id == -1:
+		if id == -1 or x < 0 or y < 0:
 			return
 		surf = self.tileset.getSurf(id)
 		noBottom = self.tileset.getNoBottom(id)

@@ -70,6 +70,7 @@ class Player(Entity): #Initialisé comme une entité
 				if (not tile1.noBottom) and (not tile2.noBottom):
 					self.last_onground_pos = [self.rect.x, self.rect.y]
 
+
 			#Récupérer les inputs sur la frame
 			events = self.game.events
 			keys = self.game.keys
