@@ -64,9 +64,11 @@ class Player(Entity): #Initialisé comme une entité
 
 	def update(self): #Executé à chaque frame par Game (renvoie la vélocité de l'entité pour les calculs de physique.)
 		if self.stats.life > 0: #Vérifier s'il est en vie
-
 			if self.game.getTile(self.rect.bottomleft) and self.game.getTile(self.rect.bottomright):
-				self.last_onground_pos = [self.rect.x, self.rect.y]
+				tile1 = self.game.getTile(self.rect.bottomleft)
+				tile2 = self.game.getTile(self.rect.bottomright)
+				if (not tile1.noBottom) and (not tile2.noBottom):
+					self.last_onground_pos = [self.rect.x, self.rect.y]
 
 			#Récupérer les inputs sur la frame
 			events = self.game.events
@@ -147,7 +149,6 @@ class Player(Entity): #Initialisé comme une entité
 				if self.dashing == 0:
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 
-			
 			if self.rect.y >= self.game.tilemap.map_h: #Pour l'instant c'est 32000 parce que Joris il est con
 				self.rect.x = self.last_onground_pos[0]
 				self.rect.y = self.last_onground_pos[1]
@@ -219,7 +220,7 @@ class Player(Entity): #Initialisé comme une entité
 				img = self.get_item_sprite(item["sprite"])
 				if self.direction != 1:
 					img = pygame.transform.flip(img, True, False)
-				self.game.surf.blit(img, rect.move(offset))
+				self.game.surf.blit(img, self.rect.move(offset))
 
 		#HUD
 		pygame.draw.rect(self.game.surf, (70, 70, 70), [30, 30, 300, 30])

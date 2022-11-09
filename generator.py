@@ -38,7 +38,29 @@ class Generator():
 			tileId = self.read_csv("structures/"+str(self.nextStruct()))
 			end_tiles = self.spawnStructure(tileId, coor=deb_tile)
 			deb_tile = self.join(end_tiles[0])
-		
+		self.fill()
+
+	def fill(self):
+		map = self.tilemap.map
+		for x in range(len(map[0])):
+			tile = map[len(map)-1][x]
+			if tile == -1:
+				self.fillUp(x, len(map)-1)
+
+	def fillUp(self, x, y):
+		if y == -1:
+			return -1
+		tile = self.tilemap.map[y][x]
+		if tile == -1:
+			next = self.fillUp(x, y-1)
+			if self.tileset.getNoBottom(next):
+				return -1
+			else:
+				self.tilemap.add(next, x, y)
+				return next
+		else:
+			return tile
+
 	def nextStruct(self):
 		nb = random.randint(1,4)
 		while nb in self.struct_spawned:
@@ -106,23 +128,22 @@ class Generator():
 						self.tilemap.add(id, x, y)
 				x+=1
 			y+=1
-		self.tilemap.map_w, self.tilemap.map_h = 1000*self.size, 1000*self.size
 		return end_tiles
 
 	def complete(self, tileid, x,y, offset):
 		x=x-offset[0]
 		y=y-offset[1]
+		cases = [[x,y-1],[x,y+1],[x-1,y],[x+1,y]]
 		adj = []
-		for i in range(x-1,x+2):
-			for j in range(y-1,y+2):
-				if i != x or j != y:
-					if len(tileid) <= j or j < 0:
-						adj.append(-1)
-					elif len(tileid[j]) <= i or i < 0:
-						adj.append(-1)
-					else:
-						adj.append(tileid[j][i])
-
+		for case in cases:
+			j=case[1]
+			i=case[0]
+			if len(tileid) <= j or j < 0:
+				adj.append(-1)
+			elif len(tileid[j]) <= i or i < 0:
+				adj.append(-1)
+			else:
+				adj.append(tileid[j][i])
 
 		#Compter et trouver le plus grand
 		dic = {}
@@ -215,6 +236,17 @@ class Tilemap():
 		self.tileset = generator.tileset
 		self.tile_size = self.tileset.size
 		self.map_w, self.map_h = 0,0
+		self.map = []
+
+	def add_in_map(self, id, x, y):
+		while len(self.map)-1 < y:
+			self.map.append([])
+		for j in range(len(self.map)):
+			while len(self.map[j])-1 < x:
+					self.map[j].append(-1)
+		self.map[y][x] = id
+		self.map_w = len(self.map[0])*self.tile_size
+		self.map_h = len(self.map)*self.tile_size
 
 	def add(self, id, x, y):
 		if id == -1:
@@ -225,5 +257,6 @@ class Tilemap():
 		tile = Tile(surf, x*self.tile_size, y*self.tile_size, self.game, noBottom=noBottom, deco=deco)
 		if not deco:
 			self.tiles.append(tile)
+			self.add_in_map(id, x, y)
 		else:
 			self.deco.append(tile)
