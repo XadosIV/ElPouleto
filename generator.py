@@ -19,6 +19,26 @@ class Generator():
 
 		self.generate()
 		self.spawns()
+		self.optimize()
+
+	def optimize(self):
+		#Retire des collisions tout les blocs touchant d'autres blocs de tout les côtés, inutile de les compter
+		#dans les collisions puisque celles-ci n'arriveront jamais.
+		#Ces tuiles seront mises en déco pour être quand même affiché
+		for tile in self.tilemap.tiles:
+			up = self.tilemap.getTileId(tile.x, tile.y-1)
+			down = self.tilemap.getTileId(tile.x, tile.y+1)
+			left = self.tilemap.getTileId(tile.x-1, tile.y)
+			right = self.tilemap.getTileId(tile.x+1, tile.y)
+			upleft = self.tilemap.getTileId(tile.x-1, tile.y-1)
+			upright = self.tilemap.getTileId(tile.x+1, tile.y-1)
+			downleft = self.tilemap.getTileId(tile.x-1, tile.y+1)
+			downright = self.tilemap.getTileId(tile.x+1, tile.y+1)
+			if up == down == left == right == upleft == upright == downleft == downright:
+				if up != -1:
+					tile.deco = True
+					self.game.collisions.remove(tile)
+					self.tilemap.deco.append(tile)
 
 	def read_csv(self, file):
 		tileId = []
@@ -28,7 +48,17 @@ class Generator():
 				tileId.append(list(row))
 		return tileId
 
+	def join2(self, deb, fin):
+		ground_id = 5
+		x,y = deb
+		xend,yend = fin
+		while [xend,yend] != [x,y]:
+			distance = [xend-x, yend-y]
+			self.tilemap.add(ground_id, x, y)
+			x+=1
+
 	def generate(self):
+		self.join2([0,27], [45,27])
 		tileId = self.read_csv("spawn")
 		nb_struct = 4
 		deb_tile = [0,30]
@@ -94,10 +124,6 @@ class Generator():
 						y+=direction[1]
 						self.tilemap.add(ground_id, x, y)
 		return fin
-
-	def join2(self, deb, fin):
-		x,y = deb
-
 
 	def spawnStructure(self, tileId, coor):
 		if self.find_deb_tile(tileId):
@@ -217,13 +243,16 @@ class Tileset():
 		return self.deco[id]
 
 class Tile():
-	def __init__(self, surf, x, y, game, noBottom=True, deco=False):
+	def __init__(self, surf, x, y, game, noBottom, deco):
 		self.game = game
 		self.image = surf
+		self.x = x
+		self.y = y
 		self.rect = self.image.get_rect()
-		self.rect.x, self.rect.y = x,y
+		self.rect.x, self.rect.y = x*32,y*32
 		self.type = "tile"
 		self.noBottom = noBottom
+		self.deco = deco
 		if not deco:
 			self.game.collisions.append(self)
 
@@ -257,9 +286,40 @@ class Tilemap():
 		surf = self.tileset.getSurf(id)
 		noBottom = self.tileset.getNoBottom(id)
 		deco = self.tileset.getDeco(id)
-		tile = Tile(surf, x*self.tile_size, y*self.tile_size, self.game, noBottom=noBottom, deco=deco)
+		tile = Tile(surf, x, y, self.game, noBottom=noBottom, deco=deco)
 		if not deco:
 			self.tiles.append(tile)
 			self.add_in_map(id, x, y)
 		else:
 			self.deco.append(tile)
+
+	def getTileId(self, x, y):
+		if y >= len(self.map):
+			return -1
+		elif x >= len(self.map[0]):
+			return -1
+		return self.map[y][x]
+
+	def getTile(self,x,y=None):
+		#Renvoie la tile ou False
+		#x,y = coordonnée dans la map
+		if y == None:
+			x,y = x
+		x=x*self.tile_size
+		y=y*self.tile_size
+		for body in self.tiles:
+			if body.rect.x == x and body.rect.y == y:
+				return body
+		return False
+
+	def getTileByCoor(self,x,y=None):
+		#Renvoie la tile ou False
+		#x,y = coordonnée absolue
+		if y == None:
+			x,y = x
+		x=(x//self.tile_size)*self.tile_size
+		y=(y//self.tile_size)*self.tile_size
+		for body in self.tiles:
+			if body.rect.x == x and body.rect.y == y:
+				return body
+		return False

@@ -64,9 +64,9 @@ class Player(Entity): #Initialisé comme une entité
 
 	def update(self): #Executé à chaque frame par Game (renvoie la vélocité de l'entité pour les calculs de physique.)
 		if self.stats.life > 0: #Vérifier s'il est en vie
-			if self.game.getTile(self.rect.bottomleft) and self.game.getTile(self.rect.bottomright):
-				tile1 = self.game.getTile(self.rect.bottomleft)
-				tile2 = self.game.getTile(self.rect.bottomright)
+			if self.game.tilemap.getTileByCoor(self.rect.bottomleft) and self.game.tilemap.getTileByCoor(self.rect.bottomright):
+				tile1 = self.game.tilemap.getTileByCoor(self.rect.bottomleft)
+				tile2 = self.game.tilemap.getTileByCoor(self.rect.bottomright)
 				if (not tile1.noBottom) and (not tile2.noBottom):
 					self.last_onground_pos = [self.rect.x, self.rect.y]
 

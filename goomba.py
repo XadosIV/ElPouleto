@@ -32,10 +32,10 @@ class Goomba(Entity): #Initialisé comme une entité
 				if self.velocity[0] == 0: #S'il ne bouge plus (Coincé contre un bloc)
 					self.direction *= -1
 				if self.direction == 1: #S'il va à droite
-					if not self.game.getTile(self.rect.bottomright): #Tant qu'il n'a pas un petit bout dans le vide (Bas-droite)
+					if not self.game.tilemap.getTileByCoor(self.rect.bottomright): #Tant qu'il n'a pas un petit bout dans le vide (Bas-droite)
 						self.direction *= -1
 				else: 
-					if not self.game.getTile(self.rect.bottomleft): #Tant qu'il n'a pas un petit bout dans le vide (Bas-gauche)
+					if not self.game.tilemap.getTileByCoor(self.rect.bottomleft): #Tant qu'il n'a pas un petit bout dans le vide (Bas-gauche)
 						self.direction *= -1
 				
 				self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse

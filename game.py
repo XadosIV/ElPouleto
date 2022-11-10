@@ -103,16 +103,6 @@ class Game():
 				t_non_null.append(t[i])
 		return t_non_null
 
-	def getTile(self,coor):
-		#Renvoie la tile ou False si il n'y en a pas aux coordonnées
-		x,y = coor[0], coor[1]
-		x=(x//self.tilemap.tile_size)*self.tilemap.tile_size
-		y=(y//self.tilemap.tile_size)*self.tilemap.tile_size
-		for body in self.tilemap.tiles:
-			if body.rect.x == x and body.rect.y == y:
-				return body
-		return False
-
 	def side(self, entity, body):
 		if body.height < entity.rect.height:
 			dif = entity.rect.height - body.height
@@ -127,12 +117,28 @@ class Game():
 		botright = body.collidepoint(entity.rect.bottomright)
 		midright = body.collidepoint(entity.rect.midright)
 		midleft = body.collidepoint(entity.rect.midleft)
-		top = int(topleft) + int(topmid) + int(topright) if not self.getTile(body.bottomleft) and entity.velocity[1] < 0 else 0
-		bot = int(botleft) + int(botright) + int(botmid) if not self.getTile((body.x,body.y-self.tilemap.tile_size)) and entity.velocity[1] > 0 else 0
-		left = int(topleft) + int(midleft) + int(botleft) if not self.getTile(body.topright) and entity.velocity[0] < 0 else 0
-		right = int(topright) + int(midright) + int(botright) if not self.getTile((body.x-self.tilemap.tile_size,body.y)) and entity.velocity[0] > 0 else 0
+		top = 0
+		bot = 0
+		left = 0
+		right = 0
 
+		x,y = body.x//32, body.y//32
+		tileId_Bas = self.tilemap.getTileId(x,y+1)
+		tileId_Haut = self.tilemap.getTileId(x,y-1)
+		tileId_Gauche = self.tilemap.getTileId(x-1,y)
+		tileId_Droite = self.tilemap.getTileId(x+1,y)
+
+		if ((not self.tilemap.getTileByCoor(body.bottomleft)) or self.tilemap.tileset.getNoBottom(tileId_Bas)) and entity.velocity[1] < 0:
+			top = int(topleft) + int(topmid) + int(topright) 
+		if ((not self.tilemap.getTileByCoor((body.x,body.y-self.tilemap.tile_size))) or (self.tilemap.tileset.getNoBottom(tileId_Haut))) and entity.velocity[1] > 0:
+			#si bug il y a, de là cela vient, check si S appuyé pour vérifier s'il a le droit d'aller en bas
+			bot = int(botleft) + int(botright) + int(botmid)
+		if not self.tilemap.getTileByCoor(body.topright) and entity.velocity[0] < 0:
+			left = int(topleft) + int(midleft) + int(botleft)
+		if not self.tilemap.getTileByCoor((body.x-self.tilemap.tile_size,body.y)) and entity.velocity[0] > 0:
+			right = int(topright) + int(midright) + int(botright)
 		forces = [top, bot, left, right]
+
 		if max(forces) > 0:
 			if top == max(forces):
 				return "bottom"
