@@ -9,6 +9,7 @@ class Stats():
 		self.size = 1
 		self.life = 500
 		self.lifemax = 500
+		self.weapons = [{"name": "peck", "damage": 50}]
 
 		self.dict = self.__dict__.copy() #Pour avoir toutes les stats de base
 

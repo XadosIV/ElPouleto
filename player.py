@@ -32,8 +32,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.cpt_frame = 0 #Compteur de frames, pour les animations du poulet.
 		self.not_dead = 60 #Compteur de frames, pour la résurrection du joueur.
 		#Affichage
-		self.show_items = True #True = objets affichés sur le joueur		
-		
+		self.show_items = True #True = objets affichés sur le joueur			
 
 	def loadImg(self, path):
 		#Charge toutes les images contenues dans path et les renvoie sous forme de dictionnaire name -> image
@@ -118,11 +117,15 @@ class Player(Entity): #Initialisé comme une entité
 
 						#Attaque
 						if event.key == K_SPACE:
-							#Projectile(self.game, self)
 							self.weapon.use()
+
 						#Interaction
 						if event.key == K_e:
 							self.interact = True
+
+						#Changement d'arme
+						if event.key == K_f:
+							self.weapon.change()
 		
 					if event.type == pygame.KEYUP:
 						if event.key == K_e:
@@ -150,7 +153,7 @@ class Player(Entity): #Initialisé comme une entité
 				if self.dashing == 0:
 					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 
-			if self.rect.y >= self.game.tilemap.map_h: #Pour l'instant c'est 32000 parce que Joris il est con
+			if self.rect.y >= self.game.tilemap.map_h: 
 				self.rect.x = self.last_onground_pos[0]
 				self.rect.y = self.last_onground_pos[1]
 				self.hurt(200)
@@ -193,9 +196,13 @@ class Player(Entity): #Initialisé comme une entité
 			if bonus["add"]:
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
 			else:
-				setattr(self.stats, bonus["var"], bonus["val"])
+				if bonus["var"] == "weapons":
+					self.stats.weapons.append({"name": bonus["val"], "damage": bonus["damage"]})
+				else:
+					setattr(self.stats, bonus["var"], bonus["val"])				
 			if bonus["var"] == "size":
 				self.updateDim()
+			
 
 	def removeBonus(self,item):
 		for bonus in item["bonus"]:

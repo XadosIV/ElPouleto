@@ -58,7 +58,9 @@
 		"name":"Arc",
 		"sprite":"placeholder",
 		"description":"Tire des flèches",
-		"notUsing":true,
-		"bonus":[]
+		"notUsing":false,
+		"bonus":[
+			{"var":"weapons", "val":"bow", "damage":100, "add":false}
+		]
 	}
 ]
