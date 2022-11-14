@@ -4,7 +4,6 @@
 		"sprite":"spring",
 		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
 		"notUsing":false,
-		"getOnce":false,
 		"bonus":[
 			{"var":"jump_max", "val":1, "add":true}
 		]
@@ -14,7 +13,6 @@
 		"sprite":"wings",
 		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
 		"notUsing":false,
-		"getOnce":true,
 		"bonus":[
 			{"var":"glide", "val":2, "add":true}
 		]
@@ -24,7 +22,6 @@
 		"sprite":"dash",
 		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
 		"notUsing":false,
-		"getOnce":true,
 		"bonus":[
 			{"var":"dash", "val":5, "add":false}
 		]
@@ -34,7 +31,6 @@
 		"sprite":"wheat",
 		"description":"Du blé afin que notre poulet se nourisse et grandisse",
 		"notUsing":false,
-		"getOnce":true,
 		"bonus":[
 			{"var":"size", "val":1.8, "add":false}
 		]
@@ -44,7 +40,6 @@
 		"sprite":"life",
 		"description":"Une vie supplémentaire afin de soigner votre petit cœur de poulet",
 		"notUsing":false,
-		"getOnce":false,
 		"bonus":[
 			{"var":"lifemax", "val":100, "add":true},
 			{"var":"life", "val":100, "add":true}
@@ -55,7 +50,6 @@
 		"sprite":"book",
 		"description":"Vous permet de rester en vie après la mort (1 coeur)",
 		"notUsing":true,
-		"getOnce":true,
 		"bonus":[
 			{"var":"life", "val":100, "add":false}
 		]
@@ -65,9 +59,17 @@
 		"sprite":"placeholder",
 		"description":"Tire des flèches",
 		"notUsing":false,
-		"getOnce":true,
 		"bonus":[
 			{"var":"weapons", "val":"bow", "damage":100, "add":false}
+		]
+	},
+	{
+		"name":"Arc 2",
+		"sprite":"placeholder",
+		"description":"Tire des flèches",
+		"notUsing":false,
+		"bonus":[
+			{"var":"weapons", "val":"bow2", "damage":150, "add":false}
 		]
 	}
 ]

@@ -4,11 +4,12 @@ from entity import Entity
 class Projectile(Entity): #Initialisé comme une entité
 	def __init__(self, game, owner, damage, speed=1000):
 		super().__init__(game)
+		self.owner = owner
 		#Importation de l'image
 		self.sprite = pygame.image.load("./assets/arrow.png")
 		self.rect = self.sprite.get_rect() 
-		self.rect.x = owner.rect.x #Rectangle qui part des coordonnées du player
-		self.rect.y = owner.rect.y
+		self.rect.x = self.owner.rect.x #Rectangle qui part des coordonnées du player
+		self.rect.y = self.owner.rect.y
 		#Changement de sens en foncion de sa direction
 		self.damage = damage
 		if owner.direction == -1: 
@@ -22,6 +23,6 @@ class Projectile(Entity): #Initialisé comme une entité
 		indices = self.rect.collidelistall(self.game.enemies) #Regarde si le projectile touche un ennemi
 		for i in indices:
 			entity = self.game.enemies[i]
-			entity.life -= self.damage
-			self.delete() #Enlève 100 PV à l'ennemi puis se supprime
+			entity.hurt(self.damage,self.owner)
+			self.delete() #Enlève "damage" PV à l'ennemi puis se supprime
 		return self.velocity

@@ -19,8 +19,6 @@ class Collection():
     def spawnRandomItem(self, x, y):
         item = self.items[random.randint(0, len(self.items)-1)]
         self.game.items.append(Item(self.game, item, x, y))
-        if item["getOnce"]:
-            self.items.pop(self.items.index(item))
 
 class Infobulle():
     def __init__(self, item):

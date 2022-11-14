@@ -5,17 +5,9 @@ class Weapon():
 	def __init__(self, owner):
 		self.owner = owner
 		self.game = self.owner.game
-		self.weapon = self.owner.stats.weapons[0]
-		self.damage = self.weapon["damage"]
-		self.weaponName = self.weapon["name"]
-	
-	def change(self):
-		indexNewWeapon = self.owner.stats.weapons.index(self.weapon) + 1
-		if indexNewWeapon == len(self.owner.stats.weapons):
-			indexNewWeapon = 0
-		self.weapon = self.owner.stats.weapons[indexNewWeapon]
-		self.damage = self.weapon["damage"]
-		self.weaponName = self.weapon["name"]
+		self.data = None
+		self.weaponName = "peck"
+		self.damage = 50
 
 	def use(self):
 		if self.weaponName == "peck":

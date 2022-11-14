@@ -16,7 +16,6 @@ class Player(Entity): #Initialisé comme une entité
 		#Inventaire, stockant les données des objets obtenus par le joueur
 		self.inventory = []
 		self.weapon = Weapon(self)
-		self.secondary_weapon = None
 		self.world_power = None
 		#Chargement des images
 		self.imgs = self.loadImg(img_path) #Contient toutes les images contenues dans img_path
@@ -122,10 +121,6 @@ class Player(Entity): #Initialisé comme une entité
 						#Interaction
 						if event.key == K_e:
 							self.interact = True
-
-						#Changement d'arme
-						if event.key == K_f:
-							self.weapon.change()
 		
 					if event.type == pygame.KEYUP:
 						if event.key == K_e:
@@ -197,12 +192,15 @@ class Player(Entity): #Initialisé comme une entité
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
 			else:
 				if bonus["var"] == "weapons":
-					self.stats.weapons.append({"name": bonus["val"], "damage": bonus["damage"]})
+					if self.weapon.weaponName != "peck":
+						self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.weapon.data), self.rect.x, self.rect.y)
+					self.weapon.data = item	
+					self.weapon.weaponName = bonus["val"] 
+					self.weapon.damage = bonus["damage"]									
 				else:
 					setattr(self.stats, bonus["var"], bonus["val"])				
 			if bonus["var"] == "size":
-				self.updateDim()
-			
+				self.updateDim()			
 
 	def removeBonus(self,item):
 		for bonus in item["bonus"]:

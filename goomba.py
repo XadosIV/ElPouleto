@@ -21,13 +21,13 @@ class Goomba(Entity): #Initialisé comme une entité
 		self.direction_hurt = 1
 		#Compteurs
 		self.cd_hurt = 0 #Temps pendant lequel l'ennemi est intouchable + knockback
-		self.disappear = 150 #Temps pendant lequel l'ennemi est mort avant de disparaitre
+		self.disappear = 90 #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
 		if self.life > 0:
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
-				self.velocity[0] = 50 * self.direction_hurt * self.game.dt
+				self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
 			else:
 				if self.velocity[0] == 0: #S'il ne bouge plus (Coincé contre un bloc)
 					self.direction *= -1
@@ -42,7 +42,7 @@ class Goomba(Entity): #Initialisé comme une entité
 
 				Entity.update(self)
 		else: #Supprime si plus de vie			
-			if self.disappear == 150:
+			if self.disappear == 90:
 				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
 				self.game.enemies.remove(self)
 			self.disappear -= 1		
@@ -53,10 +53,10 @@ class Goomba(Entity): #Initialisé comme une entité
 
 	def hurt(self, damage, hitter):
 		if self.cd_hurt == 0:
+			self.life -= damage
 			if hitter.rect.x > self.rect.x:
 				self.direction_hurt = -1
 			else:
 				self.direction_hurt = 1
-			self.life -= damage
 			self.cd_hurt = 30
-	
+		
