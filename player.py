@@ -16,6 +16,7 @@ class Player(Entity): #Initialisé comme une entité
 		#Inventaire, stockant les données des objets obtenus par le joueur
 		self.inventory = []
 		self.weapon = Weapon(self)
+		self.secondary_weapon = None
 		self.world_power = None
 		#Chargement des images
 		self.imgs = self.loadImg(img_path) #Contient toutes les images contenues dans img_path
@@ -31,7 +32,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.cpt_frame = 0 #Compteur de frames, pour les animations du poulet.
 		self.not_dead = 60 #Compteur de frames, pour la résurrection du joueur.
 		#Affichage
-		self.show_items = True #True = objets affichés sur le joueur			
+		self.show_items = True #True = objets affichés sur le joueur	
 
 	def loadImg(self, path):
 		#Charge toutes les images contenues dans path et les renvoie sous forme de dictionnaire name -> image
@@ -104,7 +105,8 @@ class Player(Entity): #Initialisé comme une entité
 				if keys[K_z]:
 					if self.onground:
 						self.jump(False)
-
+						
+				self.interact = False
 				for event in events:
 					if event.type == pygame.KEYDOWN:
 						#Double saut
@@ -122,9 +124,6 @@ class Player(Entity): #Initialisé comme une entité
 						if event.key == K_e:
 							self.interact = True
 		
-					if event.type == pygame.KEYUP:
-						if event.key == K_e:
-							self.interact = False
 
 
 				#check damages
@@ -194,7 +193,7 @@ class Player(Entity): #Initialisé comme une entité
 				if bonus["var"] == "weapons":
 					if self.weapon.weaponName != "peck":
 						self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.weapon.data), self.rect.x, self.rect.y)
-					self.weapon.data = item	
+					self.weapon.data = item
 					self.weapon.weaponName = bonus["val"] 
 					self.weapon.damage = bonus["damage"]									
 				else:
