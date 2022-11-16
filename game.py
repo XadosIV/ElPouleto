@@ -7,6 +7,7 @@ from item import Item, Collection
 from camera import Camera
 from pygame.locals import *
 from generator import Generator
+from utilities import Timer
 
 import random
 
@@ -21,16 +22,22 @@ class Game():
 		self.collisions = [] #Tout les objets pouvant rentrer en contact avec les entités
 		self.enemies = [] #Ennemis du joueur
 		self.items = [] #Objets apparus dans le monde
+		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.item_collection = Collection(self) #Liste de tout les objets
 		self.generator = Generator(self, "1") #Génération de la carte
 		self.tilemap = self.generator.tilemap #Tilemap de la carte générée
 		self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur
 		self.camera = Camera(self) #Création de la caméra
 
+
 	def update(self, events, keys, dt):
 		self.events = events #Récupération des évèments de la frame
 		self.keys = keys #Récupération des touches appuyés durant la frame
 		self.dt = min(dt/1000, 0.1) #Calcul du Dt (avec un maximum à 0.1)
+
+		#Update des timers
+		for timer in self.timers:
+			timer.update()
 
 		updatable_rect = self.surf.get_clip() #Rectangle dans lequel les entités sont mises à jour (optimisation)
 		updatable_rect.inflate_ip(640,640) #Ce rectangle correspond à la taille de la fenêtre + 320 pixels de chaque côté (~10 tuiles)
