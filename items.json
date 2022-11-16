@@ -1,75 +1,48 @@
 [
 	{
-		"name":"Extension Cybernétique de fou furieux",
+		"name":"Ressort",
 		"sprite":"spring",
-		"description":"Une extension high-tech conçue spécialement pour des jambes de poulet, (Compatible à partir de Windows 7 et UNIX)",
-		"notUsing":false,
+		"world":1,
+		"description":"Un ressort vous accordant une seconde propulsion une fois dans les airs.",
 		"bonus":[
-			{"var":"jump_max", "val":1, "add":true}
+			{"var":"jumpMax", "val":1, "add":true}
 		]
 	},
 	{
-		"name":"Ailes de pigeon",
+		"name":"Ailes d'ange",
 		"sprite":"wings",
-		"description":"Des ailes fabriquées à partir de plumes de pigeon.",
-		"notUsing":false,
+		"world":2,
+		"description":"Des ailes, par chance encore intactes, ayant appartenu à un ange désormais déchu.",
 		"bonus":[
-			{"var":"glide", "val":2, "add":true}
+			{"var":"glide", "val":60, "add":true}
 		]
 	},
 	{
-		"name":"Poussée d'énergie",
+		"name":"Apport musculaire",
 		"sprite":"dash",
-		"description":"Un petit boost pour que notre poulet devienne tellement rapide qu'on ne le voit pas pendant une fraction de seconde",
-		"notUsing":false,
+		"world":1,
+		"description":"Une boite de conserve contenant des protéines vous permettant de vous ruer en avant.",
 		"bonus":[
 			{"var":"dash", "val":5, "add":false}
 		]
 	},
 	{
-		"name":"Poussée de croissance",
-		"sprite":"wheat",
-		"description":"Du blé afin que notre poulet se nourisse et grandisse",
-		"notUsing":false,
-		"bonus":[
-			{"var":"size", "val":1.8, "add":false}
-		]
-	},
-	{
-		"name":"Vie supplémentaire",
+		"name":"Coeur de cristal",
 		"sprite":"life",
-		"description":"Une vie supplémentaire afin de soigner votre petit cœur de poulet",
-		"notUsing":false,
+		"world":0,
+		"description":"Un coeur fait de cristal vous offrant une plus grande longévité.",
 		"bonus":[
-			{"var":"lifemax", "val":100, "add":true},
+			{"var":"lifeMax", "val":100, "add":true},
 			{"var":"life", "val":100, "add":true}
 		]
 	},
 	{
 		"name":"Tome de résurrection",
 		"sprite":"book",
-		"description":"Vous permet de rester en vie après la mort (1 coeur)",
-		"notUsing":true,
+		"world":6,
+		"description":"Un livre contenant un sortilège vous accordant une seconde chance.",
 		"bonus":[
-			{"var":"life", "val":100, "add":false}
-		]
-	},
-	{
-		"name":"Arc",
-		"sprite":"placeholder",
-		"description":"Tire des flèches",
-		"notUsing":false,
-		"bonus":[
-			{"var":"weapons", "val":"bow", "damage":100, "add":false}
-		]
-	},
-	{
-		"name":"Arc 2",
-		"sprite":"placeholder",
-		"description":"Tire des flèches",
-		"notUsing":false,
-		"bonus":[
-			{"var":"weapons", "val":"bow2", "damage":150, "add":false}
+			{"var":"extraLife", "val":1, "add":true}
 		]
 	}
 ]

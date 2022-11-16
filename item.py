@@ -29,7 +29,6 @@ class Infobulle():
         self.game = self.item.game
         self.create_infobulle(item)
         
-
     def create_infobulle(self, item):
         padding = self.padding
         width = self.width
@@ -111,8 +110,7 @@ class Item(Entity):
 
     def take(self):
         self.game.player.inventory.append(self.data)
-        if self.data["notUsing"] == False:
-            self.game.player.addBonus(self.data)
+        self.game.player.addBonus(self.data)
         self.delete()
 
     def check(self):

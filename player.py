@@ -5,6 +5,7 @@ from stats import Stats
 import os
 from projectile import Projectile
 from weapons import Weapon
+from utilities import Timer
 
 class Player(Entity): #Initialisé comme une entité
 	def __init__(self, x,y, game, img_path="./assets/player/"):
@@ -24,15 +25,15 @@ class Player(Entity): #Initialisé comme une entité
 		#Variables locales
 		self.interact = False #True si E appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
 		self.last_onground_pos = [x,y] #Position où  faire respawn le joueur en cas de chute dans le vide
-		#Compteurs
-		self.invincible = 0 #Compteur de frames d'invincibilité, décrémente de deltaTime à chaque frame si != 0
-		self.dashing = 0 #Compteur de frames de dash
-		self.gliding = 0 #Compteur de secondes de vol, décrémente de deltaTime à chaque frame si != 0
-		self.cd_dash = 0 #Compteur de frames avant réutilisation du dash
+		#Compteurs et timers
+		self.timer_invincible = Timer(60, self.game) #Timer de frames d'invincibilité, décrémente de deltaTime à chaque frame si != 0
+		self.timer_dashing = Timer(0, self.game) #Timer de frames de dash
+		self.timer_gliding = Timer(0, self.game) #Timer de secondes de vol, décrémente de deltaTime à chaque frame si != 0
+		self.timer_cd_dash = Timer(60, self.game) #Timer de frames avant réutilisation du dash
 		self.cpt_frame = 0 #Compteur de frames, pour les animations du poulet.
-		self.not_dead = 60 #Compteur de frames, pour la résurrection du joueur.
+		self.timer_respawn = Timer(60, self.game) #Timer de frames, pour la résurrection du joueur.
 		#Affichage
-		self.show_items = True #True = objets affichés sur le joueur	
+		self.show_items = True #True = objets affichés sur le joueur
 
 	def loadImg(self, path):
 		#Charge toutes les images contenues dans path et les renvoie sous forme de dictionnaire name -> image
@@ -63,6 +64,8 @@ class Player(Entity): #Initialisé comme une entité
 
 	def update(self): #Executé à chaque frame par Game (renvoie la vélocité de l'entité pour les calculs de physique.)
 		if self.stats.life > 0: #Vérifier s'il est en vie
+			#Sauvegarde de la dernière position correcte en cas de chute dans le vide
+			#Une position correcte = deux tuiles pleines en dessous du joueur
 			if self.game.tilemap.getTileByCoor(self.rect.bottomleft) and self.game.tilemap.getTileByCoor(self.rect.bottomright):
 				tile1 = self.game.tilemap.getTileByCoor(self.rect.bottomleft)
 				tile2 = self.game.tilemap.getTileByCoor(self.rect.bottomright)
@@ -75,21 +78,20 @@ class Player(Entity): #Initialisé comme une entité
 			keys = self.game.keys
 
 			#Update les compteurs
-
-			#Compteur frame d'invincibilité
-			if self.invincible > 0:
-				self.invincible -= 1
-			#Compteur frame avant re_dash
-			if self.cd_dash > 0:
-				self.cd_dash -= 1
 			#Au sol, reset des compteurs
 			if self.onground:
 				#Compteur de saut
 				self.cpt_saut = 0
-				#Compteur frame planer
-				self.gliding = self.stats.glide
+
+				#Reset timer glide
+				self.timer_gliding.setMax(self.stats.glide)
+				self.timer_gliding.reset()
 			
-			if self.dashing == 0: #Blocage des contrôles durant le dash.
+			if self.timer_dashing.ended: #Blocage des contrôles durant le dash.
+				if not self.timer_cd_dash.running: #Si le dash est fini, on lance le cd et on reset le timer du dash
+					self.timer_cd_dash.start(reset=True)
+					self.timer_dashing.reset()
+
 				#Controles horizontaux
 				self.velocity[0] = 0
 				if keys[K_q]:
@@ -110,11 +112,12 @@ class Player(Entity): #Initialisé comme une entité
 				for event in events:
 					if event.type == pygame.KEYDOWN:
 						#Double saut
-						if event.key == K_z and self.cpt_saut < self.stats.jump_max-1 and not self.onground and self.velocity[1] > 0:
+						if event.key == K_z and self.cpt_saut < self.stats.jumpMax-1 and not self.onground and self.velocity[1] > 0:
 							self.jump(True)
 						#Dash
-						if event.key == K_v and self.velocity[0] != 0 and self.cd_dash <= 0:
-							self.dashing = self.stats.dash
+						if event.key == K_v and self.velocity[0] != 0 and self.timer_cd_dash.ended:
+							self.timer_dashing.setMax(self.stats.dash)
+							self.timer_dashing.start()
 
 						#Attaque
 						if event.key == K_SPACE:
@@ -127,25 +130,25 @@ class Player(Entity): #Initialisé comme une entité
 
 
 				#check damages
-				if self.invincible == 0:
+				if self.timer_invincible.ended:
 					for enemy in self.game.enemies:
 						if self.game.player.rect.colliderect(enemy):
 							self.hurt(enemy.damage)
 							break #On peut pas se faire toucher deux fois dans la même frame
 
 				#Planer
-				if keys[K_z] and self.gliding > 0 and self.velocity[1] >= 0:
-					self.gliding -= self.game.dt
+				#Uniquement en chute, avec l'appui sur la touche, si le timer est à son état initial (!= 0) ou si il n'est pas fini.
+				if keys[K_z] and self.velocity[1] >= 0 and (self.timer_gliding.max == self.timer_gliding.current != 0 or not self.timer_gliding.ended):
+					self.timer_gliding.start()
 					self.velocity[1] = 3 #Gravité baisse de 3 pixels le poulet par frame
 				else:
+					self.timer_gliding.pause()
 					super().update() #Application de la gravité normalement
 			else:
 				#Dash
+				self.timer_cd_dash.reset() # On reset le compteur du cd
 				self.velocity[0] = self.direction * 1000*self.game.dt #Vitesse du dash
 				self.velocity[1] = 0 #Insensible à la gravité (+ super().update() non appelé)
-				self.dashing -= 1 #Décrémente le compteur du dash
-				if self.dashing == 0:
-					self.cd_dash = 60 #Lorsque le dash est fini, on met à jour son cooldown pour le réutiliser dans 30 frames
 
 			if self.rect.y >= self.game.tilemap.map_h: 
 				self.rect.x = self.last_onground_pos[0]
@@ -153,14 +156,19 @@ class Player(Entity): #Initialisé comme une entité
 				self.hurt(200)
 
 		else:
-			for item in self.inventory:
-				if self.game.item_collection.items.index(item) == 5:					
-					self.not_dead -= 1 #Décrémente le compteur de la mort
-					if self.not_dead == 0:
-						self.not_dead = 60
-						self.addBonus(item)
-						self.inventory.remove(item) #Lorsque la mort est finie, on met à jour son cooldown pour le réutiliser dans minimum 60 frames, et on supprime l'item
-			super().update()
+			if self.stats.extraLife <= 0:
+				#Perdu
+				pass
+			else:
+				self.timer_respawn.start()
+				if self.timer_respawn.ended:
+					self.timer_respawn.reset() #On réinitialise le compteur
+					self.stats.extraLife -= 1 #On retire une vie
+					self.stats.life = round(self.stats.lifeMax * 0.2) #On lui rend 20% de sa vie
+					self.timer_invincible.start(reset=True) #On le met invincible le temps de respawn
+
+
+			super().update() #Application de la gravité
 		return self.velocity
 		
 	def updateSprite(self):
@@ -180,8 +188,8 @@ class Player(Entity): #Initialisé comme une entité
 				else:
 					self.sprite = self.imgs["poulet"+str(self.cpt_frame//4)]
 
-			if self.invincible != 0:
-				if self.invincible % 6 in [0,5,4]: #3 premières frames + toutes les 3 frames
+			if not self.timer_invincible.ended:
+				if self.timer_invincible.current % 6 in [0,5,4]: #3 premières frames + toutes les 3 frames
 					self.sprite = self.imgs["blink"]
 					self.show_items = False
 
@@ -228,17 +236,26 @@ class Player(Entity): #Initialisé comme une entité
 				self.game.surf.blit(img, self.rect.move(offset))
 
 		#HUD
+		#Lifebar
 		pygame.draw.rect(self.game.surf, (70, 70, 70), [30, 30, 300, 30])
 		pygame.draw.rect(self.game.surf, (0, 0, 0), [35, 35, 190, 20])
-		pygame.draw.rect(self.game.surf, (255, 0, 0), [35, 35, 190*(self.stats.life/self.stats.lifemax), 20])
+		pygame.draw.rect(self.game.surf, (255, 0, 0), [35, 35, 190*(self.stats.life/self.stats.lifeMax), 20])
 		font = pygame.font.SysFont("comic sans ms", 15)
-		img = self.game.drawText(f"{max(0,self.stats.life)} / {self.stats.lifemax}", (255,255,255), 90, font, (70,70,70))
+		img = self.game.drawText(f"{max(0,self.stats.life)} / {self.stats.lifeMax}", (255,255,255), 90, font, (70,70,70))
 		img_rect = img.get_rect()
 		img_rect.midleft = (235,45)
 		self.game.surf.blit(img, img_rect)
 
+		#Items
+		#Weapon Primary
+		out_rect = pygame.Rect([self.game.width-120, self.game.height-120, 100,100])
+		in_rect = pygame.Rect([0,0,85,85])
+		in_rect.center = out_rect.center
+		pygame.draw.rect(self.game.surf, (70,70,70), out_rect)
+		pygame.draw.rect(self.game.surf, (30,30,30), in_rect)
+
 	def hurt(self, dmg):
 		self.stats.life -= dmg
-		self.invincible = 60
+		self.timer_invincible.start(reset=True)
 		if self.stats.life <= 0:
 			self.velocity = pygame.math.Vector2([0,0])
