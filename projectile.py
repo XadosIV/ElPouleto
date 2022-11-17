@@ -2,18 +2,21 @@ import pygame
 from entity import Entity
 
 class Projectile(Entity): #Initialisé comme une entité
-	def __init__(self, game, owner, damage, speed=1000):
-		super().__init__(game)
+	def __init__(self, owner, damage, speed=1000, offset=(0,0)):
+		super().__init__(owner.game)
 		self.owner = owner
 		#Importation de l'image
 		self.sprite = pygame.image.load("./assets/arrow.png")
-		self.rect = self.sprite.get_rect() 
-		self.rect.x = self.owner.rect.x #Rectangle qui part des coordonnées du player
-		self.rect.y = self.owner.rect.y
+		self.rect = self.sprite.get_rect()
+		if owner.direction == -1:
+			self.sprite = pygame.transform.flip(self.sprite, True, False)
+			self.rect.right = self.owner.rect.left + offset[0] #Rectangle qui part des coordonnées du player
+		else:
+			self.rect.left = self.owner.rect.right + offset[0] #Rectangle qui part des coordonnées du player
+
+		self.rect.centery = self.owner.rect.centery + offset[1]
 		#Changement de sens en foncion de sa direction
 		self.damage = damage
-		if owner.direction == -1: 
-			self.sprite = pygame.transform.flip(self.sprite, True, False)
 		self.type = "projectile" #Le type de l'entité / son nom.
 		self.velocity[0] = speed*self.game.dt * owner.direction #Vitesse dans la bonne direction direction du projectile 
 
