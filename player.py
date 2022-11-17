@@ -107,12 +107,10 @@ class Player(Entity): #Initialisé comme une entité
 
 				#Verticaux
 				if inputs["jump"]:
-					print(self.cpt_saut,self.stats.jumpMax-1)
 					if self.onground:
 						self.jump(False)
 					elif self.cpt_saut < self.stats.jumpMax-1 and self.velocity[1] > 0:
 						self.jump(True)
-						print("AAAAH")
 				self.interact = False
 
 				#Dash
