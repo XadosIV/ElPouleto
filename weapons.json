@@ -1,18 +1,14 @@
 [
     {
-    "name":"Arc",
-    "sprite":"placeholder",
-    "description":"Tire des flèches",
-    "bonus":[
-        {"var":"weapons", "val":"bow", "damage":100, "add":false}
-    ]
-},
-{
-    "name":"Arc 2",
-    "sprite":"placeholder",
-    "description":"Tire des flèches",
-    "bonus":[
-        {"var":"weapons", "val":"bow2", "damage":150, "add":false}
-    ]
-}
+        "name":"Arc",
+        "sprite":"placeholder",
+        "description":"Tire une flèche",
+        "script":"Bow"
+    },
+    {
+        "name":"Arc Double",
+        "sprite":"placeholder",
+        "description":"Tire deux flèches",
+        "script":"DoubleBow"
+    }
 ]

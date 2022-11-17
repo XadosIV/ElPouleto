@@ -4,7 +4,7 @@ from entity import Entity
 from stats import Stats
 import os
 from projectile import Projectile
-from weapons import Weapon
+from weaponManager import WeaponManager
 from utilities import Timer
 
 class Player(Entity): #Initialisé comme une entité
@@ -16,14 +16,14 @@ class Player(Entity): #Initialisé comme une entité
 		self.rect.y = y
 		#Inventaire, stockant les données des objets obtenus par le joueur
 		self.inventory = []
-		self.weapon = Weapon(self)
+		self.weaponManager = WeaponManager(self)
 		self.secondary_weapon = None
 		self.world_power = None
 		#Chargement des images
 		self.imgs = self.loadImg(img_path) #Contient toutes les images contenues dans img_path
 		self.updateDim(force=True) #Redimensionne toutes les images de self.imgs
 		#Variables locales
-		self.interact = False #True si E appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
+		self.interact = False #True si touche appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
 		self.last_onground_pos = [x,y] #Position où  faire respawn le joueur en cas de chute dans le vide
 		#Compteurs et timers
 		self.timer_invincible = Timer(60, self.game) #Timer de frames d'invincibilité, décrémente de deltaTime à chaque frame si != 0
