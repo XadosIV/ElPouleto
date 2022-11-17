@@ -41,7 +41,8 @@ class Entity:
 
 	def delete(self):
 		#Supprimer l'entité
-		self.game.entities.remove(self)
+		if self in self.game.entities:
+			self.game.entities.remove(self)
 		if self in self.game.enemies:
 			self.game.enemies.remove(self)
 		del self
