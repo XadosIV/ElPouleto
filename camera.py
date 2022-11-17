@@ -12,11 +12,13 @@ class Camera():
 		self.camrect = self.camsurf.get_rect()
 		self.origin = [720,480] #Placement du rectangle sur l'écran (1/2 écran horizontal, 2/3 vertical)
 		self.decalage_max = 150
-		self.decalage_y = self.decalage_max #Compteur de décalage de la caméra lors de l'appui sur S
+		self.decalage_y = 0 #Compteur de décalage de la caméra lors de l'appui sur S
 		self.camrect.center = [self.origin[0], self.origin[1]]
 		self.show_down = False #Booléen true si la caméra regardait vers le bas la frame précédente (permet de remettre le offset d'origine)
 
 	def move_cam(self): #Logique des mouvements de la caméra
+		inputs = self.game.inputs
+
 		playrect = self.player.rect.move(self.offset) #Coordonnée du joueur sur l'écran
 
 		#Le but étant de garder "camrect" dans le joueur, on redéplace correctement le offset pour atteindre le joueur
@@ -35,14 +37,22 @@ class Camera():
 			#déplacer cam à droite
 			self.offset[0] -= ((playrect.right - self.camrect.right) / self.camrect.left) * self.speed
 
-		#On déplace le rectangle de caméra d'un maximum por pouvoir "voir en dessous"
-		if self.game.keys[K_s] and self.decalage_y != 0:
-			self.decalage_y -= 10
-			self.camrect.y -= 10
-		#Sinon le rectangle de caméra reprend petit à petit sa place d'origine
-		elif self.decalage_y != self.decalage_max:
-			self.decalage_y += 10
-			self.camrect.y += 10
+		#Déplacement de la caméra selon les inputs du joueur
+		cam_vel_y = 0
+		if inputs["lookUp"] and self.decalage_y <= self.decalage_max: #Vers le haut
+			cam_vel_y += 10
+
+		if inputs["lookDown"] and self.decalage_y >= -self.decalage_max: #Vers le bas
+			cam_vel_y -= 10
+		#Si pas d'input, on replace la caméra vers son endroit initial
+
+		if cam_vel_y == 0 and self.decalage_y != 0:
+			cam_vel_y = 10 if self.decalage_y < 0 else -10
+
+		#Application
+		self.decalage_y += cam_vel_y
+		self.camrect.y += cam_vel_y
+
 
 		#Limites
 		if self.offset[0] < -(self.game.tilemap.map_w - self.game.width): #Limite droite à la taille de la carte

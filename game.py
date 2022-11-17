@@ -8,6 +8,7 @@ from camera import Camera
 from pygame.locals import *
 from generator import Generator
 from utilities import Timer
+from bindings import Bindings
 
 import random
 
@@ -23,6 +24,7 @@ class Game():
 		self.enemies = [] #Ennemis du joueur
 		self.items = [] #Objets apparus dans le monde
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
+		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
 		self.generator = Generator(self, "1") #Génération de la carte
 		self.tilemap = self.generator.tilemap #Tilemap de la carte générée
@@ -34,6 +36,9 @@ class Game():
 		self.events = events #Récupération des évèments de la frame
 		self.keys = keys #Récupération des touches appuyés durant la frame
 		self.dt = min(dt/1000, 0.1) #Calcul du Dt (avec un maximum à 0.1)
+
+		self.inputs = self.listener.getInputs() #Update les touches appuyés sur la frame
+
 
 		#Update des timers
 		for timer in self.timers:
@@ -50,7 +55,6 @@ class Game():
 				velocity = entity.update()
 				#Coupe de la vélocité en plusieurs petits vecteurs afin de ne pas avoir de soucis de collisions
 				tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
-
 				onground = entity.onground
 				for t in tab: #On parcours chaque petit vecteur
 					entity.rect = entity.rect.move(t[0], t[1]) #On applique le petit vecteur à l'entité
@@ -60,7 +64,7 @@ class Game():
 						side = self.side(entity, bloc.rect)
 						#Il y a une collision avec la tuile "bloc" sur le côté "side" de l'entité
 						if side == "bot":
-							if entity.type == "player" and keys[K_s] and keys[K_SPACE] and bloc.noBottom:
+							if entity.type == "player" and self.inputs["passBot"] and bloc.noBottom:
 								#On ne gère pas la collision haute si c'est le joueur, que le bloc testé n'est pas plein
 								#et que le joueur souhaite le traverser (via les appuis sur S et SPACE)
 								continue

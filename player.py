@@ -29,7 +29,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.timer_invincible = Timer(60, self.game) #Timer de frames d'invincibilité, décrémente de deltaTime à chaque frame si != 0
 		self.timer_dashing = Timer(0, self.game) #Timer de frames de dash
 		self.timer_gliding = Timer(0, self.game) #Timer de secondes de vol, décrémente de deltaTime à chaque frame si != 0
-		self.timer_cd_dash = Timer(60, self.game) #Timer de frames avant réutilisation du dash
+		self.timer_cd_dash = Timer(30, self.game) #Timer de frames avant réutilisation du dash
 		self.cpt_frame = 0 #Compteur de frames, pour les animations du poulet.
 		self.timer_respawn = Timer(60, self.game) #Timer de frames, pour la résurrection du joueur.
 		#Affichage
@@ -63,6 +63,8 @@ class Player(Entity): #Initialisé comme une entité
 		return (self.width, self.height)
 
 	def update(self): #Executé à chaque frame par Game (renvoie la vélocité de l'entité pour les calculs de physique.)
+		inputs = self.game.inputs
+
 		if self.stats.life > 0: #Vérifier s'il est en vie
 			#Sauvegarde de la dernière position correcte en cas de chute dans le vide
 			#Une position correcte = deux tuiles pleines en dessous du joueur
@@ -73,7 +75,7 @@ class Player(Entity): #Initialisé comme une entité
 					self.last_onground_pos = [self.rect.x, self.rect.y]
 
 
-			#Récupérer les inputs sur la frame
+			#Récupérer les s sur la frame
 			events = self.game.events
 			keys = self.game.keys
 
@@ -94,9 +96,9 @@ class Player(Entity): #Initialisé comme une entité
 
 				#Controles horizontaux
 				self.velocity[0] = 0
-				if keys[K_q]:
+				if inputs["left"]:
 					self.velocity[0] -= self.stats.speed*self.game.dt
-				if keys[K_d]:
+				if inputs["right"]:
 					self.velocity[0] += self.stats.speed*self.game.dt
 				if self.velocity[0] > 0:
 					self.direction = 1
@@ -104,12 +106,26 @@ class Player(Entity): #Initialisé comme une entité
 					self.direction = -1
 
 				#Verticaux
-				if keys[K_z]:
+				if inputs["jump"]:
+					print(self.cpt_saut,self.stats.jumpMax-1)
 					if self.onground:
 						self.jump(False)
-						
+					elif self.cpt_saut < self.stats.jumpMax-1 and self.velocity[1] > 0:
+						self.jump(True)
+						print("AAAAH")
 				self.interact = False
-				for event in events:
+
+				#Dash
+				if inputs["dash"] and self.velocity[0] != 0 and self.timer_cd_dash.ended:
+					self.timer_dashing.setMax(self.stats.dash)
+					self.timer_dashing.start()
+
+				if inputs["primary"]:
+					self.weapon.use()
+
+				if inputs["interact"]:
+					self.interact = True
+				"""for event in events:
 					if event.type == pygame.KEYDOWN:
 						#Double saut
 						if event.key == K_z and self.cpt_saut < self.stats.jumpMax-1 and not self.onground and self.velocity[1] > 0:
@@ -125,7 +141,7 @@ class Player(Entity): #Initialisé comme une entité
 
 						#Interaction
 						if event.key == K_e:
-							self.interact = True
+							self.interact = True"""
 		
 
 
@@ -138,7 +154,7 @@ class Player(Entity): #Initialisé comme une entité
 
 				#Planer
 				#Uniquement en chute, avec l'appui sur la touche, si le timer est à son état initial (!= 0) ou si il n'est pas fini.
-				if keys[K_z] and self.velocity[1] >= 0 and (self.timer_gliding.max == self.timer_gliding.current != 0 or not self.timer_gliding.ended):
+				if inputs["glide"] and self.velocity[1] >= 0 and (self.timer_gliding.max == self.timer_gliding.current != 0 or not self.timer_gliding.ended):
 					self.timer_gliding.start()
 					self.velocity[1] = 3 #Gravité baisse de 3 pixels le poulet par frame
 				else:
