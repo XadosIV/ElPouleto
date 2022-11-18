@@ -6,7 +6,7 @@ class WeaponManager():
 	def __init__(self, owner):
 		self.owner = owner
 		self.data = None
-		self.script = None
+		self.script = "Peck"
 		self.owner.weapon = weaponClasses.__dict__["Peck"](self)
 
 	def set(self, data):

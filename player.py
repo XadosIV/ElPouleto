@@ -100,17 +100,19 @@ class Player(Entity): #Initialisé comme une entité
 					self.velocity[0] -= self.stats.speed*self.game.dt
 				if inputs["right"]:
 					self.velocity[0] += self.stats.speed*self.game.dt
+				#Direction du joueur
 				if self.velocity[0] > 0:
 					self.direction = 1
 				elif self.velocity[0] < 0:
 					self.direction = -1
 
-				#Verticaux
+				#Contrôles verticaux
 				if inputs["jump"]:
 					if self.onground:
 						self.jump(False)
 					elif self.cpt_saut < self.stats.jumpMax-1 and self.velocity[1] > 0:
 						self.jump(True)
+				#Reset de l'interaction avec les items afind e ne pas récupérer tous les items en même temps 
 				self.interact = False
 
 				#Dash
@@ -118,9 +120,15 @@ class Player(Entity): #Initialisé comme une entité
 					self.timer_dashing.setMax(self.stats.dash)
 					self.timer_dashing.start()
 
+				#Utilisation de l'arme équipée
 				if inputs["primary"]:
 					self.weapon.use()
 
+				#Utiulisation de l'arme secondaire
+				if inputs["secondary"]:
+					self.secondary_weapon.use()
+
+				#Interaction avec les items
 				if inputs["interact"]:
 					self.interact = True
 				"""for event in events:
@@ -210,18 +218,15 @@ class Player(Entity): #Initialisé comme une entité
 	def addBonus(self,item):
 		for bonus in item["bonus"]:
 			if bonus["add"]:
-				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])
+				if bonus["var"] == "life" and self.stats.life + bonus["val"] > self.stats.lifeMax:
+					self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.game.player.inventory[-1]), self.game.player.rect.x, self.game.player.rect.y)
+					break
+				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])					
 			else:
-				if bonus["var"] == "weapons":
-					if self.weapon.weaponName != "peck":
-						self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.weapon.data), self.rect.x, self.rect.y)
-					self.weapon.data = item
-					self.weapon.weaponName = bonus["val"] 
-					self.weapon.damage = bonus["damage"]									
-				else:
-					setattr(self.stats, bonus["var"], bonus["val"])				
+				setattr(self.stats, bonus["var"], bonus["val"])				
 			if bonus["var"] == "size":
-				self.updateDim()			
+				self.updateDim()	
+					
 
 	def removeBonus(self,item):
 		for bonus in item["bonus"]:

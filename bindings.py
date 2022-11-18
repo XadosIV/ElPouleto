@@ -53,7 +53,7 @@ class Bindings():
 				for key in self.onHit:
 					inputs[key] = event.key == self.keybind[key]
 		
-
+		#Passer à travers les blocs passable
 		if inputs["glide"] and inputs["lookDown"]:
 			inputs["glide"] = False
 			inputs["lookDown"] = False

@@ -15,7 +15,7 @@ class Goomba(Entity): #Initialisé comme une entité
 		#Chargement de l'image
 		self.sprite = pygame.image.load("./assets/goomba.png")		
 		self.life = 200 #Vie de l'ennemi
-		self.damage = 300
+		self.damage = 50
 		self.type = "goomba" #Le type de l'entité / son nom.
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1

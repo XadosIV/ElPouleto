@@ -26,6 +26,7 @@ class Game():
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
+		print(self.item_collection.all)
 		self.generator = Generator(self, "1") #Génération de la carte
 		self.tilemap = self.generator.tilemap #Tilemap de la carte générée
 		self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur

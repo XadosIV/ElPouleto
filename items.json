@@ -32,7 +32,6 @@
 		"world":0,
 		"description":"Un coeur fait de cristal vous offrant une plus grande longévité.",
 		"bonus":[
-			{"var":"lifeMax", "val":100, "add":true},
 			{"var":"life", "val":100, "add":true}
 		]
 	},
