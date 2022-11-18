@@ -1,5 +1,5 @@
 import pygame, csv, random
-from goomba import Goomba
+from snake import Snake
 
 class Generator():
 	def __init__(self, game, world, size=32): #map generator
@@ -201,7 +201,7 @@ class Generator():
 
 	def spawns(self):
 		for i in self.enemies_coor:
-			Goomba(self.game, i[0], i[1])
+			Snake(self.game, i[0], i[1])
 		for i in self.items_coor:
 			self.game.item_collection.spawnRandomItem(i[0], i[1])
 

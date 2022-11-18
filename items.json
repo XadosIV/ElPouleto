@@ -28,11 +28,11 @@
 	},
 	{
 		"name":"Coeur de cristal",
-		"sprite":"life",
+		"sprite":"lifemax",
 		"world":0,
 		"description":"Un coeur fait de cristal vous offrant une plus grande longévité.",
 		"bonus":[
-			{"var":"life", "val":100, "add":true}
+			{"var":"lifemax", "val":100, "add":true}
 		]
 	},
 	{

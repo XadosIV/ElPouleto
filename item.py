@@ -57,7 +57,6 @@ class Item(Entity):
 
     def take(self):
         self.game.player.inventory.append(self.data)
-        print(self.data)
         if self.data["type"] == "item":
             self.game.player.addBonus(self.data)
         else:

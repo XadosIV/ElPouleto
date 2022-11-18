@@ -4,7 +4,7 @@ from pygame.locals import *
 from entity import Entity, Stats
 import random
 
-class Goomba(Entity): #Initialisé comme une entité
+class Snake(Entity): #Initialisé comme une entité
 	def __init__(self, game, x, y):
 		Entity.__init__(self, game)
 		#Point de spawn de l'ennemi
@@ -15,8 +15,8 @@ class Goomba(Entity): #Initialisé comme une entité
 		#Chargement de l'image
 		self.sprite = pygame.image.load("./assets/goomba.png")		
 		self.life = 200 #Vie de l'ennemi
-		self.damage = 50
-		self.type = "goomba" #Le type de l'entité / son nom.
+		self.damage = 50 #Dégats en fonction de la vie actuelle (Pour test)
+		self.type = "snake" #Le type de l'entité / son nom.
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1
 		#Compteurs
@@ -40,7 +40,9 @@ class Goomba(Entity): #Initialisé comme une entité
 				
 				self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
 
-				Entity.update(self)
+			self.damage = 40 + self.game.player.stats.life * 0.2
+
+			Entity.update(self)
 		else: #Supprime si plus de vie			
 			if self.disappear == 90:
 				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
