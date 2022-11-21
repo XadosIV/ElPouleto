@@ -27,7 +27,6 @@ class Fox(Entity):
 		self.disappear = 90 #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
-		print(self.timer_home.running)
 		if self.life > 0:
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
