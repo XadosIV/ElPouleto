@@ -23,8 +23,8 @@ def _create_window():
 
 	w,h = (1440,720)
 	window = pygame.display.set_mode((w,h))
-	#pygame.display.set_icon(WINDOW_ICON)
-    #pygame.display.set_caption(WINDOW_TITLE)
+	pygame.display.set_icon(pygame.image.load("./resources/icon.png"))
+	pygame.display.set_caption("El Pouleto !")
     #pygame.display.set_mode(SCREEN_SIZE, FULLSCREEN | SCALED)
 	pygame.mouse.set_visible(False)
     #pygame.event.set_allowed([QUIT, KEYDOWN, MOUSEBUTTONUP, MOUSEBUTTONDOWN])
