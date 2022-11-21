@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from entity import Entity, Stats
+from src.game.gameplay.entity import Entity
 
 import random
 

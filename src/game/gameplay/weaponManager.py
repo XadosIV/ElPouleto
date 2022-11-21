@@ -1,6 +1,6 @@
 import pygame
-from projectile import Projectile
-import weaponClasses
+from src.game.gameplay.projectile import Projectile
+import src.game.gameplay.weaponClasses as weaponClasses
 
 class WeaponManager():
 	def __init__(self, owner):

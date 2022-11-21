@@ -27,15 +27,6 @@
 		]
 	},
 	{
-		"name":"Coeur de cristal",
-		"sprite":"lifemax",
-		"world":0,
-		"description":"Un coeur fait de cristal vous offrant une plus grande longévité.",
-		"bonus":[
-			{"var":"lifemax", "val":100, "add":true}
-		]
-	},
-	{
 		"name":"Tome de résurrection",
 		"sprite":"book",
 		"world":6,

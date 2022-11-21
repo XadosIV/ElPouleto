@@ -1,15 +1,14 @@
 import pygame
-from entity import Entity
-from player import Player
-from infobulle import Infobulle
+from src.game.gameplay.entity import Entity
+from src.game.display.infobulle import Infobulle
 from pygame.locals import *
 import json
 import random
 
 class Collection():
     def __init__(self, game):
-        self.items = self.loadJson("items.json", addItemType=True)
-        self.weapons = self.loadJson("weapons.json", addWeaponType=True)
+        self.items = self.loadJson("src/game/gameplay/data/items.json", addItemType=True)
+        self.weapons = self.loadJson("src/game/gameplay/data/weapons.json", addWeaponType=True)
         self.all = self.items + self.weapons
         self.game = game
 
@@ -44,7 +43,7 @@ class Item(Entity):
         self.rect.x = x
         self.rect.y = y
         self.pickable = False
-        self.sprite = pygame.image.load(f"./assets/{data['sprite']}.png")
+        self.sprite = self.images.get(f"items/{data['sprite']}")
         self.type = "item"
         self.data = data
         self.infobulle = Infobulle(self)

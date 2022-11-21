@@ -1,5 +1,5 @@
 import pygame
-from entity import Entity
+from src.game.gameplay.entity import Entity
 
 class Projectile(Entity): #Initialisé comme une entité
 	def __init__(self, owner, damage, speed=1000, offset=(0,0)):

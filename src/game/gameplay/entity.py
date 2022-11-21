@@ -1,13 +1,14 @@
 import pygame
 from pygame.locals import *
-from stats import Stats
+from src.game.gameplay.stats import Stats
 
 class Entity:
 	def __init__(self, game):
-		self.game = game 
+		self.game = game
+		self.images = self.game.galery
 		self.velocity = pygame.math.Vector2([0,0]) #Vitesse de l'entité horizontalement/verticalement
 		#Importation de l'image (De base c'est un carré rouge)
-		self.sprite = pygame.image.load("./assets/placeholder.png") 
+		self.sprite = pygame.image.load("resources/placeholder.png") 
 		self.rect = self.sprite.get_rect() 
 		self.onground = False
 		self.direction = 1 #Direction : 1 = Droite, -1 = Gauche

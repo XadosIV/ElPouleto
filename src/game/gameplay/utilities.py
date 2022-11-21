@@ -1,3 +1,5 @@
+import os, pygame
+
 class Timer():
 	def __init__(self, maximum, game):
 		self.max = maximum
@@ -41,3 +43,29 @@ class Timer():
 
 	def __str__(self):
 		return f"TIMER : Current : {self.current} / Running : {self.running} / Ended : {self.ended} / Max : {self.max}"
+
+class Galery():
+	def __init__(self, path="./resources"):
+		self.imgs = {}
+		self.assetsDir = path
+		self.load(path)
+		print(self.imgs)
+
+	def load(self, path):
+		for file in os.listdir(path):
+			relativePath = path+"/"+file
+			if os.path.isdir(relativePath):
+				self.load(relativePath)
+			else:
+				print("loaded: "+ relativePath)
+				self.imgs[relativePath[12:-4]] = pygame.image.load(relativePath)
+
+	def get(self, name="placeholder"):
+		return self.imgs[name]
+
+	def startsWith(self, start=""):
+		dico = {}
+		for k,v in self.imgs.items():
+			if k.startswith(start):
+				dico[k.split("/")[1]] = v
+		return dico

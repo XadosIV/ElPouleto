@@ -1,14 +1,14 @@
 import pygame
 from pygame.locals import *
-from entity import Entity
-from stats import Stats
+from src.game.gameplay.entity import Entity
+from src.game.gameplay.stats import Stats
 import os
-from projectile import Projectile
-from weaponManager import WeaponManager
-from utilities import Timer
+from src.game.gameplay.projectile import Projectile
+from src.game.gameplay.weaponManager import WeaponManager
+from src.game.gameplay.utilities import Timer
 
 class Player(Entity): #Initialisé comme une entité
-	def __init__(self, x,y, game, img_path="./assets/player/"):
+	def __init__(self, x,y, game):
 		super().__init__(game)
 		self.type = "player" #Le type de l'entité / son nom.
 		#Point de spawn du joueur
@@ -20,7 +20,8 @@ class Player(Entity): #Initialisé comme une entité
 		self.secondary_weapon = None
 		self.world_power = None
 		#Chargement des images
-		self.imgs = self.loadImg(img_path) #Contient toutes les images contenues dans img_path
+		self.imgs = self.images.startsWith("player/") #Contient toutes les images contenues dans img_path
+		print(self.imgs)
 		self.updateDim(force=True) #Redimensionne toutes les images de self.imgs
 		#Variables locales
 		self.interact = False #True si touche appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
@@ -34,14 +35,6 @@ class Player(Entity): #Initialisé comme une entité
 		self.timer_respawn = Timer(60, self.game) #Timer de frames, pour la résurrection du joueur.
 		#Affichage
 		self.show_items = True #True = objets affichés sur le joueur
-
-	def loadImg(self, path):
-		#Charge toutes les images contenues dans path et les renvoie sous forme de dictionnaire name -> image
-		imgs = {}
-		for name in os.listdir(path):
-			imgs[name.split(".")[0]] = pygame.image.load(path+name)
-		return imgs
-
 
 	def updateDim(self, force=False):
 		# Redimensionne si nécessaire le joueur (tout ses sprites)

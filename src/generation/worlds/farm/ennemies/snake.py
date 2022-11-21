@@ -1,7 +1,7 @@
 import pygame
 import copy as cp
 from pygame.locals import *
-from entity import Entity, Stats
+from src.game.gameplay.entity import Entity
 import random
 
 class Snake(Entity): #Initialisé comme une entité
@@ -11,11 +11,11 @@ class Snake(Entity): #Initialisé comme une entité
 		self.rect.x = x 
 		self.rect.y = y
 		#Vitesse aléatoire de l'ennemi
-		self.stats.speed = random.randint(150,250) 
+		self.stats.speed = 200
 		#Chargement de l'image
-		self.sprite = pygame.image.load("./assets/goomba.png")		
+		self.sprite = self.images.get("enemies/goomba") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
 		self.life = 200 #Vie de l'ennemi
-		self.damage = 50 #Dégats en fonction de la vie actuelle (Pour test)
+		self.damage = 0 #Dégats en fonction de la vie actuelle (Pour test), calculé dans l'update
 		self.type = "snake" #Le type de l'entité / son nom.
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1
@@ -40,7 +40,7 @@ class Snake(Entity): #Initialisé comme une entité
 				
 				self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
 
-			self.damage = 40 + self.game.player.stats.life * 0.2
+			self.damage = int(40 + self.game.player.stats.life * 0.2)
 
 			Entity.update(self)
 		else: #Supprime si plus de vie			

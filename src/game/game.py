@@ -1,19 +1,21 @@
-import pygame, copy
-from snake import Snake
-from fox import Fox
-from entity import Entity
-from player import Player
-from item import Item, Collection
-from camera import Camera
+import pygame
+
+from src.generation.worlds.farm.ennemies.snake import Snake
+from src.generation.worlds.farm.ennemies.fox import Fox
+from src.game.gameplay.entity import Entity
+from src.game.gameplay.player import Player
+from src.game.gameplay.item import Item, Collection
+from src.game.display.camera import Camera
 from pygame.locals import *
-from generator import Generator
-from utilities import Timer
-from bindings import Bindings
+from src.generation.generator import Generator
+from src.game.gameplay.utilities import Timer, Galery
+from src.game.gameplay.bindings import Bindings
 
 import random
 
 class Game():
 	def __init__(self, surf):
+		pygame.font.init()
 		self.gravity = 30 # Nombre de pixels par seconde (pour les entités en chute)
 		self.surf = surf #Surface de la fenêtre
 		#Dimensions
@@ -24,9 +26,10 @@ class Game():
 		self.enemies = [] #Ennemis du joueur
 		self.items = [] #Objets apparus dans le monde
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
+		self.galery = Galery()
 		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
-		self.generator = Generator(self, "1") #Génération de la carte
+		self.generator = Generator(self, "farm") #Génération de la carte
 		self.tilemap = self.generator.tilemap #Tilemap de la carte générée
 		self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur
 		self.camera = Camera(self) #Création de la caméra

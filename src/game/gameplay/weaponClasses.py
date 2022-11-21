@@ -1,6 +1,6 @@
-from projectile import Projectile
+from src.game.gameplay.projectile import Projectile
 import pygame
-from utilities import Timer
+from src.game.gameplay.utilities import Timer
 
 #Classe abstraite
 class Weapon():

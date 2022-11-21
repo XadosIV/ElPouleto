@@ -1,5 +1,5 @@
 import pygame, csv, random
-from snake import Snake
+from src.generation.worlds.farm.ennemies.snake import Snake
 
 class Generator():
 	def __init__(self, game, world, size=32): #map generator
@@ -7,7 +7,7 @@ class Generator():
 		self.world = world
 		self.size = size
 
-		self.path = f"./assets/worlds/{world}/"
+		self.path = f"./src/generation/worlds/{world}/"
 		self.tileset = Tileset(self.path+"tileset.png")
 		self.tilemap = Tilemap(self) #Contient tiles[] et tile_size
 		
