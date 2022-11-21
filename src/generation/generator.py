@@ -1,5 +1,6 @@
 import pygame, csv, random
 from src.generation.worlds.farm.ennemies.snake import Snake
+from src.generation.worlds.farm.ennemies.fox import Fox
 
 class Generator():
 	def __init__(self, game, world, size=32): #map generator
@@ -201,7 +202,7 @@ class Generator():
 
 	def spawns(self):
 		for i in self.enemies_coor:
-			Snake(self.game, i[0], i[1])
+			Fox(self.game, i[0], i[1])
 		for i in self.items_coor:
 			self.game.item_collection.spawnRandomItem(i[0], i[1])
 

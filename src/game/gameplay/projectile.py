@@ -6,7 +6,7 @@ class Projectile(Entity): #Initialisé comme une entité
 		super().__init__(owner.game)
 		self.owner = owner
 		#Importation de l'image
-		self.sprite = pygame.image.load("./assets/arrow.png")
+		self.sprite = self.images.get("items/arrow")
 		self.rect = self.sprite.get_rect()
 		if owner.direction == -1:
 			self.sprite = pygame.transform.flip(self.sprite, True, False)
