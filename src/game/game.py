@@ -16,7 +16,7 @@ import random
 class Game():
 	def __init__(self, surf):
 		pygame.font.init()
-		self.gravity = 30 # Nombre de pixels par seconde (pour les entités en chute)
+		self.gravity = 10 # Nombre de pixels par seconde (pour les entités en chute)
 		self.surf = surf #Surface de la fenêtre
 		#Dimensions
 		self.width = surf.get_width()
@@ -56,6 +56,7 @@ class Game():
 			if updatable_rect.colliderect(entity.rect.move(self.camera.offset)) or entity.type == "player":
 				#Update et récupération de la vélocité
 				velocity = entity.update()
+				velocity[1] = int(velocity[1])+1
 				#Coupe de la vélocité en plusieurs petits vecteurs afin de ne pas avoir de soucis de collisions
 				tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
 				onground = entity.onground

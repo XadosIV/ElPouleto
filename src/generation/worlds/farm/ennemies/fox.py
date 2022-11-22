@@ -12,9 +12,9 @@ class Fox(Entity):
 		self.rect.x = x 
 		self.rect.y = y
 		#Vitesse aléatoire de l'ennemi
-		self.stats.speed = 250
+		self.stats.speed = 150
 		#Chargement de l'image
-		self.sprite = self.images.get("enemies/goomba") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
+		self.sprite = self.images.get("enemies/fox") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
 		self.life = 400 #Vie de l'ennemi
 		self.damage = 130 #Dégats en fonction de la vie actuelle (Pour test), calculé dans l'update
 		self.home = self.rect.copy()
@@ -72,8 +72,6 @@ class Fox(Entity):
 					else:
 						if abs(self.game.player.rect.x-self.rect.x) > 16:
 							self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
-						else:
-							self.rect.x = self.game.player.rect.x
 
 			Entity.update(self)
 
