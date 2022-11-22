@@ -49,7 +49,6 @@ class Galery():
 		self.imgs = {}
 		self.assetsDir = path
 		self.load(path)
-		print(self.imgs)
 
 	def load(self, path):
 		for file in os.listdir(path):
@@ -57,7 +56,6 @@ class Galery():
 			if os.path.isdir(relativePath):
 				self.load(relativePath)
 			else:
-				print("loaded: "+ relativePath)
 				self.imgs[relativePath[12:-4]] = pygame.image.load(relativePath)
 
 	def get(self, name="placeholder"):

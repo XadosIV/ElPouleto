@@ -12,17 +12,17 @@ class Fox(Entity):
 		self.rect.x = x 
 		self.rect.y = y
 		#Vitesse aléatoire de l'ennemi
-		self.stats.speed = 300
+		self.stats.speed = 250
 		#Chargement de l'image
 		self.sprite = self.images.get("enemies/goomba") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
 		self.life = 400 #Vie de l'ennemi
 		self.damage = 130 #Dégats en fonction de la vie actuelle (Pour test), calculé dans l'update
-		self.home = self.rect
-		self.type = "snake" #Le type de l'entité / son nom.
+		self.home = self.rect.copy()
+		self.type = "fox" #Le type de l'entité / son nom.
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1
 		#Compteurs
-		self.timer_home = Timer(60, self.game)
+		self.timer_home = Timer(30, self.game)
 		self.cd_hurt = 0 #Temps pendant lequel l'ennemi est intouchable + knockback
 		self.disappear = 90 #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
@@ -31,28 +31,50 @@ class Fox(Entity):
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
 				self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
-			else:		
-				if self.home.x - self.game.player.rect.x > 400 or self.game.player.rect.x - self.home.x > 400:
-					if self.rect.x < self.home.x:
-						self.direction = 1
+			else:
+				vecRect = pygame.math.Vector2(self.rect.center) #Vecteur du fox
+				vecPlayer = pygame.math.Vector2(self.game.player.rect.center) #Vecteur du joueur
+				vecHome = pygame.math.Vector2(self.home.center) #Vecteur du home
+
+
+				if vecHome.distance_to(vecPlayer) > 400: #Quand player pas dans la range
+					self.timer_home.reset() #On reset le timer une fois que le joueur n'est plus dans la range
+
+					distHome = vecHome.distance_to(vecRect) #Distance des deux vecteurs
+
+					if distHome < 16: # Range d'entrée dans le home
+						self.rect.center = self.home.center
+						self.velocity[0] = 0
 					else:
-						self.direction = -1
-					self.velocity[0] = 0
-				else:
-					if self.rect.x == self.home.x and not self.timer_home.running:
-						self.timer_home.start(reset=True)	
-						print("yooo")			
+						if self.velocity[0] == 0 and self.onground:
+							self.jump()
+						if self.rect.x < self.home.x: #Direction du home
+							self.direction = 1
+						else:
+							self.direction = -1
+						if abs(self.rect.y-self.home.y) > 16 and self.onground: #Si le home est trop haut ou trop bas du fox, il le déplace.
+							self.rect.center = self.home.center 
+							self.velocity[0] = 0
+
+						self.velocity[0] = self.stats.speed * self.direction * self.game.dt
+				else: #Quand player in range
+					if not self.timer_home.running:
+						self.timer_home.start()
 					if self.rect.x < self.game.player.rect.x:
 						self.direction = 1
 					else:
 						self.direction = -1
 			
-				self.damage = round(80 + self.game.player.stats.life * 0.1)
+					self.damage = round(80 + self.game.player.stats.life * 0.1)
 			
-			if self.timer_home.running:
-				self.velocity[0] = 0
-			elif not self.timer_home.running and (not self.home.x - self.game.player.rect.x > 400 or not self.game.player.rect.x - self.home.x > 400):
-				self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
+					if not self.timer_home.ended:
+						self.velocity[0] = 0
+					else:
+						if abs(self.game.player.rect.x-self.rect.x) > 16:
+							self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
+						else:
+							self.rect.x = self.game.player.rect.x
+
 			Entity.update(self)
 
 		else: #Supprime si plus de vie			

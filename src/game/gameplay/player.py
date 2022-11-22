@@ -21,7 +21,6 @@ class Player(Entity): #Initialisé comme une entité
 		self.world_power = None
 		#Chargement des images
 		self.imgs = self.images.startsWith("player/") #Contient toutes les images contenues dans img_path
-		print(self.imgs)
 		self.updateDim(force=True) #Redimensionne toutes les images de self.imgs
 		#Variables locales
 		self.interact = False #True si touche appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
