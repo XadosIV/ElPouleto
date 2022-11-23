@@ -9,7 +9,7 @@ def main():
 	while running:
 		events = pygame.event.get()
 		keys = pygame.key.get_pressed()
-		framerate = 30
+		framerate = 60
 		clock = pygame.time.Clock()
 		dt = clock.tick(framerate)
 		for event in events:

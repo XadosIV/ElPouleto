@@ -52,7 +52,7 @@ class Fox(Entity):
 							self.direction = 1
 						else:
 							self.direction = -1
-						if abs(self.rect.y-self.home.y) > 16 and self.onground: #Si le home est trop haut ou trop bas du fox, il le déplace.
+						if self.rect.y-self.home.y > 16 and self.onground: #Si le home est trop haut ou trop bas du fox, il le déplace.
 							self.rect.center = self.home.center 
 							self.velocity[0] = 0
 
@@ -66,11 +66,13 @@ class Fox(Entity):
 						self.direction = -1
 			
 					self.damage = round(80 + self.game.player.stats.life * 0.1)
-			
+
 					if not self.timer_home.ended:
 						self.velocity[0] = 0
 					else:
 						if abs(self.game.player.rect.x-self.rect.x) > 16:
+							if self.onground and self.velocity[0] == 0:
+								self.jump()
 							self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
 
 			Entity.update(self)

@@ -5,6 +5,7 @@ from src.game.gameplay.stats import Stats
 class Entity:
 	def __init__(self, game):
 		self.game = game
+		self.fall = 0
 		self.images = self.game.galery
 		self.velocity = pygame.math.Vector2([0,0]) #Vitesse de l'entité horizontalement/verticalement
 		#Importation de l'image (De base c'est un carré rouge)
@@ -22,7 +23,10 @@ class Entity:
 		#Gestion Physique
 		if self.velocity[1] > 1:
 			self.onground = False #S'il est en l'air il est pas au sol
-		self.velocity[1] += self.game.gravity*self.game.dt #Fait tomber les entités
+		self.fall += self.game.gravity*self.game.dt
+		if self.fall >= 1:
+			self.fall -= 1
+			self.velocity[1] += 1
 		return self.velocity
 
 	def draw(self, offset):
@@ -36,7 +40,7 @@ class Entity:
 	def jump(self, increment=False): 
 		#Saut
 		self.onground = False
-		self.velocity[1] = -self.stats.jumpForce #Contrebalance la gravité pour faire sauter
+		self.velocity[1] = -self.stats.jumpForce*self.game.dt #Contrebalance la gravité pour faire sauter
 		if increment: #Pour plusieurs sauts
 			self.cpt_saut += 1
 
