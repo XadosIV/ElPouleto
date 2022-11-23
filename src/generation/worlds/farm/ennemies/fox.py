@@ -18,6 +18,7 @@ class Fox(Entity):
 		self.life = 400 #Vie de l'ennemi
 		self.damage = 130 #Dégats en fonction de la vie actuelle (Pour test), calculé dans l'update
 		self.home = self.rect.copy()
+		self.inHome = True
 		self.type = "fox" #Le type de l'entité / son nom.
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1
@@ -27,6 +28,7 @@ class Fox(Entity):
 		self.disappear = 90 #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
+		self.inHome=False
 		if self.life > 0:
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
@@ -45,6 +47,7 @@ class Fox(Entity):
 					if distHome < 16: # Range d'entrée dans le home
 						self.rect.center = self.home.center
 						self.velocity[0] = 0
+						self.inHome = True
 					else:
 						if self.velocity[0] == 0 and self.onground:
 							self.jump()
@@ -95,3 +98,15 @@ class Fox(Entity):
 			self.direction_hurt = 1
 		self.cd_hurt = 30
 		return self.velocity
+
+	def draw(self, offset):
+		#Draw Home and Fox only if not in Home
+		if self.inHome:
+			sprite = self.images.get("enemies/fox_home2")
+		else:
+			sprite = self.images.get("enemies/fox_home")
+		rect = pygame.Rect(self.home.x,self.home.y, 32,32)
+		rect=rect.move(offset)
+		self.game.surf.blit(sprite, rect)
+		if not self.inHome:
+			super(Fox, self).draw(offset)
