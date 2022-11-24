@@ -83,18 +83,18 @@ class Fox(Entity):
 						if abs(self.game.player.rect.x-self.rect.x) > 16:
 							if self.onground and self.velocity[0] == 0:
 								self.jump()
-							self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
-
-			Entity.update(self)
+							self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse			
 
 		else: #Supprime si plus de vie			
 			if not self.timer_disappear.running:
-				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
+				self.sprite = self.images.get("enemies/fox_dead")
 				self.game.enemies.remove(self)
 			self.timer_disappear.start()	
 			self.velocity[0] = 0
 			if self.timer_disappear.ended:
 				self.game.entities.remove(self)
+
+		Entity.update(self)
 		return self.velocity
 
 	def hurt(self, damage, hitter):
