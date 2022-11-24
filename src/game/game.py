@@ -1,7 +1,5 @@
 import pygame
 
-from src.generation.worlds.farm.ennemies.snake import Snake
-from src.generation.worlds.farm.ennemies.fox import Fox
 from src.game.gameplay.entity import Entity
 from src.game.gameplay.player import Player
 from src.game.gameplay.item import Item, Collection

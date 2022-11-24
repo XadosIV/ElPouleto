@@ -1,6 +1,4 @@
-import pygame, csv, random
-from src.generation.worlds.farm.ennemies.snake import Snake
-from src.generation.worlds.farm.ennemies.fox import Fox
+import pygame, csv, random, json, importlib
 
 class Generator():
 	def __init__(self, game, world, size=32): #map generator
@@ -9,9 +7,10 @@ class Generator():
 		self.size = size
 
 		self.path = f"./src/generation/worlds/{world}/"
+		self.enemies = self.importEnemiesByWorld() #Renvoie un tableau des classes des ennemies à faire spawn pour le monde
 		self.tileset = Tileset(self.path+"tileset.png")
 		self.tilemap = Tilemap(self) #Contient tiles[] et tile_size
-		
+
 		self.start_x, self.start_y = 0,0 #Coordonnée de spawn du joueur
 		self.enemies_coor = [] #Coordonnée où doivent spawn des ennemis
 		self.items_coor = [] #Coordonnée où doivent spawn des items
@@ -21,6 +20,22 @@ class Generator():
 		self.generate()
 		self.spawns()
 		self.optimize()
+
+	def importEnemiesByWorld(self):
+		enemies = []
+		#read json
+		with open("./src/generation/data/enemies.json", "r") as f:
+			raw_json = f.read()
+		#get world_array
+		self.enemiesByWorld = json.loads(raw_json)
+		worldEnemies = self.enemiesByWorld[self.world]
+		#Import and append classes in enemies
+		package = "src.game.gameplay.enemies"
+		for name in worldEnemies:
+			file = "."+name.lower()
+			module = importlib.import_module(file, package)
+			enemies.append(module.__dict__[name])
+		return enemies
 
 	def optimize(self):
 		#Retire des collisions tout les blocs touchant d'autres blocs de tout les côtés, inutile de les compter
@@ -202,7 +217,7 @@ class Generator():
 
 	def spawns(self):
 		for i in self.enemies_coor:
-			Fox(self.game, i[0], i[1])
+			random.choice(self.enemies)(self.game, i[0], i[1])
 		for i in self.items_coor:
 			self.game.item_collection.spawnRandomItem(i[0], i[1])
 
