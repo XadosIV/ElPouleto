@@ -4,3 +4,4 @@ anciencodephysique.txt
 brainstorming
 gen.txt
 assetsNotUsed/*
+src/game/gameplay/enemies/fly.py

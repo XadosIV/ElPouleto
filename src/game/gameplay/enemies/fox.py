@@ -23,9 +23,10 @@ class Fox(Entity):
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
 		self.direction_hurt = 1
 		#Compteurs
-		self.timer_home = Timer(30, self.game)
+		self.timer_home = Timer(30, self.game) #Temps avant que le renard sorte de son home
+		self.timer_tooFar = Timer(30, self.game) #Temps avant que le renard se TP à son home 
 		self.cd_hurt = 0 #Temps pendant lequel l'ennemi est intouchable + knockback
-		self.disappear = 90 #Temps pendant lequel l'ennemi est mort avant de disparaitre
+		self.timer_disappear = Timer(90, self.game) #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
 		self.inHome=False
@@ -37,12 +38,20 @@ class Fox(Entity):
 				vecRect = pygame.math.Vector2(self.rect.center) #Vecteur du fox
 				vecPlayer = pygame.math.Vector2(self.game.player.rect.center) #Vecteur du joueur
 				vecHome = pygame.math.Vector2(self.home.center) #Vecteur du home
+				distHome = vecHome.distance_to(vecRect) #Distance des deux vecteurs
+				distPlayer = vecPlayer.distance_to(vecRect) #Distance des deux vecteurs
 
+				if self.rect.y != self.home.y and ((distHome > 400 and distPlayer > 400) or distPlayer > 400):
+					if not self.timer_tooFar.running:
+						self.timer_tooFar.start()
+						self.direction *= -1
+					if self.timer_tooFar.ended and self.timer_tooFar.running:
+						self.rect.center = self.home.center 
+						self.velocity[0] = 0
+						self.timer_tooFar.reset()
 
 				if vecHome.distance_to(vecPlayer) > 400: #Quand player pas dans la range
 					self.timer_home.reset() #On reset le timer une fois que le joueur n'est plus dans la range
-
-					distHome = vecHome.distance_to(vecRect) #Distance des deux vecteurs
 
 					if distHome < 16: # Range d'entrée dans le home
 						self.rect.center = self.home.center
@@ -51,14 +60,12 @@ class Fox(Entity):
 					else:
 						if self.velocity[0] == 0 and self.onground:
 							self.jump()
-						if self.rect.x < self.home.x: #Direction du home
-							self.direction = 1
-						else:
-							self.direction = -1
-						if self.rect.y-self.home.y > 16 and self.onground: #Si le home est trop haut ou trop bas du fox, il le déplace.
-							self.rect.center = self.home.center 
-							self.velocity[0] = 0
-
+						if self.rect.y == self.home.y:
+							if self.rect.x < self.home.x: #Direction du home
+								self.direction = 1
+							else:
+								self.direction = -1
+							
 						self.velocity[0] = self.stats.speed * self.direction * self.game.dt
 				else: #Quand player in range
 					if not self.timer_home.running:
@@ -81,12 +88,12 @@ class Fox(Entity):
 			Entity.update(self)
 
 		else: #Supprime si plus de vie			
-			if self.disappear == 90:
+			if not self.timer_disappear.running:
 				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
 				self.game.enemies.remove(self)
-			self.disappear -= 1		
+			self.timer_disappear.start()	
 			self.velocity[0] = 0
-			if self.disappear == 0:
+			if self.timer_disappear.ended:
 				self.game.entities.remove(self)
 		return self.velocity
 

@@ -22,7 +22,7 @@ class Snake(Entity): #Initialisé comme une entité
 		self.direction_hurt = 1
 		#Compteurs
 		self.cd_hurt = 0 #Temps pendant lequel l'ennemi est intouchable + knockback
-		self.disappear = 90 #Temps pendant lequel l'ennemi est mort avant de disparaitre
+		self.timer_disappear = Timer(90, self.game) #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
 		if self.life > 0:
@@ -45,14 +45,15 @@ class Snake(Entity): #Initialisé comme une entité
 
 			Entity.update(self)
 		else: #Supprime si plus de vie			
-			if self.disappear == 90:
-				self.sprite = self.images.get("enemies/snake_hurt")
+			if not self.timer_disappear.running:
+				self.sprite = pygame.transform.rotate(self.sprite, 90*self.direction_hurt)
 				self.game.enemies.remove(self)
-			self.disappear -= 1		
+			self.timer_disappear.start()	
 			self.velocity[0] = 0
-			if self.disappear == 0:
+			if self.timer_disappear.ended:
 				self.game.entities.remove(self)
 		return self.velocity
+
 
 	def hurt(self, damage, hitter):
 		self.sprite = self.images.get("enemies/snake_hurt")

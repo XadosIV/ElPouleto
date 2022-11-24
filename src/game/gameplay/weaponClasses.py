@@ -9,6 +9,7 @@ class Weapon():
 		self.owner = weaponManager.owner
 		self.data = weaponManager.data
 		self.game = self.owner.game
+		self.cd = Timer(20, self.game)
 
 	def use(self):
 		pass
@@ -21,11 +22,13 @@ class Peck(Weapon):
 		self.range = 40
 
 	def use(self):
-		self.getHitbox() #Définit self.hitbox (Rect) et la place correctement au niveau du joueur
-		colliders = self.hitbox.collidelistall(self.game.enemies)
-		for index in colliders:
-			enemy = self.game.enemies[index]
-			enemy.hurt(self.damage, self.owner)
+		if self.cd.ended:
+			self.getHitbox() #Définit self.hitbox (Rect) et la place correctement au niveau du joueur
+			colliders = self.hitbox.collidelistall(self.game.enemies)
+			for index in colliders:
+				enemy = self.game.enemies[index]
+				enemy.hurt(self.damage, self.owner)
+			self.cd.start(reset=True)
 
 	def getHitbox(self):
 		self.hitbox = pygame.Rect([1,1,self.range,self.owner.height])
