@@ -12,6 +12,7 @@ class Entity:
 		self.sprite = pygame.image.load("resources/placeholder.png") 
 		self.rect = self.sprite.get_rect() 
 		self.onground = False
+		self.flying = False #Définit si on doit lui appliquer une gravité ou non et si l'entité passe à travers les blocs transparents
 		self.direction = 1 #Direction : 1 = Droite, -1 = Gauche
 		self.cpt_saut = 0 #Compteur de saut de l'entité
 		#Importation des stats
@@ -21,12 +22,13 @@ class Entity:
 
 	def update(self):
 		#Gestion Physique
-		if self.velocity[1] > 1:
-			self.onground = False #S'il est en l'air il est pas au sol
-		self.fall += self.game.gravity*self.game.dt
-		if self.fall >= 1:
-			self.fall -= 1
-			self.velocity[1] += 1
+		if not self.flying:
+			if self.velocity[1] > 1:
+				self.onground = False #S'il est en l'air il est pas au sol
+			self.fall += self.game.gravity*self.game.dt
+			if self.fall >= 1:
+				self.fall -= 1
+				self.velocity[1] += 1
 		return self.velocity
 
 	def draw(self, offset):

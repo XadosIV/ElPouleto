@@ -1,5 +1,4 @@
 import pygame
-import copy as cp
 from pygame.locals import *
 from src.game.gameplay.entity import Entity
 from src.game.gameplay.utilities import Timer

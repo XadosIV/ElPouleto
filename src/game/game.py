@@ -66,7 +66,7 @@ class Game():
 						side = self.side(entity, bloc.rect)
 						#Il y a une collision avec la tuile "bloc" sur le côté "side" de l'entité
 						if side == "bot":
-							if entity.type == "player" and self.inputs["passBot"] and bloc.noBottom:
+							if ((entity.type == "player" and self.inputs["passBot"]) or (entity.flying)) and bloc.noBottom:
 								#On ne gère pas la collision haute si c'est le joueur, que le bloc testé n'est pas plein
 								#et que le joueur souhaite le traverser (via les appuis sur S et SPACE)
 								continue
