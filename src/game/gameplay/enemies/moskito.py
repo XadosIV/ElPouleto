@@ -13,11 +13,11 @@ class Moskito(Entity): #Initialisé comme une entité
         self.rect.width = 16
         self.rect.height = 16
         #Vitesse aléatoire de l'ennemi
-        self.stats.speed = 350
+        self.stats.speed = 300
         #Chargement de l'image
         self.sprite = self.images.get("enemies/moskito") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
         self.life = 50 #Vie de l'ennemi
-        self.damage = 150
+        self.damage = 120
         self.flying = True
         self.type = "moskito" #Le type de l'entité / son nom.
         self.game.enemies.append(self) #Ajout dans la liste d'ennemis		

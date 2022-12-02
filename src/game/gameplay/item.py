@@ -60,8 +60,10 @@ class Item(Entity):
             self.game.player.addBonus(self.data)
         else:
             if self.game.player.weaponManager.script != "Peck":
-                self.game.item_collection.spawnWeapon(self.game.item_collection.weapons.index(self.game.player.weaponManager.data), self.game.player.rect.x, self.game.player.rect.y)
+                index = self.game.item_collection.weapons.index(self.game.player.weaponManager.data)
+                self.game.item_collection.spawnWeapon(index, self.game.player.rect.x, self.game.player.rect.y)
             self.game.player.weaponManager.set(self.data)
+        self.game.player.interact = False
         self.delete()
 
     def check(self):

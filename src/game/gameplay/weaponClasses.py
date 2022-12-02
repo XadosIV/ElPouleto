@@ -31,11 +31,12 @@ class Peck(Weapon):
 			self.cd.start(reset=True)
 
 	def getHitbox(self):
-		self.hitbox = pygame.Rect([1,1,self.range,self.owner.height])
+		self.hitbox = pygame.Rect([1,1,self.range+self.owner.width,self.owner.height])
 		if self.owner.direction == 1:
-			self.hitbox.midleft = self.owner.rect.midright
+			self.hitbox.midleft = self.owner.rect.midleft
 		else:
-			self.hitbox.midright = self.owner.rect.midleft
+			self.hitbox.midright = self.owner.rect.midright
+
 
 
 class Bow(Weapon):

@@ -123,24 +123,6 @@ class Player(Entity): #Initialisé comme une entité
 				#Interaction avec les items
 				if inputs["interact"]:
 					self.interact = True
-				"""for event in events:
-					if event.type == pygame.KEYDOWN:
-						#Double saut
-						if event.key == K_z and self.cpt_saut < self.stats.jumpMax-1 and not self.onground and self.velocity[1] > 0:
-							self.jump(True)
-						#Dash
-						if event.key == K_v and self.velocity[0] != 0 and self.timer_cd_dash.ended:
-							self.timer_dashing.setMax(self.stats.dash)
-							self.timer_dashing.start()
-
-						#Attaque
-						if event.key == K_SPACE:
-							self.weapon.use()
-
-						#Interaction
-						if event.key == K_e:
-							self.interact = True"""
-		
 
 
 				#check damages
@@ -264,6 +246,11 @@ class Player(Entity): #Initialisé comme une entité
 		in_rect.center = out_rect.center
 		pygame.draw.rect(self.game.surf, (70,70,70), out_rect)
 		pygame.draw.rect(self.game.surf, (30,30,30), in_rect)
+		if (self.weapon.data != None):
+			img = self.images.get("items/"+self.weapon.data["sprite"])
+			img = pygame.transform.scale(img, (85,85))
+
+			self.game.surf.blit(img, in_rect)
 
 	def hurt(self, dmg):
 		self.stats.life -= dmg
