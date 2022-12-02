@@ -1,4 +1,4 @@
-import pygame, csv, random, json, importlib
+import pygame, csv, random, json, importlib, os
 
 class Generator():
 	def __init__(self, game, world, size=32): #map generator
@@ -16,6 +16,9 @@ class Generator():
 		self.items_coor = [] #Coordonnée où doivent spawn des items
 
 		self.struct_spawned = []
+		self.struct_max = len(os.listdir(self.path+"structures"))
+		self.force_first = 0
+		self.nb_struct = 6
 
 		self.generate()
 		self.spawns()
@@ -64,23 +67,12 @@ class Generator():
 				tileId.append(list(row))
 		return tileId
 
-	def join2(self, deb, fin):
-		ground_id = 5
-		x,y = deb
-		xend,yend = fin
-		while [xend,yend] != [x,y]:
-			distance = [xend-x, yend-y]
-			self.tilemap.add(ground_id, x, y)
-			x+=1
-
 	def generate(self):
-		self.join2([0,27], [45,27])
 		tileId = self.read_csv("spawn")
-		nb_struct = 4
 		deb_tile = [0,30]
 		end_tiles = self.spawnStructure(tileId, coor=deb_tile)
 		deb_tile = [end_tiles[0][0]-1,end_tiles[0][1]]
-		for i in range(nb_struct):
+		for i in range(self.nb_struct):
 			tileId = self.read_csv("structures/"+str(self.nextStruct()))
 			end_tiles = self.spawnStructure(tileId, coor=deb_tile)
 			deb_tile = [end_tiles[0][0]-1,end_tiles[0][1]]
@@ -111,9 +103,12 @@ class Generator():
 			return tile
 
 	def nextStruct(self):
-		nb = random.randint(1,4)
+		if (len(self.struct_spawned) == 0 and self.force_first != 0):
+			nb = self.force_first
+		else:
+			nb = random.randint(1,self.struct_max)
 		while nb in self.struct_spawned:
-			nb = random.randint(1,4)
+			nb = random.randint(1,self.struct_max)
 		self.struct_spawned.append(nb)
 		return nb
 

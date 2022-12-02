@@ -18,6 +18,7 @@ class Peck(Weapon):
 	def __init__(self, weaponManager):
 		super(Peck, self).__init__(weaponManager)
 		#Attaque de Cac définie par défaut lorsqu'aucune arme n'est équipée
+		self.cd = Timer(5, self.game)
 		self.damage = 50
 		self.range = 40
 
