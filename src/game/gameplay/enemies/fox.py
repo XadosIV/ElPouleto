@@ -11,11 +11,11 @@ class Fox(Entity):
 		#Point de spawn de l'ennemi
 		self.rect.x = x 
 		self.rect.y = y
-		#Vitesse aléatoire de l'ennemi
+		#Vitesse
 		self.stats.speed = 150
 		#Chargement de l'image
 		self.sprite = self.images.get("enemies/fox") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
-		self.life = 400 #Vie de l'ennemi
+		self.stats.life = 400 #Vie de l'ennemi
 		self.damage = 130 #Dégats en fonction de la vie actuelle (Pour test), calculé dans l'update
 		self.home = self.rect.copy()
 		self.inHome = True
@@ -30,7 +30,7 @@ class Fox(Entity):
 
 	def update(self):
 		self.inHome=False
-		if self.life > 0:
+		if self.stats.life > 0:
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
 				self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
@@ -98,7 +98,7 @@ class Fox(Entity):
 		return self.velocity
 
 	def hurt(self, damage, hitter):
-		self.life -= damage
+		self.stats.life -= damage
 		if hitter.rect.x > self.rect.x:
 			self.direction_hurt = -1
 		else:

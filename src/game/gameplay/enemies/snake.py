@@ -10,11 +10,11 @@ class Snake(Entity): #Initialisé comme une entité
 		#Point de spawn de l'ennemi
 		self.rect.x = x 
 		self.rect.y = y
-		#Vitesse aléatoire de l'ennemi
+		#Vitesse
 		self.stats.speed = 200
 		#Chargement de l'image
 		self.sprite = self.images.get("enemies/snake") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
-		self.life = 200 #Vie de l'ennemi
+		self.stats.life = 200 #Vie de l'ennemi
 		self.damage = 50 
 		self.type = "snake" #Le type de l'entité / son nom.
 		self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
@@ -24,7 +24,7 @@ class Snake(Entity): #Initialisé comme une entité
 		self.timer_disappear = Timer(90, self.game) #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
 	def update(self):
-		if self.life > 0:
+		if self.stats.life > 0:
 			if self.cd_hurt != 0:
 				self.cd_hurt -= 1
 				self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
@@ -57,7 +57,7 @@ class Snake(Entity): #Initialisé comme une entité
 
 	def hurt(self, damage, hitter):
 		self.sprite = self.images.get("enemies/snake_hurt")
-		self.life -= damage
+		self.stats.life -= damage
 		if hitter.rect.x > self.rect.x:
 			self.direction_hurt = -1
 		else:

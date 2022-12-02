@@ -10,12 +10,12 @@ class Bird(Entity): #Initialisé comme une entité
         #Point de spawn de l'ennemi
         self.rect.x = x 
         self.rect.y = y
-        #Vitesse aléatoire de l'ennemi
+        #Vitesse
         self.area = [x-200, x+200, y-200, y+200] #Taille de l'endroit pù peut se déplacer l'oiseau
         self.stats.speed = 150
         #Chargement de l'image
         self.sprite = self.images.get("enemies/bird0") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
-        self.life = 100 #Vie de l'ennemi
+        self.stats.life = 100 #Vie de l'ennemi
         self.damage = 80
         self.type = "bird" #Le type de l'entité / son nom.
         self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
@@ -26,7 +26,7 @@ class Bird(Entity): #Initialisé comme une entité
         self.cpt_frame = 0 #Compteur de frames, pour les animations du bird.
 
     def update(self):
-        if self.life > 0:
+        if self.stats.life > 0:
             if self.cd_hurt != 0:
                 self.cd_hurt -= 1
                 self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
@@ -70,7 +70,7 @@ class Bird(Entity): #Initialisé comme une entité
                 self.sprite = self.images.get("enemies/bird"+str(self.cpt_frame//5))
 
     def hurt(self, damage, hitter):
-        self.life -= damage
+        self.stats.life -= damage
         if hitter.rect.x > self.rect.x:
             self.direction_hurt = -1
         else:
