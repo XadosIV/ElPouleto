@@ -56,11 +56,11 @@ class Bird(Entity): #Initialisé comme une entité
                 self.game.enemies.remove(self)
                 self.timer_disappear.start()	
                 self.velocity[0] = 0
+                self.flying = False
             if self.timer_disappear.ended:
                 self.game.entities.remove(self)
 
-        Entity.update(self)
-        return self.velocity
+        return Entity.update(self)
 
     def updateSprite(self):
         self.cpt_frame += 1
