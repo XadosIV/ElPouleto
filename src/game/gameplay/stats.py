@@ -1,7 +1,7 @@
 class Stats():
 	def __init__(self, opt={}):
-		self.speed = 400
-		self.jumpForce = 650
+		self.speed = 300
+		self.jumpForce = 550
 		self.jumpMax = 1
 		self.glide = 0 #en secondes
 		self.dash = 0 #en frame

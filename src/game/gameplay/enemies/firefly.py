@@ -15,7 +15,7 @@ class Firefly(Entity): #Initialisé comme une entité
         self.rect.width = 32
         self.rect.height = 32
         #Vitesse
-        self.stats.speed = 450
+        self.stats.speed = 250
         #Chargement de l'image
         self.sprite = self.images.get("enemies/firefly0") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
         self.stats.life = 1 #Vie de l'ennemi

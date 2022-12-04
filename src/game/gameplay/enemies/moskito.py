@@ -15,7 +15,7 @@ class Moskito(Entity): #Initialisé comme une entité
         self.rect.width = 16
         self.rect.height = 16
         #Vitesse
-        self.stats.speed = 300
+        self.stats.speed = 220
         #Chargement de l'image
         self.sprite = self.images.get("enemies/moskito") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
         self.stats.life = 50 #Vie de l'ennemi
