@@ -21,7 +21,7 @@ class Generator():
 		self.struct_spawned = []
 		self.struct_max = len(os.listdir(self.path+"structures"))
 		self.force_first = 0
-		self.nb_struct = 6
+		self.nb_struct = 3
 
 		self.generate()
 		self.spawns()

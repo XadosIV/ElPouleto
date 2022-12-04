@@ -27,7 +27,7 @@ class Game():
 		self.galery = Galery()
 		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
-		self.generator = Generator(self, "farm") #Génération de la carte
+		self.generator = Generator(self, "hell") #Génération de la carte
 		self.tilemap = self.generator.tilemap #Tilemap de la carte générée
 		self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur
 		self.camera = Camera(self) #Création de la caméra
