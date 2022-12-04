@@ -1,0 +1,157 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "spawn_farm.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
+    "fileStates": {
+        "D:/../../tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "D:/Desktop/ElPouleto/assets/worlds/1/end.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 81,
+                "y": -246
+            }
+        },
+        "Farm.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "SpriteSheet.tsx": {
+            "scaleInDock": 1
+        },
+        "end.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 254.66666666666663,
+                "y": -255.33333333333337
+            }
+        },
+        "spawn_farm.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 109.33333333333326,
+                "y": 192.66666666666663
+            }
+        },
+        "struct_farm_1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 511.99999999999994,
+                "y": 0.6666666666666288
+            }
+        },
+        "struct_farm_2.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256,
+                "y": 0.5
+            }
+        },
+        "struct_farm_3.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256,
+                "y": 256.5
+            }
+        },
+        "struct_farm_4.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256,
+                "y": 256.5
+            }
+        },
+        "struct_farm_5.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 255.99999999999994,
+                "y": 256.66666666666663
+            }
+        },
+        "struct_farm_6.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256,
+                "y": 0.5
+            }
+        },
+        "struct_farm_7.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 512,
+                "y": 257
+            }
+        },
+        "struct_farm_8.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 255.99999999999994,
+                "y": 0.6666666666666288
+            }
+        },
+        "testmap1.tmx": {
+            "scale": 0.6174999999999999,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 721.4574898785426,
+                "y": 361.13360323886644
+            }
+        },
+        "testmap1.tmx#SpriteSheet": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "D:/Desktop/Projets/ElPouleto/src/generation/worlds/farm/structures",
+    "last.externalTilesetPath": "C:/Users/JORIS_DUBOIS",
+    "last.imagePath": "D:/Desktop/Projets/ElPouleto/src/generation/worlds/farm",
+    "map.fixedSize": false,
+    "map.lastUsedExportFilter": "Tous les Fichiers (*)",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "spawn_farm.tmx",
+        "struct_farm_1.tmx",
+        "struct_farm_2.tmx",
+        "struct_farm_3.tmx",
+        "struct_farm_4.tmx",
+        "Farm.tsx",
+        "end.tmx",
+        "struct_farm_5.tmx",
+        "struct_farm_6.tmx",
+        "struct_farm_7.tmx",
+        "struct_farm_8.tmx"
+    ],
+    "project": "spawn_farm.tiled-project",
+    "recentFiles": [
+        "struct_farm_8.tmx",
+        "struct_farm_7.tmx",
+        "struct_farm_6.tmx",
+        "struct_farm_5.tmx",
+        "end.tmx",
+        "Farm.tsx",
+        "struct_farm_4.tmx",
+        "struct_farm_3.tmx",
+        "struct_farm_2.tmx",
+        "struct_farm_1.tmx",
+        "spawn_farm.tmx",
+        "D:/Desktop/ElPouleto/assets/worlds/1/end.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}

@@ -1,0 +1,109 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_3.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
+    "fileStates": {
+        "1.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 456,
+                "y": 180.5
+            }
+        },
+        "2.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 277,
+                "y": 199.5
+            }
+        },
+        "3.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 624,
+                "y": -237.5
+            }
+        },
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/Farm.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_3.tmx": {
+            "scale": 0.64755859375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 257.8917207057759,
+                "y": 0.772130900316597
+            }
+        },
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_4.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 339.99999999999994,
+                "y": 393.66666666666663
+            }
+        },
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_6.tmx": {
+            "scale": 0.64755859375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.3474589051426,
+                "y": 0.772130900316597
+            }
+        },
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_7.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 647.9999999999999,
+                "y": 219.33333333333331
+            }
+        },
+        "C:/Users/Mathys/Downloads/tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "spawn.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 90.90909090909076,
+                "y": 328.78787878787875
+            }
+        },
+        "tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "D:/Desktop/Projets/ElPouleto/src/generation/worlds/hell/structures",
+    "last.externalTilesetPath": "C:/Users/JORIS_DUBOIS/Documents/Tiled/Hell",
+    "last.imagePath": "D:/Desktop/Projets/ElPouleto/src/generation/worlds/hell",
+    "map.fixedSize": false,
+    "map.lastUsedExportFilter": "Tous les Fichiers (*)",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "tileset.tsx",
+        "spawn.tmx",
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_3.tmx",
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_4.tmx"
+    ],
+    "project": "hell.tiled-project",
+    "recentFiles": [
+        "spawn.tmx",
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_4.tmx",
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_3.tmx",
+        "tileset.tsx",
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_7.tmx",
+        "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_6.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
