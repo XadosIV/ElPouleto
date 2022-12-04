@@ -23,6 +23,7 @@ class Bird(Entity): #Initialisé comme une entité
         self.type = "bird" #Le type de l'entité / son nom.
         self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
         self.direction_hurt = 1
+        self.flying = flying
         #Compteurs
         self.cd_hurt = 0 #Temps pendant lequel l'ennemi est intouchable + knockback
         self.timer_disappear = Timer(90, self.game) #Temps pendant lequel l'ennemi est mort avant de disparaitre
@@ -37,14 +38,16 @@ class Bird(Entity): #Initialisé comme une entité
                 if self.rect.x < self.area[0] or self.rect.x > self.area[1]: #S'il sort de l'area
                     self.direction *= -1
                 if self.rect.y < self.area[2]:
-                    self.velocity[1] = self.stats.speed * self.direction * self.game.dt
+                    self.velocity[1] += 5
                 elif self.rect.y > self.area[3]:
-                    self.velocity[1] = - self.stats.speed * self.direction * self.game.dt
-
-                if random.randint(1,2) == 2:
-                    self.velocity[1] = self.stats.speed * self.direction * self.game.dt
-                if random.randint(1,50) == 1:
-                    self.direction *= -1
+                    self.velocity[1] -= 5
+                else:
+                    if random.randint(1,10) == 1:
+                        self.velocity[1] += 1
+                    elif random.randint(1,10) == 2:
+                        self.velocity[1] -= 1
+                    if random.randint(1,50) == 1:
+                        self.direction *= -1
 
                 self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse        
 
@@ -53,7 +56,6 @@ class Bird(Entity): #Initialisé comme une entité
                 self.game.enemies.remove(self)
                 self.timer_disappear.start()	
                 self.velocity[0] = 0
-                self.velocity[1] = 0
             if self.timer_disappear.ended:
                 self.game.entities.remove(self)
 
