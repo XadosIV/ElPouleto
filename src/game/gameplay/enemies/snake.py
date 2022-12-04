@@ -29,8 +29,6 @@ class Snake(Entity): #Initialisé comme une entité
 				self.cd_hurt -= 1
 				self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
 			else:
-				if self.sprite == self.images.get("enemies/snake_hurt"):
-					self.sprite = self.images.get("enemies/snake")
 				if self.velocity[0] == 0: #S'il ne bouge plus (Coincé contre un bloc)
 					self.direction *= -1
 				if self.direction == 1: #S'il va à droite
@@ -44,7 +42,6 @@ class Snake(Entity): #Initialisé comme une entité
 
 		else: #Supprime si plus de vie			
 			if not self.timer_disappear.running:
-				self.sprite = self.images.get("enemies/snake_hurt")
 				self.game.enemies.remove(self)
 			self.timer_disappear.start()	
 			self.velocity[0] = 0
@@ -56,7 +53,6 @@ class Snake(Entity): #Initialisé comme une entité
 
 
 	def hurt(self, damage, hitter):
-		self.sprite = self.images.get("enemies/snake_hurt")
 		self.stats.life -= damage
 		if hitter.rect.x > self.rect.x:
 			self.direction_hurt = -1

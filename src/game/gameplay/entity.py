@@ -26,9 +26,9 @@ class Entity:
 			if self.velocity[1] > 1:
 				self.onground = False #S'il est en l'air il est pas au sol
 			self.fall += self.game.gravity*self.game.dt
-			if self.fall >= 1:
+			if self.fall >= 1: 
 				self.fall -= 1
-				self.velocity[1] += 1
+				self.velocity[1] += 1 #Il tombe de plus en plus vite
 		return self.velocity
 
 	def draw(self, offset):

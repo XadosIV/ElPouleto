@@ -30,18 +30,18 @@ class Bird(Entity): #Initialisé comme une entité
         self.cpt_frame = 0 #Compteur de frames, pour les animations du bird.
 
     def update(self):
-        if self.stats.life > 0:
-            if self.cd_hurt != 0:
-                self.cd_hurt -= 1
-                self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
+        if self.stats.life > 0: #S'il est en vie
+            if self.cd_hurt != 0: #Si touché par le joueur
+                self.cd_hurt -= 1 
+                self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt #Knockback de l'ennemi
             else:
-                if self.rect.x < self.area[0] or self.rect.x > self.area[1]: #S'il sort de l'area
-                    self.direction *= -1
-                if self.rect.y < self.area[2]:
+                if self.rect.x < self.area[0] or self.rect.x > self.area[1]: #S'il sort de l'area à gauche ou à droite
+                    self.direction *= -1 #Changement de direction
+                if self.rect.y < self.area[2]: #S'il sort de l'area en haut
                     self.velocity[1] += 5
-                elif self.rect.y > self.area[3]:
+                elif self.rect.y > self.area[3]: #S'il sort de l'area en bas
                     self.velocity[1] -= 5
-                else:
+                else: #Sinon déplacement aléatoires de temps en temps
                     if random.randint(1,10) == 1:
                         self.velocity[1] += 1
                     elif random.randint(1,10) == 2:
@@ -52,7 +52,7 @@ class Bird(Entity): #Initialisé comme une entité
                 self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse        
 
         else: #Supprime si plus de vie			
-            if not self.timer_disappear.running:
+            if not self.timer_disappear.running: #Temps pendant lequel son corps est toujours visible
                 self.game.enemies.remove(self)
                 self.timer_disappear.start()	
                 self.velocity[0] = 0
@@ -66,10 +66,10 @@ class Bird(Entity): #Initialisé comme une entité
         self.cpt_frame += 1
         if self.cpt_frame == 16:
             self.cpt_frame = 0
-        if self.stats.life <= 0:
+        if self.stats.life <= 0: #S'il est mort il prend le sprite mort
             self.sprite = self.images.get("enemies/bird_dead")
         else:
-            if self.velocity[0] == 0:
+            if self.velocity[0] == 0: #Sinon animations de vol
                 self.sprite = self.images.get("enemies/bird0")
             else:
                 self.sprite = self.images.get("enemies/bird"+str(self.cpt_frame//5))

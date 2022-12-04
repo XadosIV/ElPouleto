@@ -29,22 +29,22 @@ class Moskito(Entity): #Initialisé comme une entité
         self.timer_disappear = Timer(90, self.game) #Temps pendant lequel l'ennemi est mort avant de disparaitre
 
     def update(self):
-        if self.stats.life > 0:
-            if self.cd_hurt != 0:
+        if self.stats.life > 0: #Si en vie
+            if self.cd_hurt != 0: #Si pas touché par le joueur
                 self.cd_hurt -= 1
-                self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt
+                self.velocity[0] = (self.cd_hurt*4 + 1) * self.direction_hurt * self.game.dt #Knockback
             else:
                 #comportement normal
-                vecPlayer = pygame.math.Vector2([self.game.player.rect.x, self.game.player.rect.y])
-                vecMoi = pygame.math.Vector2([self.rect.x, self.rect.y])
-                vecDirection = vecPlayer - vecMoi
-                if vecDirection.length_squared() != 0:
+                vecPlayer = pygame.math.Vector2([self.game.player.rect.x, self.game.player.rect.y]) #Vecteur du player
+                vecMoi = pygame.math.Vector2([self.rect.x, self.rect.y]) #Vecteur du moskito
+                vecDirection = vecPlayer - vecMoi #Vecteur entre les 2
+                if vecDirection.length_squared() != 0: 
                     vecDirection.normalize_ip()
-                    self.velocity = vecDirection * self.stats.speed * self.game.dt
+                    self.velocity = vecDirection * self.stats.speed * self.game.dt #Se dirige vers le joueur
                 else:
                     self.velocity = pygame.math.Vector2(0)
         else: #Supprime si plus de vie			
-            if not self.timer_disappear.running:
+            if not self.timer_disappear.running: #Timer pendant lequel il reste "mort" sur l'écran
                 self.game.enemies.remove(self)
                 self.timer_disappear.start()	
                 self.velocity[0] = 0
@@ -52,7 +52,7 @@ class Moskito(Entity): #Initialisé comme une entité
             if self.timer_disappear.ended:
                 self.delete()
 
-        if self.velocity[0] > 0:
+        if self.velocity[0] > 0: #Ajustement de la direction
             self.direction = 1
         else:
             self.direction = -1
