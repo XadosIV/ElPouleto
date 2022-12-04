@@ -4,6 +4,8 @@ from src.game.gameplay.entity import Entity
 from src.game.gameplay.utilities import Timer
 import random
 
+flying = True
+
 class Firefly(Entity): #Initialisé comme une entité
     def __init__(self, game, x, y):
         Entity.__init__(self, game)
@@ -18,7 +20,7 @@ class Firefly(Entity): #Initialisé comme une entité
         self.sprite = self.images.get("enemies/firefly0") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
         self.stats.life = 1 #Vie de l'ennemi
         self.damage = 180
-        self.flying = True
+        self.flying = flying
         self.type = "firefly" #Le type de l'entité / son nom.
         self.game.enemies.append(self) #Ajout dans la liste d'ennemis		
         self.direction_hurt = 1

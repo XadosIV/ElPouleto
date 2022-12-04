@@ -7,7 +7,10 @@ class Generator():
 		self.size = size
 
 		self.path = f"./src/generation/worlds/{world}/"
-		self.enemies = self.importEnemiesByWorld() #Renvoie un tableau des classes des ennemies à faire spawn pour le monde
+
+		self.data = self.read_info()
+
+		self.enemies, self.flyingEnemies = self.importEnemiesByWorld() #Renvoie un tableau des classes des ennemies à faire spawn pour le monde
 		self.tileset = Tileset(self.path+"tileset.png")
 		self.tilemap = Tilemap(self) #Contient tiles[] et tile_size
 
@@ -24,8 +27,14 @@ class Generator():
 		self.spawns()
 		self.optimize()
 
+	def read_info(self):
+		with open(self.path+"info.json") as f:
+			raw_json = f.read()
+		return json.loads(raw_json)
+
 	def importEnemiesByWorld(self):
 		enemies = []
+		flyingEnemies = []
 		#read json
 		with open("./src/generation/data/enemies.json", "r") as f:
 			raw_json = f.read()
@@ -37,8 +46,15 @@ class Generator():
 		for name in worldEnemies:
 			file = "."+name.lower()
 			module = importlib.import_module(file, package)
-			enemies.append(module.__dict__[name])
-		return enemies
+			try:
+				if module.__dict__["flying"]:
+					flyingEnemies.append(module.__dict__[name])
+				else:
+					enemies.append(module.__dict__[name])
+			except Exception as e:
+				enemies.append(module.__dict__[name])
+
+		return enemies,flyingEnemies
 
 	def optimize(self):
 		#Retire des collisions tout les blocs touchant d'autres blocs de tout les côtés, inutile de les compter
@@ -111,30 +127,6 @@ class Generator():
 			nb = random.randint(1,self.struct_max)
 		self.struct_spawned.append(nb)
 		return nb
-
-	def join(self, deb):
-		x,y = deb
-		fin = [deb[0]+random.randint(5,15),deb[1]+random.randint(-3, 0)]
-		segment = [fin[0]-deb[0], fin[1]-deb[1]]
-		direction = [1 if segment[0] > 0 else -1, 1 if segment[1] > 0 else -1]		
-		ground_id = 5
-		if x >= y:
-			self.tilemap.add(ground_id, x, y)
-			while [x,y] != fin:
-				x+=direction[0]
-				distx = abs(fin[0]-x)
-				disty = abs(fin[1]-y)
-				self.tilemap.add(ground_id, x, y)
-				if y != fin[1]:
-					if distx > disty:
-						for i in range(min(2, disty)):
-							if random.randint(1,4) == 1:
-								y+=direction[1]
-								self.tilemap.add(ground_id, x, y)
-					else:
-						y+=direction[1]
-						self.tilemap.add(ground_id, x, y)
-		return fin
 
 	def spawnStructure(self, tileId, coor):
 		if self.find_deb_tile(tileId):
@@ -212,7 +204,13 @@ class Generator():
 
 	def spawns(self):
 		for i in self.enemies_coor:
-			random.choice(self.enemies)(self.game, i[0], i[1])
+			if self.tilemap.getTileByCoor(i[0], i[1]+32):
+				if self.tilemap.getTileByCoor(i[0], i[1]+32):
+					random.choice(self.enemies)(self.game, i[0], i[1]) #ennemi terrestre
+				else:
+					random.choice(self.flyingEnemies)(self.game, i[0], i[1]) #sinon ennemi aérien
+			else:
+				random.choice(self.flyingEnemies)(self.game, i[0], i[1]) #sinon ennemi aérien
 		for i in self.items_coor:
 			self.game.item_collection.spawnRandomItem(i[0], i[1])
 

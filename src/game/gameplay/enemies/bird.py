@@ -4,6 +4,8 @@ from src.game.gameplay.entity import Entity
 from src.game.gameplay.utilities import Timer
 import random
 
+flying = True
+
 class Bird(Entity): #Initialisé comme une entité
     def __init__(self, game, x, y):
         Entity.__init__(self, game)
@@ -15,6 +17,7 @@ class Bird(Entity): #Initialisé comme une entité
         self.stats.speed = 150
         #Chargement de l'image
         self.sprite = self.images.get("enemies/bird0") #Sans paramètre, ça renvoie le placeholder (carré rouge)		
+        self.flying = flying
         self.stats.life = 100 #Vie de l'ennemi
         self.damage = 80
         self.type = "bird" #Le type de l'entité / son nom.

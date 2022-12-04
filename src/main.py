@@ -6,11 +6,11 @@ def main():
 	window = _create_window()
 	game = Game(window)
 	running = True
+	clock = pygame.time.Clock()
 	while running:
 		events = pygame.event.get()
 		keys = pygame.key.get_pressed()
 		framerate = 60
-		clock = pygame.time.Clock()
 		dt = clock.tick(framerate)
 		for event in events:
 			if event.type == QUIT:
