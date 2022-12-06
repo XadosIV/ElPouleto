@@ -37,7 +37,7 @@
 	},
 	{
 		"name":"Bulle de protection",
-		"sprite":"placeholder",
+		"sprite":"shield",
 		"world":3,
 		"description":"Ce bouclier aérien vous permettra d'encaisser une attaque sans vous prendre de dégats.",
 		"bonus":[

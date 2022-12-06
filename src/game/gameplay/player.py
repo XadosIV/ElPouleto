@@ -45,8 +45,8 @@ class Player(Entity): #Initialisé comme une entité
 			self.width = TILE_SIZE*self.stats.size
 			self.height = TILE_SIZE*self.stats.size
 			#Redimensionner les images
-			for img in self.imgs:
-				self.imgs[img] = pygame.transform.scale(self.imgs[img], (self.width, self.height))
+			"""for img in self.imgs:
+				self.imgs[img] = pygame.transform.scale(self.imgs[img], (self.width, self.height))"""
 			#Définir le sprite par défaut
 			self.sprite = self.imgs["poulet0"]
 			#Update le rectangle
@@ -196,7 +196,7 @@ class Player(Entity): #Initialisé comme une entité
 		for bonus in item["bonus"]:
 			if bonus["add"]:
 				if bonus["var"] == "life" and self.stats.life + bonus["val"] > self.stats.lifeMax:
-					self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.game.player.inventory[-1]), self.game.player.rect.x, self.game.player.rect.y)
+					self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.inventory[-1]), self.game.player.rect.x, self.game.player.rect.y)
 					break
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])					
 			else:
@@ -212,9 +212,6 @@ class Player(Entity): #Initialisé comme une entité
 			else:
 				setattr(self.stats, bonus["var"], self.stats.base_stats()[bonus["var"]])
 
-	def endCooldownDash(self):
-		self.stats.can_dash = True
-
 	def get_item_sprite(self, name):
 		if name in self.imgs.keys():
 			return self.imgs[name]
@@ -226,10 +223,10 @@ class Player(Entity): #Initialisé comme une entité
 		super().draw(offset)
 		if self.show_items:
 			for item in self.inventory:
-				img = self.get_item_sprite(item["sprite"])
-				if self.direction != 1:
+				img = self.get_item_sprite(item["sprite"]) #Récupération du sprite à appliquer sur le poulet
+				if self.direction != 1: #Change le sens si dans l'autre direction
 					img = pygame.transform.flip(img, True, False)
-				self.game.surf.blit(img, self.rect.move(offset))
+				self.game.surf.blit(img, self.rect.move([offset[0] - (img.get_size()[0]-TILE_SIZE)/2, offset[1] - (img.get_size()[1]-TILE_SIZE)/2])) #Fixe l'image au centre du poulet
 
 		#HUD
 		#Lifebar
@@ -256,7 +253,7 @@ class Player(Entity): #Initialisé comme une entité
 			self.game.surf.blit(img, in_rect)
 
 	def hurt(self, dmg):
-		if self.shield == 0:
+		if self.stats.shield == 0:
 			self.stats.life -= dmg
 			self.timer_invincible.start(reset=True)
 			if self.stats.life <= 0:
