@@ -2,6 +2,7 @@ class Stats():
 	def __init__(self, opt={}):
 		self.speed = 300
 		self.jumpForce = 12
+		self.jumpForce = 13
 		self.jumpMax = 1
 		self.glide = 0 #en secondes
 		self.dash = 0 #en frame
@@ -10,6 +11,7 @@ class Stats():
 		self.lifeMax = 500
 		self.life = self.lifeMax
 		self.extraLife = 0
+		self.shield = 0
 
 		self.dict = self.__dict__.copy() #Pour avoir toutes les stats de base
 

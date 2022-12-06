@@ -34,5 +34,14 @@
 		"bonus":[
 			{"var":"extraLife", "val":1, "add":true}
 		]
+	},
+	{
+		"name":"Bulle de protection",
+		"sprite":"placeholder",
+		"world":3,
+		"description":"Ce bouclier aérien vous permettra d'encaisser une attaque sans vous prendre de dégats.",
+		"bonus":[
+			{"var":"shield", "val":1, "add":true}
+		]
 	}
 ]
