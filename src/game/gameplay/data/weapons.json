@@ -9,7 +9,7 @@
     {
         "name":"Arc Double",
         "sprite":"doublebow",
-        "world":1,
+        "world":2,
         "description":"Tire deux flèches",
         "script":"DoubleBow"
     }

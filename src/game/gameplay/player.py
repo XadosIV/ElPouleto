@@ -7,6 +7,9 @@ from src.game.gameplay.projectile import Projectile
 from src.game.gameplay.weaponManager import WeaponManager
 from src.game.gameplay.utilities import Timer
 
+from src.constants import TILE_SIZE
+
+
 class Player(Entity): #Initialisé comme une entité
 	def __init__(self, x,y, game):
 		super().__init__(game)
@@ -37,10 +40,10 @@ class Player(Entity): #Initialisé comme une entité
 
 	def updateDim(self, force=False):
 		# Redimensionne si nécessaire le joueur (tout ses sprites)
-		if force or self.width != self.game.tilemap.tile_size*self.stats.size:
+		if force or self.width != TILE_SIZE*self.stats.size:
 			#Calcul de la taille selon les stats du poulet
-			self.width = self.game.tilemap.tile_size*self.stats.size
-			self.height = self.game.tilemap.tile_size*self.stats.size
+			self.width = TILE_SIZE*self.stats.size
+			self.height = TILE_SIZE*self.stats.size
 			#Redimensionner les images
 			for img in self.imgs:
 				self.imgs[img] = pygame.transform.scale(self.imgs[img], (self.width, self.height))

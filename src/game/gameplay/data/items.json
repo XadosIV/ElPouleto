@@ -2,7 +2,7 @@
 	{
 		"name":"Ressort",
 		"sprite":"spring",
-		"world":1,
+		"world":0,
 		"description":"Un ressort vous accordant une seconde propulsion une fois dans les airs.",
 		"bonus":[
 			{"var":"jumpMax", "val":1, "add":true}
@@ -29,7 +29,7 @@
 	{
 		"name":"Tome de résurrection",
 		"sprite":"book",
-		"world":6,
+		"world":2,
 		"description":"Un livre contenant un sortilège vous accordant une seconde chance.",
 		"bonus":[
 			{"var":"extraLife", "val":1, "add":true}

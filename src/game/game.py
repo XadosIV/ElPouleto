@@ -8,6 +8,7 @@ from pygame.locals import *
 from src.generation.generator import Generator
 from src.game.gameplay.utilities import Timer, Galery
 from src.game.gameplay.bindings import Bindings
+from src.constants import TILE_SIZE
 
 import random
 
@@ -27,11 +28,14 @@ class Game():
 		self.galery = Galery()
 		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
-		self.generator = Generator(self, "hell") #Génération de la carte
-		self.tilemap = self.generator.tilemap #Tilemap de la carte générée
-		self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur
+		self.generator = Generator(self) 
+		self.data = self.generator.generate("farm") #Génération de la carte
+		self.tilemap = self.data["tilemap"]
+		self.generator.spawns(self.data["enemies"], self.data["items"], self.data["world"], self.data["tilemap"])
+		self.player = Player(self.data["spawn"][0], self.data["spawn"][1], self)
+		#self.tilemap = self.generator.tilemap #Tilemap de la carte générée
+		#self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur
 		self.camera = Camera(self) #Création de la caméra
-
 
 	def update(self, events, keys, dt):
 		self.events = events #Récupération des évèments de la frame
@@ -56,7 +60,7 @@ class Game():
 				velocity = entity.update()
 				velocity[1] = int(velocity[1])
 				#Coupe de la vélocité en plusieurs petits vecteurs afin de ne pas avoir de soucis de collisions
-				tab = self.split_velocity_cap(velocity, self.tilemap.tile_size//4)
+				tab = self.split_velocity_cap(velocity, TILE_SIZE//4)
 				onground = entity.onground
 				for t in tab: #On parcours chaque petit vecteur
 					entity.rect = entity.rect.move(t[0], t[1]) #On applique le petit vecteur à l'entité
@@ -137,7 +141,7 @@ class Game():
 		#On grandit virtuellement la taille du bloc si l'entité est plus grosse que lui.
 		if body.height < entity.rect.height:
 			dif = entity.rect.height - body.height
-			resizer = dif//32+1 * self.tilemap.tile_size
+			resizer = dif//32+1 * TILE_SIZE
 			goingup = entity.velocity[1] < 0
 			body = body.union(body.move((0,-resizer if goingup else resizer)))
 		#On récupère la collision sur tout les points de l'entité.

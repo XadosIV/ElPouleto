@@ -65,7 +65,7 @@ class Camera():
 	def draw(self):
 		self.move_cam() # Mouvement de la caméra à mettre à jour avant de dessiner la frame
 
-		self.surf.fill(self.game.generator.data["bgColor"]) #Fond couleur du monde
+		self.surf.fill(self.game.data["bgColor"]) #Fond couleur du monde
 
 		item_infobulles = []
 		for deco in self.game.tilemap.deco:
