@@ -253,7 +253,11 @@ class Player(Entity): #Initialisé comme une entité
 			self.game.surf.blit(img, in_rect)
 
 	def hurt(self, dmg):
-		self.stats.life -= dmg
-		self.timer_invincible.start(reset=True)
-		if self.stats.life <= 0:
-			self.velocity = pygame.math.Vector2([0,0])
+		if self.shield == 0:
+			self.stats.life -= dmg
+			self.timer_invincible.start(reset=True)
+			if self.stats.life <= 0:
+				self.velocity = pygame.math.Vector2([0,0])
+		else:
+			self.stats.shield -= 1
+			self.timer_invincible.start(reset=True)
