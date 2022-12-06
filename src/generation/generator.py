@@ -311,8 +311,8 @@ class Tileset():
 				surf.convert_alpha()
 				surf.blit(self.tileset, (0,0), (column*TILE_SIZE,row*TILE_SIZE,TILE_SIZE,TILE_SIZE))
 				self.tile_id.append(surf)
-				self.noBottom_id.append(row == self.rows-2)
-				self.deco.append(row == self.rows-1)
+				self.noBottom_id.append(row == 2)
+				self.deco.append(row == 3)
 
 	def getSurf(self, id):
 		if id == -1:

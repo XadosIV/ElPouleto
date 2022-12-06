@@ -29,7 +29,7 @@ class Game():
 		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
 		self.generator = Generator(self) 
-		self.data = self.generator.generate("farm") #Génération de la carte
+		self.data = self.generator.generate("hell") #Génération de la carte
 		self.tilemap = self.data["tilemap"]
 		self.generator.spawns(self.data["enemies"], self.data["items"], self.data["world"], self.data["tilemap"])
 		self.player = Player(self.data["spawn"][0], self.data["spawn"][1], self)
