@@ -64,7 +64,7 @@ class Generator():
 				debTile = data["endTile"]
 				debTile[0]-=1
 				self.merge(returnData, data)
-
+			structures_spawned.append(struct_id)
 		#Génération de la structure de fin
 		data = self.spawnStructure(data["endTile"], "end", path, tilemap)
 		self.merge(returnData, data)
