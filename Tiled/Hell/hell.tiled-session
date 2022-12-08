@@ -10,27 +10,67 @@
     "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
     "fileStates": {
         "1.tmx": {
-            "scale": 1,
+            "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 456,
-                "y": 180.5
+                "x": 1293.939393939394,
+                "y": 531.818181818182
             }
         },
         "2.tmx": {
-            "scale": 1,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 277,
-                "y": 199.5
+                "x": 422,
+                "y": 225
             }
         },
         "3.tmx": {
-            "scale": 1,
+            "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 624,
-                "y": -237.5
+                "x": 1206.060606060606,
+                "y": 16.666666666666742
+            }
+        },
+        "4.tmx": {
+            "scale": 0.8034179687499999,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.4045216968519,
+                "y": 0.6223410720798483
+            }
+        },
+        "5.tmx": {
+            "scale": 0.5356119791666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 257.6492038410114,
+                "y": -254.84866901665237
+            }
+        },
+        "6.tmx": {
+            "scale": 0.64755859375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.3474589051426,
+                "y": 0.772130900316597
+            }
+        },
+        "7.tmx": {
+            "scale": 0.5356119791666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 257.6492038410114,
+                "y": -254.84866901665237
+            }
+        },
+        "8.tmx": {
+            "scale": 1.6068359374999999,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.40452169685193,
+                "y": 256.09335116081195
             }
         },
         "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/Farm.tsx": {
@@ -76,7 +116,15 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 90.90909090909076,
-                "y": 328.78787878787875
+                "y": 710.6060606060607
+            }
+        },
+        "struct_hell_7.tmx": {
+            "scale": 0.5356119791666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 257.6492038410114,
+                "y": -254.84866901665237
             }
         },
         "tileset.tsx": {
@@ -98,6 +146,11 @@
     ],
     "project": "hell.tiled-project",
     "recentFiles": [
+        "5.tmx",
+        "6.tmx",
+        "8.tmx",
+        "7.tmx",
+        "struct_hell_7.tmx",
         "spawn.tmx",
         "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_4.tmx",
         "C:/Users/JORIS_DUBOIS/Documents/Tiled/Farm/struct_farm_3.tmx",

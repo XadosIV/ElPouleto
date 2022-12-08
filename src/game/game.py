@@ -26,7 +26,7 @@ class Game():
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.generator = Generator(self)
 		self.player = Player(self)
-		self.newWorld("hell")
+		self.newWorld("farm")
 
 	def newWorld(self, typename):
 		self.entities = [] #Toutes les entitées à update à chaque frame
