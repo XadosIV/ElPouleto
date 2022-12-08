@@ -43,7 +43,8 @@ class Generator():
 			"enemies":[],
 			"items":[],
 			"spawn":[],
-			"tilemap":tilemap
+			"tilemap":tilemap,
+			"exitWorld":[],
 		}
 
 		#Génération du spawn
@@ -68,7 +69,8 @@ class Generator():
 		#Génération de la structure de fin
 		data = self.spawnStructure(data["endTile"], "end", path, tilemap)
 		self.merge(returnData, data)
-		
+		returnData["exitWorld"] = data["endTile"]
+
 		#Remplissage des sols
 		self.fill(tilemap)
 		

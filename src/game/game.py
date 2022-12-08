@@ -20,29 +20,35 @@ class Game():
 		#Dimensions
 		self.width = surf.get_width()
 		self.height = surf.get_height()
+		self.galery = Galery()
+		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
+		self.item_collection = Collection(self) #Liste de tout les objets
+		self.newWorld("hell")
+
+	def newWorld(self, typename):
+		self.generator = Generator(self) 
+
 		self.entities = [] #Toutes les entitées à update à chaque frame
 		self.collisions = [] #Tout les objets pouvant rentrer en contact avec les entités
 		self.enemies = [] #Ennemis du joueur
 		self.items = [] #Objets apparus dans le monde
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
-		self.galery = Galery()
-		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
-		self.item_collection = Collection(self) #Liste de tout les objets
-		self.generator = Generator(self) 
-		self.data = self.generator.generate("farm") #Génération de la carte
+		self.data = self.generator.generate(typename) #Génération de la carte
 		self.tilemap = self.data["tilemap"]
 		self.generator.spawns(self.data["enemies"], self.data["items"], self.data["world"], self.data["tilemap"])
 		self.player = Player(self.data["spawn"][0], self.data["spawn"][1], self)
-		#self.tilemap = self.generator.tilemap #Tilemap de la carte générée
-		#self.player = Player(self.generator.start_x, self.generator.start_y, self) #Création du joueur au spawn indiqué par le générateur
 		self.camera = Camera(self) #Création de la caméra
 
 	def update(self, events, keys, dt):
 		self.events = events #Récupération des évèments de la frame
 		self.keys = keys #Récupération des touches appuyés durant la frame
-		self.dt = min(dt/1000, 0.1) #Calcul du Dt (avec un maximum à 0.1)
-
+		self.dt = min(dt/1000, 0.05) #Calcul du Dt (avec un maximum à 0.05)
+		print(self.dt)
 		self.inputs = self.listener.getInputs() #Update les touches appuyés sur la frame
+
+		coord = [(self.player.rect.x//32), (self.player.rect.y//32)]
+		if self.data["exitWorld"] == coord:
+			self.newWorld("hell")
 
 
 		#Update des timers

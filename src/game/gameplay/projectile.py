@@ -21,7 +21,7 @@ class Projectile(Entity): #Initialisé comme une entité
 		self.velocity[0] = speed*self.game.dt * owner.direction #Vitesse dans la bonne direction direction du projectile 
 
 	def update(self):
-		if self.velocity[0] == 0: #S'il ne bouge plus il est supprimé (Coincé dans un bloc)
+		if self.velocity[0] == 0 or self.rect.collidelistall(self.game.collisions): #S'il ne bouge plus il est supprimé (Coincé dans un bloc)
 			self.delete()
 		indices = self.rect.collidelistall(self.game.enemies) #Regarde si le projectile touche un ennemi
 		for i in indices:
