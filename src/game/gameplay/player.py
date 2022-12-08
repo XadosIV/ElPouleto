@@ -11,12 +11,12 @@ from src.constants import TILE_SIZE
 
 
 class Player(Entity): #Initialisé comme une entité
-	def __init__(self, x,y, game):
-		super().__init__(game)
+	def __init__(self, game):
+		super().__init__(game, player=True)
 		self.type = "player" #Le type de l'entité / son nom.
 		#Point de spawn du joueur
-		self.rect.x = x
-		self.rect.y = y
+		self.rect.x = 0
+		self.rect.y = 0
 		#Inventaire, stockant les données des objets obtenus par le joueur
 		self.inventory = []
 		self.weaponManager = WeaponManager(self)
@@ -27,7 +27,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.updateDim(force=True) #Redimensionne toutes les images de self.imgs
 		#Variables locales
 		self.interact = False #True si touche appuyé <=> Permet au joueur d'interagir avec le jeu (item, parler, etc...)
-		self.last_onground_pos = [x,y] #Position où  faire respawn le joueur en cas de chute dans le vide
+		self.last_onground_pos = [0,0] #Position où  faire respawn le joueur en cas de chute dans le vide
 		#Compteurs et timers
 		self.timer_invincible = Timer(60, self.game) #Timer de frames d'invincibilité, décrémente de deltaTime à chaque frame si != 0
 		self.timer_dashing = Timer(0, self.game) #Timer de frames de dash
@@ -37,6 +37,11 @@ class Player(Entity): #Initialisé comme une entité
 		self.timer_respawn = Timer(60, self.game) #Timer de frames, pour la résurrection du joueur.
 		#Affichage
 		self.show_items = True #True = objets affichés sur le joueur
+
+	def teleport(self, x, y):
+		self.rect.x = x
+		self.rect.y = y
+		self.velocity = pygame.math.Vector2([0,0])
 
 	def updateDim(self, force=False):
 		# Redimensionne si nécessaire le joueur (tout ses sprites)

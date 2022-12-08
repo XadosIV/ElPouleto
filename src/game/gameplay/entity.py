@@ -3,7 +3,7 @@ from pygame.locals import *
 from src.game.gameplay.stats import Stats
 
 class Entity:
-	def __init__(self, game):
+	def __init__(self, game, player=False):
 		self.game = game
 		self.fall = 0
 		self.images = self.game.galery
@@ -17,7 +17,8 @@ class Entity:
 		self.cpt_saut = 0 #Compteur de saut de l'entité
 		#Importation des stats
 		self.stats = Stats() 
-		self.game.entities.append(self) #Ajout dans la liste d'entités
+		if not player:
+			self.game.entities.append(self) #Ajout dans la liste d'entités
 		self.type = "entity" #Le type de l'entité / son nom.
 
 	def update(self):

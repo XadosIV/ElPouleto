@@ -67,7 +67,7 @@ class Generator():
 				self.merge(returnData, data)
 			structures_spawned.append(struct_id)
 		#Génération de la structure de fin
-		data = self.spawnStructure(data["endTile"], "end", path, tilemap)
+		data = self.spawnStructure(data["endTile"], "end", path, tilemap, portal=True)
 		self.merge(returnData, data)
 		returnData["exitWorld"] = data["endTile"]
 
@@ -86,7 +86,7 @@ class Generator():
 		if len(data["spawn"]) != 0:
 			returnData["spawn"] = data["spawn"]
 
-	def spawnStructure(self, coor, name, path, tilemap):
+	def spawnStructure(self, coor, name, path, tilemap, portal=None):
 		#Load structure data
 		csvData = []
 		with open(path+name+".csv", "r") as data_raw:
@@ -131,7 +131,12 @@ class Generator():
 					tilemap.add(id, x, y)
 				elif tile == "4":
 					#Tuile de fin à renvoyer
-					endTile = [x,y]
+					if portal == None:
+						endTile = [x,y]
+					else:
+						endTile.append([x,y])
+					id = self.complete(csvData, x-coor[0], y-offset-coor[1], tilemap.tileset)
+					tilemap.add(id, x, y)
 				elif tile != "-1" and tile != "3": #Cas où ce n'est pas un bloc vide ni un bloc de contrôle (dernier non géré ici = 3)
 					tilemap.add(int(tile), x, y) #On ajoute le bloc à la tilemap
 					if tilemap.tileset.getNoBottom(int(tile)): #Si c'est un bloc transparent
@@ -245,7 +250,8 @@ class Generator():
 		if y == -1:
 			return -1
 		tile = tilemap.map[y][x]
-		if tile == -1:
+		deco = tilemap.decomap[y][x]
+		if tile == -1 and deco == -1:
 			nextTile = self.fillUp(x, y-1, tilemap)
 			if tilemap.tileset.getNoBottom(nextTile):
 				return -1
@@ -355,14 +361,36 @@ class Tilemap():
 		self.deco = []
 		self.tileset = tileset
 		self.map_w, self.map_h = 0,0
-		self.map = []
+		self.map = [[-1]]
+		self.decomap = [[-1]]
+
+	def getMaxSize(self, maxx, maxy):
+		maxy = max(maxy, len(self.map)-1, len(self.decomap)-1)
+		maxx = max(maxx, len(self.map[0])-1, len(self.decomap[0])-1)
+		return maxx,maxy
+
+	def updateMapSize(self, maxx, maxy):
+		#Ajout du bon nombre de ligne max
+		#self.map[maxy][maxx] sera forcément disponible après cette fonction.
+		maxx, maxy = self.getMaxSize(maxx,maxy)
+		maps = [self.map, self.decomap]
+
+		for map in maps:
+			while len(map)-1 < maxy:
+				map.append([])
+
+			for line in map:
+				while len(line)-1 < maxx:
+					line.append(-1)
+
+	def add_in_deco(self, id, x, y):
+		self.updateMapSize(x, y)
+		self.decomap[y][x] = id
+		self.decomap_w = len(self.decomap[0])*TILE_SIZE
+		self.decomap_h = len(self.decomap)*TILE_SIZE
 
 	def add_in_map(self, id, x, y):
-		while len(self.map)-1 < y:
-			self.map.append([])
-		for j in range(len(self.map)):
-			while len(self.map[j])-1 < x:
-					self.map[j].append(-1)
+		self.updateMapSize(x, y)
 		self.map[y][x] = id
 		self.map_w = len(self.map[0])*TILE_SIZE
 		self.map_h = len(self.map)*TILE_SIZE
@@ -379,6 +407,8 @@ class Tilemap():
 			self.add_in_map(id, x, y)
 		else:
 			self.deco.append(tile)
+			self.add_in_deco(id, x, y)
+
 
 	def getTileId(self, x, y):
 		if y >= len(self.map):

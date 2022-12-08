@@ -23,31 +23,32 @@ class Game():
 		self.galery = Galery()
 		self.listener = Bindings(self) #Ecoute les touches à chaque frame pour en déterminer les actions du joueur
 		self.item_collection = Collection(self) #Liste de tout les objets
-		self.newWorld("hell")
+		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
+		self.generator = Generator(self)
+		self.player = Player(self)
+		self.newWorld("farm")
 
 	def newWorld(self, typename):
-		self.generator = Generator(self) 
-
 		self.entities = [] #Toutes les entitées à update à chaque frame
 		self.collisions = [] #Tout les objets pouvant rentrer en contact avec les entités
 		self.enemies = [] #Ennemis du joueur
 		self.items = [] #Objets apparus dans le monde
-		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.data = self.generator.generate(typename) #Génération de la carte
 		self.tilemap = self.data["tilemap"]
 		self.generator.spawns(self.data["enemies"], self.data["items"], self.data["world"], self.data["tilemap"])
-		self.player = Player(self.data["spawn"][0], self.data["spawn"][1], self)
+		self.player.teleport(self.data["spawn"][0], self.data["spawn"][1])
+		self.entities.append(self.player)
+
 		self.camera = Camera(self) #Création de la caméra
 
 	def update(self, events, keys, dt):
 		self.events = events #Récupération des évèments de la frame
 		self.keys = keys #Récupération des touches appuyés durant la frame
 		self.dt = min(dt/1000, 0.05) #Calcul du Dt (avec un maximum à 0.05)
-		print(self.dt)
 		self.inputs = self.listener.getInputs() #Update les touches appuyés sur la frame
 
 		coord = [(self.player.rect.x//32), (self.player.rect.y//32)]
-		if self.data["exitWorld"] == coord:
+		if coord in self.data["exitWorld"]:
 			self.newWorld("hell")
 
 
