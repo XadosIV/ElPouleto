@@ -26,7 +26,7 @@ class Game():
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.generator = Generator(self)
 		self.player = Player(self)
-		self.newWorld("farm")
+		self.newWorld("hell")
 
 	def newWorld(self, typename):
 		self.entities = [] #Toutes les entitées à update à chaque frame
@@ -89,7 +89,7 @@ class Game():
 									t[1] = 0
 								velocity[1] = 0
 						elif side == "top":
-							if not bloc.noBottom: #Les blocs non plein sont traversable depuis le bas, on ne gère donc pas
+							if not bloc.noBottom and not bloc.topOnly: #Les blocs non plein sont traversable depuis le bas, on ne gère donc pas
 								# la collision dans ce cas.
 								entity.rect.top = bloc.rect.bottom # On replace l'entité
 								#On bloque la vélocité verticale puisqu'on a rencontré un mur.
@@ -174,6 +174,12 @@ class Game():
 		nobottom_left = self.tilemap.tileset.getNoBottom(tileId_Gauche)
 		nobottom_right = self.tilemap.tileset.getNoBottom(tileId_Droite)
 		nobottom_me = self.tilemap.tileset.getNoBottom(tileId_Me)
+		#On récupère si oui ou non ce bloc est traversable seulement par le bas
+		topOnly_bot = self.tilemap.tileset.getTopOnly(tileId_Bas)
+		topOnly_top = self.tilemap.tileset.getTopOnly(tileId_Haut)
+		topOnly_left = self.tilemap.tileset.getTopOnly(tileId_Gauche)
+		topOnly_right = self.tilemap.tileset.getTopOnly(tileId_Droite)
+		topOnly_me = self.tilemap.tileset.getTopOnly(tileId_Me)
 		#Définiton des forces de chaque côté
 		top = int(topleft) + int(topmid) + int(topright) #sur le haut de l'entité / bas du bloc
 		bot = int(botleft) + int(botright) + int(botmid) #sur le bas de l'entité / haut du bloc
@@ -205,6 +211,17 @@ class Game():
 			if tileId_Gauche != -1 and (not nobottom_left): #Si il y a un bloc plein à gauche, la collision à droite de l'entité n'est pas possible
 				right = 0
 			if tileId_Droite != -1 and (not nobottom_right): #Si il y a un bloc plein à droite, la collision à gauche de l'entité n'est pas possible
+				left = 0
+
+		if topOnly_me: #Dans le cas d'un bloc traversable par le bas seulement
+			if tileId_Gauche != -1 and (not topOnly_left): #Si il y a un bloc plein à gauche, la collision à droite de l'entité n'est pas possible
+				right = 0
+			if tileId_Droite != -1 and (not topOnly_right): #Si il y a un bloc plein à droite, la collision à gauche de l'entité n'est pas possible
+				left = 0
+		else: #Dans le cas d'un bloc plein
+			if tileId_Gauche != -1 and (not topOnly_left): #Si il y a un bloc plein à gauche, la collision à droite de l'entité n'est pas possible
+				right = 0
+			if tileId_Droite != -1 and (not topOnly_right): #Si il y a un bloc plein à droite, la collision à gauche de l'entité n'est pas possible
 				left = 0
 
 		#On met toutes les forces dans un tableau pour les comparer

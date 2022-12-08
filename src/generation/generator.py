@@ -139,7 +139,7 @@ class Generator():
 					tilemap.add(id, x, y)
 				elif tile != "-1" and tile != "3": #Cas où ce n'est pas un bloc vide ni un bloc de contrôle (dernier non géré ici = 3)
 					tilemap.add(int(tile), x, y) #On ajoute le bloc à la tilemap
-					if tilemap.tileset.getNoBottom(int(tile)): #Si c'est un bloc transparent
+					if tilemap.tileset.getNoBottom(int(tile)) or tilemap.tileset.getTopOnly(int(tile)): #Si c'est un bloc transparent
 						id = self.complete(csvData, x-coor[0], y-offset-coor[1], tilemap.tileset) #On vérifie si on peut compléter par un bloc de déco
 						tilemap.add(id, x, y) #On l'ajoute si on peut (sinon ça l'ajoute quand même avec -1 et le add de tilemap l'ignore.)
 				x+=1
@@ -253,7 +253,7 @@ class Generator():
 		deco = tilemap.decomap[y][x]
 		if tile == -1 and deco == -1:
 			nextTile = self.fillUp(x, y-1, tilemap)
-			if tilemap.tileset.getNoBottom(nextTile):
+			if tilemap.tileset.getNoBottom(nextTile) or tilemap.tileset.getTopOnly(nextTile):
 				return -1
 			else:
 				tilemap.add(nextTile, x, y)
@@ -302,12 +302,17 @@ class Tileset():
 		#	- Si le joueur rentre en collision, la tuile inflige des dégats fixe définis dans les stats du monde
 		#	=> Le joueur est ensuite replacé dans un espace correcte (comme lors d'une chute)
 
+		#Septième ligne : Les tuiles pouvant être traversées que d'un seul côté (topOnly)
+		#	- Aucune collisions latérales
+		#	- Tout le monde ne peut les traverser que par le bas
+
 		self.tileset = pygame.image.load(path) #Chargement de l'image tileset
 		self.img_size = self.tileset.get_size()
 		self.rows = self.img_size[1]//TILE_SIZE
 		self.columns = self.img_size[0]//TILE_SIZE
 		self.tile_id = [] #Tableau ID => Surface pour chaque tuile
 		self.noBottom_id = [] #Tableau ID => True/False noBottom, indique si la tuile est transparente
+		self.topOnly_id = [] #Tableau ID => True/False topOnly, indique si la tuile est traversable par le bas
 		self.deco = [] #Tableau ID => True/False, indique si la tuile est une déco ou doit être géré normalement
 		self.damage = [] #Tableau ID => True/False, indique si la tuile doit infliger des dégâts
 		self.load()
@@ -321,6 +326,7 @@ class Tileset():
 				self.tile_id.append(surf)
 				self.noBottom_id.append(row == 2)
 				self.deco.append(row == 3)
+				self.topOnly_id.append(row == 6)
 
 	def getSurf(self, id):
 		if id == -1:
@@ -332,13 +338,18 @@ class Tileset():
 			return False
 		return self.noBottom_id[id]
 
+	def getTopOnly(self, id):
+		if id == -1:
+			return False
+		return self.topOnly_id[id]
+
 	def getDeco(self, id):
 		if id == -1:
 			return False
 		return self.deco[id]
 
 class Tile():
-	def __init__(self, surf, x, y, game, noBottom, deco):
+	def __init__(self, surf, x, y, game, noBottom, deco, topOnly):
 		self.game = game
 		self.image = surf
 		self.x = x
@@ -347,6 +358,7 @@ class Tile():
 		self.rect.x, self.rect.y = x*TILE_SIZE,y*TILE_SIZE
 		self.type = "tile"
 		self.noBottom = noBottom
+		self.topOnly = topOnly
 		self.deco = deco
 		if not deco:
 			self.game.collisions.append(self)
@@ -400,8 +412,9 @@ class Tilemap():
 			return
 		surf = self.tileset.getSurf(id)
 		noBottom = self.tileset.getNoBottom(id)
+		topOnly = self.tileset.getTopOnly(id)
 		deco = self.tileset.getDeco(id)
-		tile = Tile(surf, x, y, self.game, noBottom=noBottom, deco=deco)
+		tile = Tile(surf, x, y, self.game, noBottom=noBottom, deco=deco, topOnly=topOnly)
 		if not deco:
 			self.tiles.append(tile)
 			self.add_in_map(id, x, y)
