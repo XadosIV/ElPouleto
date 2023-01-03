@@ -314,7 +314,7 @@ class Tileset():
 		self.noBottom_id = [] #Tableau ID => True/False noBottom, indique si la tuile est transparente
 		self.topOnly_id = [] #Tableau ID => True/False topOnly, indique si la tuile est traversable par le bas
 		self.deco = [] #Tableau ID => True/False, indique si la tuile est une déco ou doit être géré normalement
-		self.damage = [] #Tableau ID => True/False, indique si la tuile doit infliger des dégâts
+		self.damageTile = [] #Tableau ID => True/False, indique si la tuile doit infliger des dégâts
 		self.load()
 
 	def load(self):
@@ -326,7 +326,9 @@ class Tileset():
 				self.tile_id.append(surf)
 				self.noBottom_id.append(row == 2)
 				self.deco.append(row == 3)
+				self.damageTile.append(row == 5)
 				self.topOnly_id.append(row == 6)
+				
 
 	def getSurf(self, id):
 		if id == -1:
@@ -347,9 +349,14 @@ class Tileset():
 		if id == -1:
 			return False
 		return self.deco[id]
+	
+	def getDamageTile(self, id):
+		if id == -1:
+			return False
+		return self.damageTile[id]
 
 class Tile():
-	def __init__(self, surf, x, y, game, noBottom, deco, topOnly):
+	def __init__(self, surf, x, y, game, noBottom, deco, damageTile, topOnly):
 		self.game = game
 		self.image = surf
 		self.x = x
@@ -360,6 +367,7 @@ class Tile():
 		self.noBottom = noBottom
 		self.topOnly = topOnly
 		self.deco = deco
+		self.damageTile = damageTile
 		if not deco:
 			self.game.collisions.append(self)
 
@@ -412,9 +420,10 @@ class Tilemap():
 			return
 		surf = self.tileset.getSurf(id)
 		noBottom = self.tileset.getNoBottom(id)
-		topOnly = self.tileset.getTopOnly(id)
 		deco = self.tileset.getDeco(id)
-		tile = Tile(surf, x, y, self.game, noBottom=noBottom, deco=deco, topOnly=topOnly)
+		damageTile = self.tileset.getDamageTile(id)
+		topOnly = self.tileset.getTopOnly(id)
+		tile = Tile(surf, x, y, self.game, noBottom=noBottom, deco=deco, damageTile=damageTile, topOnly=topOnly)
 		if not deco:
 			self.tiles.append(tile)
 			self.add_in_map(id, x, y)

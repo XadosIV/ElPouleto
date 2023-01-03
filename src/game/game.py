@@ -27,7 +27,7 @@ class Game():
 		self.generator = Generator(self)
 		self.player = Player(self)
 		self.game_ended = False
-		self.world = "farm"
+		self.world = "hell"
 		self.newWorld(self.world)
 
 	def newWorld(self, typename):
@@ -56,8 +56,6 @@ class Game():
 		if coord in self.data["exitWorld"] and self.world == "hell":
 			self.game_ended = True
 
-
-
 		#Update des timers
 		for timer in self.timers:
 			timer.update()
@@ -83,7 +81,11 @@ class Game():
 						side = self.side(entity, bloc.rect)
 						#Il y a une collision avec la tuile "bloc" sur le côté "side" de l'entité
 						if side == "bot":
-							if ((entity.type == "player" and self.inputs["passBot"]) or (entity.flying)) and bloc.noBottom:
+							if entity.type == "player" and bloc.damageTile:
+								self.player.rect.x = self.player.last_onground_pos[0]
+								self.player.rect.y = self.player.last_onground_pos[1]
+								self.player.hurt(100)
+							elif ((entity.type == "player" and self.inputs["passBot"]) or (entity.flying)) and bloc.noBottom:
 								#On ne gère pas la collision haute si c'est le joueur, que le bloc testé n'est pas plein
 								#et que le joueur souhaite le traverser (via les appuis sur S et SPACE)
 								continue
@@ -129,8 +131,10 @@ class Game():
 		else: 
 			self.surf.fill((0,0,0))
 			font = pygame.font.SysFont(None, 24)
-			endText = font.render("Vous avez réussi à compléter les 2 niveaux de El Pouleto !\nJ'espère que vous n'avez pas trop galéré !", True, "white")
-			self.surf.blit(endText, (300, self.surf.get_size()[1]/2 -12)) #Centrer le texte
+			endText = font.render("Vous avez réussi à compléter les 2 niveaux de El Pouleto !", True, "white")
+			endTextTwo = font.render("J'espère que vous n'avez pas trop galéré !", True, "white")
+			self.surf.blit(endText, (500, self.surf.get_size()[1]/2 -12)) #Centrer le texte
+			self.surf.blit(endTextTwo, (550, self.surf.get_size()[1]/2 + 30))
 			pygame.display.flip()
 
 

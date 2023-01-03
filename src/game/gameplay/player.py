@@ -179,7 +179,7 @@ class Player(Entity): #Initialisé comme une entité
 			super().update() #Application de la gravité
 
 		return self.velocity
-		
+
 	def updateSprite(self):
 		self.cpt_frame += 1
 		if self.cpt_frame == 16:
