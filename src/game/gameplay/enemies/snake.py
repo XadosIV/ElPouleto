@@ -40,13 +40,14 @@ class Snake(Entity): #Initialisé comme une entité
 				
 				self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse
 
-		else: #Supprime si plus de vie			
+		else: #Supprime si plus de vie		
 			if not self.timer_disappear.running:
+				self.sprite = pygame.transform.rotate(self.sprite, -45)
 				self.game.enemies.remove(self)
 			self.timer_disappear.start()	
 			self.velocity[0] = 0
 			if self.timer_disappear.ended:
-				self.game.entities.remove(self)
+				self.game.entities.remove(self)		
 		
 		Entity.update(self)
 		return self.velocity

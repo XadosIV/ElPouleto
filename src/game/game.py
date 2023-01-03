@@ -26,7 +26,9 @@ class Game():
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.generator = Generator(self)
 		self.player = Player(self)
-		self.newWorld("farm")
+		self.game_ended = False
+		self.world = "farm"
+		self.newWorld(self.world)
 
 	def newWorld(self, typename):
 		self.entities = [] #Toutes les entitées à update à chaque frame
@@ -48,8 +50,12 @@ class Game():
 		self.inputs = self.listener.getInputs() #Update les touches appuyés sur la frame
 
 		coord = [(self.player.rect.x//32), (self.player.rect.y//32)]
-		if coord in self.data["exitWorld"]:
-			self.newWorld("hell")
+		if coord in self.data["exitWorld"] and self.world == "farm":
+			self.world = "hell"
+			self.newWorld(self.world)
+		if coord in self.data["exitWorld"] and self.world == "hell":
+			self.game_ended = True
+
 
 
 		#Update des timers
@@ -117,7 +123,16 @@ class Game():
 		for item in self.items:
 			item.check()
 
-		self.camera.draw() #On affiche la frame.
+		
+		if not self.game_ended:
+			self.camera.draw() #On affiche la frame.
+		else: 
+			self.surf.fill((0,0,0))
+			font = pygame.font.SysFont(None, 24)
+			endText = font.render("Vous avez réussi à compléter les 2 niveaux de El Pouleto !\nJ'espère que vous n'avez pas trop galéré !", True, "white")
+			self.surf.blit(endText, (300, self.surf.get_size()[1]/2 -12)) #Centrer le texte
+			pygame.display.flip()
+
 
 	def split_velocity_cap(self, velocity, maxi):
 		#Entrée : velocity Vector2, maxi Int

@@ -22,21 +22,28 @@ class Peck(Weapon):
 		self.damage = 50
 		self.range = 40
 
-	def use(self):
+	def use(self, direction=0):
 		if self.cd.ended:
-			self.getHitbox() #Définit self.hitbox (Rect) et la place correctement au niveau du joueur
+			self.getHitbox(direction) #Définit self.hitbox (Rect) et la place correctement au niveau du joueur
 			colliders = self.hitbox.collidelistall(self.game.enemies)
 			for index in colliders:
 				enemy = self.game.enemies[index]
 				enemy.hurt(self.damage, self.owner)
 			self.cd.start(reset=True)
 
-	def getHitbox(self):
-		self.hitbox = pygame.Rect([1,1,self.range+self.owner.width,self.owner.height])
-		if self.owner.direction == 1:
-			self.hitbox.midleft = self.owner.rect.midleft
+	def getHitbox(self, direction):
+		if direction == 1:
+			self.hitbox = pygame.Rect([1,1,self.owner.height,self.range+self.owner.width])
+			self.hitbox.midbottom = self.owner.rect.midtop
+		elif direction == -1:
+			self.hitbox = pygame.Rect([1,1,self.owner.height,self.range+self.owner.width])
+			self.hitbox.midtop = self.owner.rect.midbottom
 		else:
-			self.hitbox.midright = self.owner.rect.midright
+			self.hitbox = pygame.Rect([1,1,self.range+self.owner.width,self.owner.height])
+			if self.owner.direction == 1:
+				self.hitbox.midleft = self.owner.rect.midleft
+			else:
+				self.hitbox.midright = self.owner.rect.midright
 
 
 
@@ -46,9 +53,10 @@ class Bow(Weapon):
 		self.damage = 100
 		self.cd = Timer(20, self.game)
 
-	def use(self):
+	def use(self, direction=0):
 		if self.cd.ended:
-			Projectile(self.owner, self.damage)
+			
+			Projectile(self.owner, self.damage, direction)
 			self.cd.start(reset=True)
 
 class DoubleBow(Weapon):
@@ -57,8 +65,12 @@ class DoubleBow(Weapon):
 		self.damage = 100
 		self.cd = Timer(20, self.game)
 
-	def use(self):
+	def use(self, direction=0):
 		if self.cd.ended:
-			Projectile(self.owner, self.damage, offset=(0,-5))
-			Projectile(self.owner, self.damage, offset=(0,5))
+			if direction == 0:
+				Projectile(self.owner, self.damage, direction, offset=(0,-5))
+				Projectile(self.owner, self.damage, direction, offset=(0,5))
+			else:
+				Projectile(self.owner, self.damage, direction, offset=(-5,0))
+				Projectile(self.owner, self.damage, direction, offset=(5,0))		
 			self.cd.start(reset=True)

@@ -2,7 +2,7 @@ import pygame
 from src.game.gameplay.entity import Entity
 
 class Projectile(Entity): #Initialisé comme une entité
-	def __init__(self, owner, damage, speed=1000, offset=(0,0)):
+	def __init__(self, owner, damage, direction, speed=1000, offset=(0,0)):
 		super().__init__(owner.game)
 		self.owner = owner
 		#Importation de l'image
@@ -13,15 +13,24 @@ class Projectile(Entity): #Initialisé comme une entité
 			self.rect.right = self.owner.rect.left + offset[0] #Rectangle qui part des coordonnées du player
 		else:
 			self.rect.left = self.owner.rect.right + offset[0] #Rectangle qui part des coordonnées du player
+		if direction == -1:
+			self.sprite = pygame.transform.rotate(self.sprite, 90)
+			self.rect.left = self.owner.rect.left + offset[0] #Rectangle qui part des coordonnées du player
+		elif direction == 1:
+			self.sprite = pygame.transform.rotate(self.sprite, -90)
+			self.rect.left = self.owner.rect.left + offset[0] #Rectangle qui part des coordonnées du player
 
 		self.rect.centery = self.owner.rect.centery + offset[1]
 		#Changement de sens en foncion de sa direction
 		self.damage = damage
 		self.type = "projectile" #Le type de l'entité / son nom.
 		self.velocity[0] = speed*self.game.dt * owner.direction #Vitesse dans la bonne direction direction du projectile 
+		self.velocity[1] = speed*self.game.dt * direction
+		if self.velocity[1] != 0:
+			self.velocity[0] = 0
 
 	def update(self):
-		if self.velocity[0] == 0 or self.rect.collidelistall(self.game.collisions): #S'il ne bouge plus il est supprimé (Coincé dans un bloc)
+		if self.velocity == [0,0] or self.rect.collidelistall(self.game.collisions): #S'il ne bouge plus il est supprimé (Coincé dans un bloc)
 			self.delete()
 		indices = self.rect.collidelistall(self.game.enemies) #Regarde si le projectile touche un ennemi
 		for i in indices:

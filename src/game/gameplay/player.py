@@ -121,7 +121,11 @@ class Player(Entity): #Initialisé comme une entité
 					self.timer_dashing.start()
 
 				#Utilisation de l'arme équipée
-				if inputs["primary"]:
+				if inputs["primary"] and inputs["lookUp"]:
+					self.weapon.use(direction=-1)
+				elif inputs["primary"] and inputs["lookDown"]:
+					self.weapon.use(direction=1)
+				elif inputs["primary"]:
 					self.weapon.use()
 
 				#Utiulisation de l'arme secondaire
@@ -164,6 +168,7 @@ class Player(Entity): #Initialisé comme une entité
 				#Perdu
 				pass
 			else:
+				self.removeFromInventory("Tome de résurrection")
 				self.timer_respawn.start()
 				if self.timer_respawn.ended:
 					self.timer_respawn.reset() #On réinitialise le compteur
@@ -171,8 +176,8 @@ class Player(Entity): #Initialisé comme une entité
 					self.stats.life = round(self.stats.lifeMax * 0.2) #On lui rend 20% de sa vie
 					self.timer_invincible.start(reset=True) #On le met invincible le temps de respawn
 
-
 			super().update() #Application de la gravité
+
 		return self.velocity
 		
 	def updateSprite(self):
@@ -202,6 +207,7 @@ class Player(Entity): #Initialisé comme une entité
 			if bonus["add"]:
 				if bonus["var"] == "life" and self.stats.life + bonus["val"] > self.stats.lifeMax:
 					self.game.item_collection.spawnItem(self.game.item_collection.items.index(self.inventory[-1]), self.game.player.rect.x, self.game.player.rect.y)
+					self.removeFromInventory(self.weapon.data['name'])
 					break
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) + bonus["val"])					
 			else:
@@ -216,6 +222,12 @@ class Player(Entity): #Initialisé comme une entité
 				setattr(self.stats, bonus["var"], getattr(self.stats, bonus["var"]) - bonus["val"])
 			else:
 				setattr(self.stats, bonus["var"], self.stats.base_stats()[bonus["var"]])
+	
+	def removeFromInventory(self, name):
+		for i in range(len(self.inventory)):
+			if self.inventory[i]['name'] == name:
+				self.inventory.pop(self.inventory.index(self.inventory[i]))
+				break
 
 	def get_item_sprite(self, name):
 		if name in self.imgs.keys():
@@ -265,4 +277,5 @@ class Player(Entity): #Initialisé comme une entité
 				self.velocity = pygame.math.Vector2([0,0])
 		else:
 			self.stats.shield -= 1
+			self.removeFromInventory("Bulle de protection")
 			self.timer_invincible.start(reset=True)
