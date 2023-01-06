@@ -37,7 +37,7 @@ class Projectile(Entity): #Initialisé comme une entité
 
 
 	def update(self):
-		if self.velocity == [0,0] or self.rect.inflate((1,1)).collidelistall(self.game.collisions): #S'il ne bouge plus il est supprimé (Coincé dans un bloc)
+		if self.velocity == [0,0] or self.rect.inflate((4,4)).collidelistall(self.game.collisions): #S'il ne bouge plus il est supprimé (Coincé dans un bloc)
 			self.delete()
 		if self.owner == self.game.player:
 			indices = self.rect.collidelistall(self.game.enemies) #Regarde si le projectile touche un ennemi
