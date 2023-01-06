@@ -15,10 +15,10 @@ La carte est regénérée aléatoirement à chaque fois que vous rejouez, ce qui
 Commandes : 
 - Déplacements du joueur : Flèches droite et gauche
 - Déplacement de la caméra : Flèches hautes et basses
-- Saut : W
+- Saut : Espace
 - Dash : D
 - Attaque principale : X
-- Planer : Maintenir W
+- Planer : Maintenir Espace
 - Interagir avec les objets : C
 
 ## A vous de découvrir le reste !
