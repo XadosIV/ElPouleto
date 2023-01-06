@@ -13,7 +13,8 @@ Vous commencez le jeu en poulet débutant ayant comme sule capacité un coup de 
 La carte est regénérée aléatoirement à chaque fois que vous rejouez, ce qui rajoute encore une pointe de difficulté !
 
 Commandes : 
-- Déplacements : Flèches (Droite/Gauche/Haut/Bas)
+- Déplacements du joueur : Flèches droite et gauche
+- Déplacement de la caméra : Flèches hautes et basses
 - Saut : W
 - Dash : D
 - Attaque principale : X
