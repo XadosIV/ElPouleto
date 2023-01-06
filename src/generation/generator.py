@@ -5,11 +5,7 @@ class Generator():
 	def __init__(self, game):
 		self.game = game
 
-	def newSeed(self, seed=None):
-		if seed != None:
-			seed = seed
-		else:
-			seed = random.randint(1, 1000000000) #On génère jusqu'à un milliard de seed.
+	def newSeed(self, seed):
 		random.seed(seed) #Application de la seed
 		return seed
 
@@ -56,7 +52,10 @@ class Generator():
 		#Génération des structures
 		structures_spawned = [] #Structures ayant déjà été générés
 		structures_max = len(os.listdir(path+"structures")) #Nombre de structures uniques dans le monde
-		for i in range(info["nbStructures"]):
+
+		nbStructures = random.randint(info["nbStructures"][0],info["nbStructures"][1])
+
+		for i in range(nbStructures):
 			struct_id = self.nextStruct(structures_max, structures_spawned) #Prochaine structure à générer
 			if struct_id == -1:
 				break #Le nombre de structure a été dépassé nextStruct, inutile de continuer.

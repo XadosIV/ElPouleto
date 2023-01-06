@@ -7,6 +7,7 @@ import random
 class Snake(Entity): #Initialisé comme une entité
 	def __init__(self, game, x, y):
 		Entity.__init__(self, game)
+		self.score = 20
 		#Point de spawn de l'ennemi
 		self.rect.x = x 
 		self.rect.y = y
@@ -44,7 +45,8 @@ class Snake(Entity): #Initialisé comme une entité
 			if not self.timer_disappear.running:
 				self.sprite = pygame.transform.rotate(self.sprite, -45)
 				self.game.enemies.remove(self)
-			self.timer_disappear.start()	
+				self.game.score += self.score
+			self.timer_disappear.start()
 			self.velocity[0] = 0
 			if self.timer_disappear.ended:
 				self.game.entities.remove(self)		

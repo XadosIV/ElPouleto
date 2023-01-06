@@ -9,6 +9,7 @@ flying = True
 class Bird(Entity): #Initialisé comme une entité
     def __init__(self, game, x, y):
         Entity.__init__(self, game)
+        self.score = 50
         #Point de spawn de l'ennemi
         self.rect.x = x 
         self.rect.y = y
@@ -57,14 +58,15 @@ class Bird(Entity): #Initialisé comme une entité
 
                 self.velocity[0] = self.stats.speed * self.direction * self.game.dt #Vitesse        
 
-        else: #Supprime si plus de vie			
+        else: #Supprime si plus de vie
             if not self.timer_disappear.running: #Temps pendant lequel son corps est toujours visible
+                self.game.score += self.score
                 self.game.enemies.remove(self)
                 self.timer_disappear.start()	
                 self.velocity[0] = 0
                 self.flying = False
             if self.timer_disappear.ended:
-                self.game.entities.remove(self)
+                self.delete()
 
         return Entity.update(self)
 

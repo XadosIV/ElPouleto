@@ -3,7 +3,7 @@ import math
 from src.game.gameplay.entity import Entity
 
 class Projectile(Entity): #Initialisé comme une entité
-	def __init__(self, owner, damage, angle, speed=1000, offset=(0,0)):
+	def __init__(self, owner, damage, angle, speed=1000, offset=(0,0), score=0):
 		super().__init__(owner.game)
 		self.owner = owner
 		#Importation de l'image

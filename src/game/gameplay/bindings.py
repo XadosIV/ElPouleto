@@ -6,21 +6,22 @@ class Bindings():
 	def __init__(self, game):
 		self.game = game
 		self.hold = ["left", "right", "lookUp", "lookDown", "glide"] #Touche pouvant être maintenu
-		self.onHit = ["dash", "jump", "primary", "secondary", "worldPower", "pause", "inventory", "interact"] #Touche ne pouvant être maintenu
+		self.onHit = ["dash", "jump", "primary", "interact"] #Touche ne pouvant être maintenu
+		#self.onHit = ["dash", "jump", "primary", "secondary", "worldPower", "pause", "inventory", "interact"] #Touche ne pouvant être maintenu
 		self.keybind = {
 			"left":K_LEFT,
 			"right":K_RIGHT,
 			"dash":K_d,
 			"lookUp":K_UP,
 			"lookDown":K_DOWN,
-			"jump":K_w,
+			"jump":K_SPACE,
 			"primary":K_x,
-			"secondary":K_s,
-			"worldPower":K_q,
-			"pause":K_ESCAPE,
-			"inventory":K_e,
+			#"secondary":K_s,
+			#"worldPower":K_q,
+			#"pause":K_ESCAPE,
+			#"inventory":K_e,
 			"interact":K_c,
-			"glide":K_w
+			"glide":K_SPACE
 		}
 		
 

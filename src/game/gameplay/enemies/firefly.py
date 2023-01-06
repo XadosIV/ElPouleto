@@ -9,6 +9,7 @@ flying = True
 class Firefly(Entity): #Initialisé comme une entité
     def __init__(self, game, x, y):
         Entity.__init__(self, game)
+        self.score = 500
         #Point de spawn de l'ennemi
         self.rect.x = x 
         self.rect.y = y
@@ -43,6 +44,7 @@ class Firefly(Entity): #Initialisé comme une entité
                 self.velocity = pygame.math.Vector2(0)
             if self.rect.colliderect(self.game.player.rect):
                 self.game.player.numberOfTimesHurtByFire += 1
+                self.game.score -= self.score #Contrebalance sa mort, n'étant pas causé par le joueur
                 self.hurt(self.stats.life, self)
         else: #Supprime si plus de vie			
             if not self.timer_disappear.running:
@@ -73,6 +75,7 @@ class Firefly(Entity): #Initialisé comme une entité
             self.sprite = self.images.get("enemies/firefly"+str(self.cpt_frame//5)) #Animations de vol
 
     def hurt(self, damage, hitter):
+        self.game.score += self.score
         self.stats.life -= damage
 
     def draw(self, offset):

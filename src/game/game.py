@@ -10,11 +10,13 @@ from src.game.gameplay.utilities import Timer, Galery
 from src.game.gameplay.bindings import Bindings
 from src.constants import TILE_SIZE
 
-import random
+import random, time
 
 class Game():
-	def __init__(self, surf):
+	def __init__(self, surf, mainMenu, seedRaw=""):
 		pygame.font.init()
+		self.timestart = time.time()
+		self.score = 0
 		self.gravity = 30 # Nombre de pixels par seconde (pour les entités en chute)
 		self.surf = surf #Surface de la fenêtre
 		#Dimensions
@@ -27,18 +29,46 @@ class Game():
 		self.generator = Generator(self)
 		self.player = Player(self)
 		self.game_ended = False
-		self.world = "hell"
+		self.world = "farm"
+		self.mainMenu = mainMenu
+		self.seed = self.seedRawToSeed(seedRaw)
 		self.newWorld(self.world)
 
-	def newWorld(self, typename):
+	def timeToString(self):
+		nb = int( (time.time() - self.timestart) * 1000) #en ms
+
+		minutes = str(nb // 60000)
+		seconds = str((nb-int(minutes)*60000) // 1000)
+		ms = str(nb - (int(minutes) * 60000 + int(seconds) * 1000))
+
+		if (len(minutes) == 1):	minutes = "0" + minutes
+		if (len(seconds) == 1): seconds = "0" + seconds
+		if (len(ms) == 1): ms = "0" + ms
+		if (len(ms) == 2): ms = "0" + ms
+		return f"{minutes}:{seconds}:{ms}"
+
+	def seedRawToSeed(self, seedRaw):
+		#Essaye de trouver une seed à partir d'une chaine de caractère
+		#En regardant le dernier mot, si c'est un nombre, c'est la seed, sinon il n'y en a pas.
+		#Input "Seed: 5" Return : int(5)
+		tab=seedRaw.split(" ")
+		seedString = tab[len(tab)-1]
+		try:
+			seed=int(seedString)
+		except:
+			seed = random.randint(1, 1000000000) #On génère une seed aléatoire
+		return seed
+
+	def newWorld(self, typeWorld): #typeWorld = "farm"/"hell" selon le monde qu'on génère
 		self.entities = [] #Toutes les entitées à update à chaque frame
 		self.collisions = [] #Tout les objets pouvant rentrer en contact avec les entités
 		self.enemies = [] #Ennemis du joueur
 		self.items = [] #Objets apparus dans le monde
-		self.data = self.generator.generate(typename) #Génération de la carte
+		self.data = self.generator.generate(typeWorld, self.seed) #Génération de la carte
 		self.tilemap = self.data["tilemap"]
 		self.generator.spawns(self.data["enemies"], self.data["items"], self.data["world"], self.data["tilemap"])
 		self.player.teleport(self.data["spawn"][0], self.data["spawn"][1])
+		self.player.stats.life = self.player.stats.lifeMax #On heal le joueur au changement de monde
 		self.entities.append(self.player)
 
 		self.camera = Camera(self) #Création de la caméra
@@ -132,13 +162,7 @@ class Game():
 		if not self.game_ended:
 			self.camera.draw() #On affiche la frame.
 		else: 
-			self.surf.fill((0,0,0))
-			font = pygame.font.SysFont(None, 24)
-			endText = font.render("Vous avez réussi à compléter les 2 niveaux de El Pouleto !", True, "white")
-			endTextTwo = font.render("J'espère que vous n'avez pas trop galéré !", True, "white")
-			self.surf.blit(endText, (500, self.surf.get_size()[1]/2 -12)) #Centrer le texte
-			self.surf.blit(endTextTwo, (550, self.surf.get_size()[1]/2 + 30))
-			pygame.display.flip()
+			self.mainMenu.switchScene()
 
 
 	def split_velocity_cap(self, velocity, maxi):

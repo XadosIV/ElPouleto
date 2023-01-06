@@ -279,6 +279,7 @@ class Player(Entity): #Initialisé comme une entité
 
 	def hurt(self, dmg):
 		if self.stats.shield == 0:
+			self.game.score -= 20
 			self.stats.life -= dmg
 			self.timer_invincible.start(reset=True)
 			if self.stats.life <= 0:

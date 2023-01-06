@@ -9,6 +9,7 @@ flying = True
 class Moskito(Entity): #Initialisé comme une entité
     def __init__(self, game, x, y):
         Entity.__init__(self, game)
+        self.score = 25
         #Point de spawn de l'ennemi
         self.rect.x = x 
         self.rect.y = y
@@ -46,6 +47,7 @@ class Moskito(Entity): #Initialisé comme une entité
         else: #Supprime si plus de vie			
             if not self.timer_disappear.running: #Timer pendant lequel il reste "mort" sur l'écran
                 self.game.enemies.remove(self)
+                self.game.score += self.score
                 self.timer_disappear.start()	
                 self.velocity[0] = 0
                 self.flying = False

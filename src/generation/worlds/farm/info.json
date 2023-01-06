@@ -1,7 +1,7 @@
 {
 	"id":1,
 	"name":"Ferme",
-	"nbStructures":3,
+	"nbStructures":[3,5],
 	"bgColor":[135,206,235],
 	"tileDamage":0
 }

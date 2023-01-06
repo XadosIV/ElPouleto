@@ -5,6 +5,7 @@ from src.game.gameplay.utilities import Timer #A METTRE DANS FIRESHOOTER MAIS BU
 
 class Entity:
 	def __init__(self, game, player=False):
+		self.score = 0 #Score gagné si l'entité meurt
 		self.game = game
 		self.fall = 0
 		self.images = self.game.galery

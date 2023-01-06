@@ -84,7 +84,27 @@ class Camera():
 
 		self.player.draw(self.offset) #Le joueur est affiché au dessus du reste
 
-		pygame.display.flip() #On met à jour l'affichage
+		#Affichage du texte de la seed
+		font = pygame.font.SysFont(None, 25)
+		surfText = font.render("Seed : " + str(self.game.data["seed"]), True, "white")
+		rectText = surfText.get_rect()
+		rectText.bottomleft = (0, self.game.height)
+		self.surf.blit(surfText, rectText)
 
-#Au lieu d'une cam avec le poulet au centre : Le poulet est en bas de la caméra
-#Quand appui sur S (sans appui sur espace) => Le poulet peut regarder vers le bas
+		#Affichage du texte du score
+		font = pygame.font.SysFont(None, 30)
+		surfText = font.render("Score : " + str(self.game.score), True, "white")
+		rectText = surfText.get_rect()
+		rectText.topright = (self.game.width, 0)
+		rectText.move_ip((-10,10))
+		self.surf.blit(surfText, rectText)
+
+		#Affichage du texte du temps
+		font = pygame.font.SysFont(None, 35)
+		surfText = font.render("Temps : " + self.game.timeToString(), True, "white")
+		rectText = surfText.get_rect()
+		rectText.topright = (self.game.width, 0)
+		rectText.move_ip((-10,30))
+		self.surf.blit(surfText, rectText)
+
+		pygame.display.flip() #On met à jour l'affichage

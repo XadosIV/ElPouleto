@@ -8,6 +8,7 @@ import random
 class Fox(Entity):
 	def __init__(self, game, x, y):
 		Entity.__init__(self, game)
+		self.score = 100
 		#Point de spawn de l'ennemi
 		self.rect.x = x 
 		self.rect.y = y
@@ -89,6 +90,7 @@ class Fox(Entity):
 			if not self.timer_disappear.running: #Sprite de mort si life < 0
 				self.sprite = self.images.get("enemies/fox_dead")
 				self.game.enemies.remove(self)
+				self.game.score += self.score
 			self.timer_disappear.start()	
 			self.velocity[0] = 0
 			if self.timer_disappear.ended:
