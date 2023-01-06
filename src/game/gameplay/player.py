@@ -37,6 +37,7 @@ class Player(Entity): #Initialisé comme une entité
 		self.timer_respawn = Timer(60, self.game) #Timer de frames, pour la résurrection du joueur.
 		#Affichage
 		self.show_items = True #True = objets affichés sur le joueur
+		self.numberOfTimesHurtByFire = 0 #Si tu te fais toucher 3 fois par le feu dans la même partie tu meurs (Parce que t'abuses aussi)
 
 	def teleport(self, x, y):
 		self.rect.x = x
@@ -121,12 +122,20 @@ class Player(Entity): #Initialisé comme une entité
 					self.timer_dashing.start()
 
 				#Utilisation de l'arme équipée
-				if inputs["primary"] and inputs["lookUp"]:
-					self.weapon.use(direction=-1)
-				elif inputs["primary"] and inputs["lookDown"]:
-					self.weapon.use(direction=1)
-				elif inputs["primary"]:
-					self.weapon.use()
+				if self.weapon.script != "Peck":
+					if inputs["primary"] and inputs["lookUp"]:
+						self.weapon.use(angle=-90)
+					elif inputs["primary"] and inputs["lookDown"]:
+						self.weapon.use(angle=90)
+					elif inputs["primary"]:
+						if self.direction == 1:
+							angle = 180
+						else:
+							angle = 0
+						self.weapon.use(angle)
+				else:
+					if inputs["primary"]:
+						self.weapon.use()
 
 				#Utiulisation de l'arme secondaire
 				if inputs["secondary"]:
@@ -159,8 +168,7 @@ class Player(Entity): #Initialisé comme une entité
 				self.velocity[1] = 0 #Insensible à la gravité (+ super().update() non appelé)
 
 			if self.rect.y >= self.game.tilemap.map_h: 
-				self.rect.x = self.last_onground_pos[0]
-				self.rect.y = self.last_onground_pos[1]
+				self.teleport(self.last_onground_pos[0], self.last_onground_pos[1])
 				self.hurt(200)
 
 		else:

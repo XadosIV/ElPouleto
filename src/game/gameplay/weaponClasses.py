@@ -8,6 +8,7 @@ class Weapon():
 		self.weaponManager = weaponManager
 		self.owner = weaponManager.owner
 		self.data = weaponManager.data
+		self.script = weaponManager.script
 		self.game = self.owner.game
 		self.cd = Timer(20, self.game)
 
@@ -53,10 +54,9 @@ class Bow(Weapon):
 		self.damage = 100
 		self.cd = Timer(20, self.game)
 
-	def use(self, direction=0):
+	def use(self, angle):
 		if self.cd.ended:
-			
-			Projectile(self.owner, self.damage, direction)
+			Projectile(self.owner, self.damage, angle)
 			self.cd.start(reset=True)
 
 class DoubleBow(Weapon):
@@ -65,12 +65,12 @@ class DoubleBow(Weapon):
 		self.damage = 100
 		self.cd = Timer(20, self.game)
 
-	def use(self, direction=0):
+	def use(self, angle):
 		if self.cd.ended:
-			if direction == 0:
-				Projectile(self.owner, self.damage, direction, offset=(0,-5))
-				Projectile(self.owner, self.damage, direction, offset=(0,5))
-			else:
-				Projectile(self.owner, self.damage, direction, offset=(-5,0))
-				Projectile(self.owner, self.damage, direction, offset=(5,0))		
+			if angle == 180 or angle == 0:
+				Projectile(self.owner, self.damage, angle, offset=(0,-5))
+				Projectile(self.owner, self.damage, angle, offset=(0,5))
+			elif angle == 90 or angle == -90:
+				Projectile(self.owner, self.damage, angle, offset=(-5,0))
+				Projectile(self.owner, self.damage, angle, offset=(5,0))		
 			self.cd.start(reset=True)

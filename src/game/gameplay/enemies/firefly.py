@@ -42,6 +42,7 @@ class Firefly(Entity): #Initialisé comme une entité
             else:
                 self.velocity = pygame.math.Vector2(0)
             if self.rect.colliderect(self.game.player.rect):
+                self.game.player.numberOfTimesHurtByFire += 1
                 self.hurt(self.stats.life, self)
         else: #Supprime si plus de vie			
             if not self.timer_disappear.running:

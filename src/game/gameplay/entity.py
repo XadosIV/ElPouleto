@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from src.game.gameplay.stats import Stats
+from src.game.gameplay.utilities import Timer #A METTRE DANS FIRESHOOTER MAIS BUGG INCOMPREHESIBLE
 
 class Entity:
 	def __init__(self, game, player=False):
@@ -20,6 +21,7 @@ class Entity:
 		if not player:
 			self.game.entities.append(self) #Ajout dans la liste d'entités
 		self.type = "entity" #Le type de l'entité / son nom.
+		self.cd = Timer(100, self.game) #Temps de cooldown entre chaque attaque #A METTRE DANS FIRESHOOTER MAIS BUGG INCOMPREHESIBLE
 
 	def update(self):
 		#Gestion Physique
@@ -54,3 +56,7 @@ class Entity:
 		if self in self.game.enemies:
 			self.game.enemies.remove(self)
 		del self
+	
+	def hurt(self, damage, hitter):
+		self.stats.life -= damage
+		self.cd_hurt = 30

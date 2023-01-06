@@ -82,9 +82,12 @@ class Game():
 						#Il y a une collision avec la tuile "bloc" sur le côté "side" de l'entité
 						if side == "bot":
 							if entity.type == "player" and bloc.damageTile:
-								self.player.rect.x = self.player.last_onground_pos[0]
-								self.player.rect.y = self.player.last_onground_pos[1]
-								self.player.hurt(100)
+								self.player.teleport(self.player.last_onground_pos[0], self.player.last_onground_pos[1])
+								self.player.numberOfTimesHurtByFire += 1
+								if self.player.numberOfTimesHurtByFire >= 3 :
+									self.player.stats.life = 0
+								else:
+									self.player.hurt(100)
 							elif ((entity.type == "player" and self.inputs["passBot"]) or (entity.flying)) and bloc.noBottom:
 								#On ne gère pas la collision haute si c'est le joueur, que le bloc testé n'est pas plein
 								#et que le joueur souhaite le traverser (via les appuis sur S et SPACE)

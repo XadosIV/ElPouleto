@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="1" nextlayerid="2" nextobjectid="1">
  <editorsettings>
-  <export target="D:/Desktop/Projets/ElPouleto/src/generation/worlds/hell/spawn.csv" format="csv"/>
+  <export target="../../src/generation/worlds/hell/spawn.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="tileset.tsx"/>
+ <tileset firstgid="36" source="../../../../../Downloads/tileset.tsx"/>
  <layer id="1" name="Calque de Tuiles 1" width="30" height="20">
   <data encoding="csv">
    <chunk x="-32" y="-16" width="16" height="16">
@@ -315,7 +316,7 @@
    <chunk x="-16" y="32" width="16" height="16">
 17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,
 17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,
-17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,
+17,17,17,17,17,17,17,17,17,52,17,17,17,17,17,17,
 17,17,17,17,17,17,7,7,7,7,7,7,7,7,7,7,
 17,17,17,17,17,17,7,7,7,7,7,7,7,7,7,7,
 17,17,17,17,17,17,7,7,7,7,7,7,7,7,7,7,
