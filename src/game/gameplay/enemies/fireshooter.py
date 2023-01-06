@@ -14,7 +14,7 @@ class FireShooter(Entity): #Initialisé comme une entité
         #Vitesse
         self.stats.speed = 150
         #Chargement de l'image
-        self.sprite = self.images.get() #Sans paramètre, ça renvoie le placeholder (carré rouge)        
+        self.sprite = self.images.get("enemies/fireshooter") #Sans paramètre, ça renvoie le placeholder (carré rouge)        
         self.stats.life = 200 #Vie de l'ennemi
         self.damage = 100
         self.type = "fireshooter" #Le type de l'entité / son nom.
