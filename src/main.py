@@ -4,6 +4,8 @@ from src.game.game import Game
 from src.constants import CREDITS
 from src.inputbox import InputBox
 
+import json
+
 class Main():
 	def __init__(self):
 		self.scene = 1 # 1 = menu / 2 = game / 3 = end
@@ -13,6 +15,14 @@ class Main():
 		self.framerate = 30
 		self.posMouse = (0,0)
 		
+		with open("./src/save.json") as f:
+			raw_json = f.read()
+		data = json.loads(raw_json)
+
+		self.bestScore = data["bestScore"]
+		self.bestTime = data["bestTime"]
+
+
 		self.seedInput = InputBox(0,0, self.w//4, self.h//10, "Seed: ", self)
 		self.seedRaw = ""
 		self.loop()
@@ -47,24 +57,43 @@ class Main():
 
 	def switchScene(self):
 		if (self.scene == 1):
-			self.setGame() #On définie self.game (pas avant car besoin de la seed)
+			self.setGame() #On défini self.game (pas avant car besoin de la seed)
 		elif (self.scene == 2):
 			#On récupère le score du joueur:
 			self.score = self.game.score
 			self.timescore = self.game.timeToString()
 
-			self.credits_y = 0 #On définie les variables de l'algo de crédits
+			self.save(self.score, self.timescore)
+
+			self.credits_y = 0 #On défini les variables de l'algo de crédits
 			self.loadCredits()
 
 		self.scene += 1
 		if (self.scene > 3):
 			self.scene = 1
 
+	def save(self, score, timescore):
+		data = {
+			"bestScore":self.bestScore,
+			"bestTime":self.bestTime
+		}
+		if (self.bestScore == "n/a"):
+			data["bestScore"] = score
+		elif (score > self.bestScore):
+			data["bestScore"] = score
+		if (self.bestTime == "n/a"):
+			data["bestTime"] = self.stringToTime(self.timescore)
+		elif (self.stringToTime(self.timescore) < self.bestTime):
+			data["bestTime"] = self.stringToTime(self.timescore)
+
+		with open("./src/save.json", "w") as f:
+			f.write(json.dumps(data))
+
+
 	def loadCredits(self):
 		margin = 10 #Espace entre chaque ligne
 		creditsLines = CREDITS.split("\n") #Lignes récupérés du fichier constants.py
 		font = pygame.font.SysFont(None, 48) #Taille d'écriture
-
 		textSurfaces = [] #Stockage des surfaces de chaque texte
 		heightSurfaces = 0 #Compte taille totale nécessaire
 		for line in creditsLines: #Remplissage des deux variables précédentes
@@ -105,7 +134,7 @@ class Main():
 		#Title
 		surfTitle = font.render("El Pouleto !", True, "white")
 		rectTitle = surfTitle.get_rect()
-		rectTitle.center = (self.w//2,self.h//3)
+		rectTitle.center = (self.w//2,self.h//3-50)
 		#PlayButton
 		font = pygame.font.SysFont(None, 50)
 		playButton = font.render("JOUER", True, "black")
@@ -115,24 +144,43 @@ class Main():
 		bgPlayButton = pygame.Surface((rectPlayButton.width+padding*2, rectPlayButton.height+padding*2))
 		rectBgPlayButton = bgPlayButton.get_rect()
 		rectPlayButton.center = rectBgPlayButton.center
-		rectBgPlayButton.center = (self.w//2, (self.h//3)*2)
+		rectBgPlayButton.center = (self.w//2, (self.h//3)*2-50)
 	
 		#PlayButtonDetection
 		if (rectBgPlayButton.collidepoint(self.posMouse)):
 			bgPlayButton.fill((255,255,0))
 			if (self.click):
 				self.switchScene()
-				
 		else:
 			bgPlayButton.fill((255,255,255))
 		bgPlayButton.blit(playButton, rectPlayButton)
 
 		#SeedInput position
-		self.seedInput.rect.center = (self.w//2, (self.h//3)*3 - self.seedInput.rect.height)
+		self.seedInput.rect.center = (self.w//2, (self.h//3)*3 - self.seedInput.rect.height - 50)
+
+		#Statistiques
+		font = pygame.font.SysFont(None, 25)
+
+
+
+		if (self.bestScore == "n/a"):
+			score = "X"
+		else:
+			score = str(self.bestScore)
+
+		if (self.bestTime == "n/a"):
+			temps = "--:--:---"
+		else:
+			temps = self.timeToString(self.bestTime)
+		surfStats = font.render("Meilleur Score : "+score+" - Meilleur Temps : "+temps, True, "white")
+		rectStats = surfStats.get_rect()
+		rectStats.midbottom = (self.w//2,self.h-20)
+
 
 		#Draw
 		self.window.blit(surfTitle, rectTitle)
 		self.window.blit(bgPlayButton, rectBgPlayButton)
+		self.window.blit(surfStats, rectStats)
 
 		self.seedInput.update()
 		self.seedInput.draw(self.window)
@@ -147,3 +195,19 @@ class Main():
 		pygame.display.set_caption("El Pouleto !")
 		pygame.mouse.set_visible(True)
 		return window
+
+	def timeToString(self, time):
+		minutes = str(time // 60000)
+		seconds = str((time-int(minutes)*60000) // 1000)
+		ms = str(time - (int(minutes) * 60000 + int(seconds) * 1000))
+
+		if (len(minutes) == 1):	minutes = "0" + minutes
+		if (len(seconds) == 1): seconds = "0" + seconds
+		if (len(ms) == 1): ms = "0" + ms
+		if (len(ms) == 2): ms = "0" + ms
+		return f"{minutes}:{seconds}:{ms}"
+
+	def stringToTime(self, string):
+		nbs = string.split(":")
+
+		return int(nbs[0]) * 60000 + int(nbs[1]) * 1000 + int(nbs[2])

@@ -16,7 +16,7 @@ class Game():
 	def __init__(self, surf, mainMenu, seedRaw=""):
 		pygame.font.init()
 		self.timestart = time.time()
-		self.score = 0
+		self.score = 5000
 		self.gravity = 30 # Nombre de pixels par seconde (pour les entités en chute)
 		self.surf = surf #Surface de la fenêtre
 		#Dimensions
@@ -28,7 +28,7 @@ class Game():
 		self.timers = [] #Liste de tout les timers, à update à chaque début de frame.
 		self.generator = Generator(self)
 		self.player = Player(self)
-		self.game_ended = False
+		self.game_ended = True
 		self.world = "farm"
 		self.mainMenu = mainMenu
 		self.seed = self.seedRawToSeed(seedRaw)
