@@ -4,8 +4,8 @@ import pygame as pg
 
 pg.init()
 
-COLOR_INACTIVE = pg.Color('lightskyblue3')
-COLOR_ACTIVE = pg.Color('dodgerblue2')
+COLOR_INACTIVE = pg.Color('white')
+COLOR_ACTIVE = pg.Color((255,255,0))
 FONT = pg.font.Font(None, 32)
 
 class InputBox:
@@ -14,6 +14,7 @@ class InputBox:
         self.rect = pg.Rect(x, y, w, h)
         self.color = COLOR_INACTIVE
         self.text = text
+        self.baseText = text
         self.txt_surface = FONT.render(text, True, self.color)
         self.active = False
         self.mainMenu = mainMenu
@@ -31,7 +32,8 @@ class InputBox:
         if event.type == pg.KEYDOWN:
             if self.active:
                 if event.key == pg.K_BACKSPACE:
-                    self.text = self.text[:-1]
+                    if (self.text != self.baseText):
+                        self.text = self.text[:-1]
                 elif event.key != pg.K_RETURN:
                     self.text += event.unicode
                 # Re-render the text.
