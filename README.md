@@ -1,5 +1,7 @@
 # ElPouleto
 
+> Ce projet nécessite pygame. Il a été testé avec Python 3.13.3 et pygame 2.6.1.
+
 ## Résumé
 
 El Pouleto est un jeu de combat et de action-aventure rogue-like qui se déroule dans un monde en constante évolution. Vous incarnez un poulet qui doit combattre son chemin à travers une ferme remplie d'animaux. La particularité de ce jeu est qu'à chaque fois que vous mourez, vous recommencez au début du jeu avec un personnage entièrement nouveau, mais avec l'expérience et les connaissances acquises lors de votre précédente partie. Cela signifie que vous devez apprendre à connaître les ennemis et les niveaux afin de progresser plus efficacement à chaque nouvelle tentative.
